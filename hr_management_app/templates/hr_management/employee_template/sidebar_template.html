@@ -1,0 +1,112 @@
+{% load static %}
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="" class="brand-link">
+      <img src="{% static 'dist/img/AdminLTELogo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
+           style="opacity: .8">
+      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    </a>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="{% static 'dist/img/user2-160x160.jpg' %}" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="{% url 'employee_profile' %}" class="d-block">{{ user.username }}</a>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <li class="nav-item">
+            {% url 'employee_home' as employee_home %}
+            <a href="{{ employee_home }}" class="nav-link {% if request.path == employee_home %} active {% endif %}">
+              <i class="nav-icon fas fa-home"></i>
+              <p>
+                Home
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            {% url 'employee_profile' as employee_profile %}
+            <a href="{{ employee_profile }}" class="nav-link {% if request.path == employee_profile %} active {% endif %}">
+              <i class="nav-icon fas fa-user"></i>
+              <p>
+                Employee Profile
+              </p>
+            </a>
+          </li>
+           <li class="nav-item">
+            {% url 'employee_apply_leave' as employee_apply_leave %}
+            <a href="{{ employee_apply_leave }}" class="nav-link {% if request.path == employee_apply_leave %} active {% endif %}">
+              <i class="nav-icon fas fa-calendar"></i>
+              <p>
+                Apply for Leave
+              </p>
+            </a>
+          </li>
+           <li class="nav-item">
+            {% url 'employee_feedback' as employee_feedback %}
+            <a href="{{ employee_feedback }}" class="nav-link {% if request.path == employee_feedback %} active {% endif %}">
+              <i class="nav-icon fas fa-comment"></i>
+              <p>
+                Feedback Message
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            {% url 'employee_all_notification' as employee_all_notification %}
+            <a href="{{ employee_all_notification }}" class="nav-link {% if request.path == employee_all_notification %} active {% endif %}">
+              <i class="nav-icon fas fa-bell"></i>
+              <p>
+                Notifications
+              </p>
+            </a>
+          </li>
+          <li class="nav-item has-treeview">
+            <a href="#" class="nav-link" onclick="toggleSubMenu('sub-menu-4')">
+              <i class="nav-icon fas fa-money-check-alt"></i>
+              <p>
+                Onboarding
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul id="sub-menu-3" class="nav nav-treeview sub-menu">
+              <li class="nav-item">
+                {% url 'employee_onboarding' as employee_onboarding %}
+                <a href="{{ employee_onboarding }}" class="nav-link {% if request.path == employee_onboarding %} active {% endif %}">
+                  <i class="nav-icon fas fa-circle"></i>
+                  <p>
+                    Onboarding
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                {% url 'all_records' as all_records %}
+                <a href="{{ all_records }}" class="nav-link">
+                  <i class="nav-icon fas fa-list"></i>
+                  <p>
+                    Onboarding Record
+                  </p>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            {% url 'employee_salary_view' as employee_salary_view %}
+            <a href="{{ employee_salary_view }}" class="nav-link">
+              <i class="nav-icon fas fa-file-invoice-dollar"></i>
+              <p>
+                Salary Slip
+              </p>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>

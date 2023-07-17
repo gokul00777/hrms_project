@@ -1,0 +1,590 @@
+2023-05-09 11:47:54,473 - hr_management.settings - DEBUG - Debug message
+2023-05-09 11:47:54,473 - hr_management.settings - INFO - Info message
+2023-05-09 11:47:54,474 - hr_management.settings - WARNING - Warning message
+2023-05-09 11:47:54,474 - hr_management.settings - ERROR - Error message
+2023-05-09 11:47:54,474 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 11:49:03,327 - hr_management.settings - DEBUG - Debug message
+2023-05-09 11:49:03,327 - hr_management.settings - INFO - Info message
+2023-05-09 11:49:03,327 - hr_management.settings - WARNING - Warning message
+2023-05-09 11:49:03,327 - hr_management.settings - ERROR - Error message
+2023-05-09 11:49:03,327 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 11:49:03,327 - hr_management.settings - DEBUG - Debug message
+2023-05-09 11:49:03,327 - hr_management.settings - DEBUG - settings.py:197 - Debug message
+2023-05-09 11:49:03,328 - hr_management.settings - INFO - Info message
+2023-05-09 11:49:03,328 - hr_management.settings - INFO - settings.py:198 - Info message
+2023-05-09 11:49:03,328 - hr_management.settings - WARNING - Warning message
+2023-05-09 11:49:03,328 - hr_management.settings - WARNING - settings.py:199 - Warning message
+2023-05-09 11:49:03,328 - hr_management.settings - ERROR - Error message
+2023-05-09 11:49:03,328 - hr_management.settings - ERROR - settings.py:200 - Error message
+2023-05-09 11:49:03,328 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 11:49:03,328 - hr_management.settings - CRITICAL - settings.py:201 - Critical message
+2023-05-09 06:19:03,629 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:19:03,629 - hr_management.settings - INFO - Info message
+2023-05-09 06:19:03,629 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:19:03,629 - hr_management.settings - ERROR - Error message
+2023-05-09 06:19:03,629 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:19:03,629 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:19:03,629 - hr_management.settings - DEBUG - settings.py:197 - Debug message
+2023-05-09 06:19:03,629 - hr_management.settings - INFO - Info message
+2023-05-09 06:19:03,629 - hr_management.settings - INFO - settings.py:198 - Info message
+2023-05-09 06:19:03,630 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:19:03,630 - hr_management.settings - WARNING - settings.py:199 - Warning message
+2023-05-09 06:19:03,630 - hr_management.settings - ERROR - Error message
+2023-05-09 06:19:03,630 - hr_management.settings - ERROR - settings.py:200 - Error message
+2023-05-09 06:19:03,630 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:19:03,630 - hr_management.settings - CRITICAL - settings.py:201 - Critical message
+2023-05-09 06:25:16,453 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:25:16,453 - hr_management.settings - INFO - Info message
+2023-05-09 06:25:16,453 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:25:16,453 - hr_management.settings - ERROR - Error message
+2023-05-09 06:25:16,453 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:25:16,453 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:25:16,455 - hr_management.settings - INFO - Info message
+2023-05-09 06:25:16,456 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:25:16,457 - hr_management.settings - ERROR - Error message
+2023-05-09 06:25:16,458 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:25:56,643 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:25:56,643 - hr_management.settings - INFO - Info message
+2023-05-09 06:25:56,643 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:25:56,643 - hr_management.settings - ERROR - Error message
+2023-05-09 06:25:56,643 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:25:56,643 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:25:56,645 - hr_management.settings - INFO - Info message
+2023-05-09 06:25:56,646 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:25:56,647 - hr_management.settings - ERROR - Error message
+2023-05-09 06:25:56,648 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:26:06,821 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:26:06,821 - hr_management.settings - INFO - Info message
+2023-05-09 06:26:06,821 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:26:06,821 - hr_management.settings - ERROR - Error message
+2023-05-09 06:26:06,821 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:26:06,821 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:26:06,824 - hr_management.settings - INFO - Info message
+2023-05-09 06:26:06,825 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:26:06,827 - hr_management.settings - ERROR - Error message
+2023-05-09 06:26:06,829 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:26:48,821 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:26:48,821 - hr_management.settings - INFO - Info message
+2023-05-09 06:26:48,821 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:26:48,821 - hr_management.settings - ERROR - Error message
+2023-05-09 06:26:48,821 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:26:48,821 - hr_management.settings - DEBUG - Debug message
+2023-05-09 06:26:48,821 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 06:26:48,821 - hr_management.settings - INFO - Info message
+2023-05-09 06:26:48,821 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 06:26:48,821 - hr_management.settings - WARNING - Warning message
+2023-05-09 06:26:48,821 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 06:26:48,821 - hr_management.settings - ERROR - Error message
+2023-05-09 06:26:48,821 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 06:26:48,822 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 06:26:48,822 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:20:21,435 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:20:21,435 - hr_management.settings - INFO - Info message
+2023-05-09 07:20:21,435 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:20:21,435 - hr_management.settings - ERROR - Error message
+2023-05-09 07:20:21,435 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:20:21,435 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:20:21,435 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:20:21,436 - hr_management.settings - INFO - Info message
+2023-05-09 07:20:21,436 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:20:21,436 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:20:21,436 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:20:21,436 - hr_management.settings - ERROR - Error message
+2023-05-09 07:20:21,436 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:20:21,436 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:20:21,436 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:22:12,313 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:22:12,313 - hr_management.settings - INFO - Info message
+2023-05-09 07:22:12,314 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:22:12,314 - hr_management.settings - ERROR - Error message
+2023-05-09 07:22:12,314 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:22:12,314 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:22:12,314 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:22:12,314 - hr_management.settings - INFO - Info message
+2023-05-09 07:22:12,314 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:22:12,314 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:22:12,314 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:22:12,314 - hr_management.settings - ERROR - Error message
+2023-05-09 07:22:12,314 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:22:12,314 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:22:12,314 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:22:33,564 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:22:33,564 - hr_management.settings - INFO - Info message
+2023-05-09 07:22:33,564 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:22:33,564 - hr_management.settings - ERROR - Error message
+2023-05-09 07:22:33,564 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:22:33,564 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:22:33,564 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:22:33,564 - hr_management.settings - INFO - Info message
+2023-05-09 07:22:33,564 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:22:33,564 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:22:33,564 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:22:33,564 - hr_management.settings - ERROR - Error message
+2023-05-09 07:22:33,564 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:22:33,565 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:22:33,565 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:25:54,521 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:25:54,521 - hr_management.settings - INFO - Info message
+2023-05-09 07:25:54,521 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:25:54,521 - hr_management.settings - ERROR - Error message
+2023-05-09 07:25:54,521 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:25:54,522 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:25:54,522 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:25:54,522 - hr_management.settings - INFO - Info message
+2023-05-09 07:25:54,522 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:25:54,522 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:25:54,522 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:25:54,522 - hr_management.settings - ERROR - Error message
+2023-05-09 07:25:54,522 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:25:54,522 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:25:54,522 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:26:36,582 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:26:36,582 - hr_management.settings - INFO - Info message
+2023-05-09 07:26:36,582 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:26:36,582 - hr_management.settings - ERROR - Error message
+2023-05-09 07:26:36,583 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:26:36,583 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:26:36,583 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:26:36,583 - hr_management.settings - INFO - Info message
+2023-05-09 07:26:36,583 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:26:36,583 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:26:36,583 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:26:36,583 - hr_management.settings - ERROR - Error message
+2023-05-09 07:26:36,583 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:26:36,583 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:26:36,583 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:26:43,688 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:26:43,688 - hr_management.settings - INFO - Info message
+2023-05-09 07:26:43,688 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:26:43,688 - hr_management.settings - ERROR - Error message
+2023-05-09 07:26:43,688 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:26:43,688 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:26:43,688 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:26:43,688 - hr_management.settings - INFO - Info message
+2023-05-09 07:26:43,688 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:26:43,688 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:26:43,688 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:26:43,688 - hr_management.settings - ERROR - Error message
+2023-05-09 07:26:43,688 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:26:43,688 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:26:43,688 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:27:31,606 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:31,607 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:31,607 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:31,607 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:31,607 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:31,607 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:31,607 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:27:31,607 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:31,607 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:27:31,607 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:31,607 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:27:31,607 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:31,607 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:27:31,607 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:31,607 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:27:44,030 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:44,030 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:44,030 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:44,030 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:44,030 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:44,031 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:44,031 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:27:44,031 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:44,031 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:27:44,031 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:44,031 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:27:44,031 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:44,031 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:27:44,031 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:44,031 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:27:59,297 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:59,297 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:59,297 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:59,298 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:59,298 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:59,298 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:27:59,298 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:27:59,298 - hr_management.settings - INFO - Info message
+2023-05-09 07:27:59,298 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:27:59,298 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:27:59,298 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:27:59,298 - hr_management.settings - ERROR - Error message
+2023-05-09 07:27:59,298 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:27:59,298 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:27:59,298 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:28:38,579 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:38,580 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:38,580 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:38,580 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:38,580 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:38,580 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:38,580 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:28:38,581 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:38,581 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:28:38,581 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:38,581 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:28:38,581 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:38,581 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:28:38,581 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:38,581 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:28:52,777 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:52,777 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:52,777 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:52,777 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:52,777 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:52,777 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:52,777 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:28:52,777 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:52,777 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:28:52,777 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:52,777 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:28:52,777 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:52,777 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:28:52,777 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:52,777 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:28:58,884 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:58,884 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:58,884 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:58,885 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:58,885 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:58,885 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:28:58,885 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:28:58,885 - hr_management.settings - INFO - Info message
+2023-05-09 07:28:58,885 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:28:58,885 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:28:58,885 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:28:58,885 - hr_management.settings - ERROR - Error message
+2023-05-09 07:28:58,885 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:28:58,885 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:28:58,885 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:29:18,448 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:29:18,448 - hr_management.settings - INFO - Info message
+2023-05-09 07:29:18,448 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:29:18,448 - hr_management.settings - ERROR - Error message
+2023-05-09 07:29:18,449 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:29:18,449 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:29:18,449 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:29:18,449 - hr_management.settings - INFO - Info message
+2023-05-09 07:29:18,449 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:29:18,449 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:29:18,449 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:29:18,449 - hr_management.settings - ERROR - Error message
+2023-05-09 07:29:18,449 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:29:18,449 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:29:18,449 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:31:40,808 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:31:40,808 - hr_management.settings - INFO - Info message
+2023-05-09 07:31:40,808 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:31:40,808 - hr_management.settings - ERROR - Error message
+2023-05-09 07:31:40,808 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:31:40,808 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:31:40,808 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:31:40,808 - hr_management.settings - INFO - Info message
+2023-05-09 07:31:40,808 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:31:40,808 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:31:40,808 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:31:40,809 - hr_management.settings - ERROR - Error message
+2023-05-09 07:31:40,809 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:31:40,809 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:31:40,809 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:34:50,419 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:34:50,420 - hr_management.settings - INFO - Info message
+2023-05-09 07:34:50,420 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:34:50,420 - hr_management.settings - ERROR - Error message
+2023-05-09 07:34:50,420 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:34:50,420 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:34:50,420 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:34:50,420 - hr_management.settings - INFO - Info message
+2023-05-09 07:34:50,420 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:34:50,420 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:34:50,420 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:34:50,420 - hr_management.settings - ERROR - Error message
+2023-05-09 07:34:50,420 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:34:50,420 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:34:50,420 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:35:14,882 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:35:14,882 - hr_management.settings - INFO - Info message
+2023-05-09 07:35:14,882 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:35:14,882 - hr_management.settings - ERROR - Error message
+2023-05-09 07:35:14,882 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:35:14,882 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:35:14,882 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:35:14,882 - hr_management.settings - INFO - Info message
+2023-05-09 07:35:14,882 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:35:14,882 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:35:14,882 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:35:14,882 - hr_management.settings - ERROR - Error message
+2023-05-09 07:35:14,882 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:35:14,883 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:35:14,883 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:35:46,231 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:35:46,232 - hr_management.settings - INFO - Info message
+2023-05-09 07:35:46,232 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:35:46,232 - hr_management.settings - ERROR - Error message
+2023-05-09 07:35:46,232 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:35:46,232 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:35:46,232 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:35:46,232 - hr_management.settings - INFO - Info message
+2023-05-09 07:35:46,232 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:35:46,232 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:35:46,232 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:35:46,232 - hr_management.settings - ERROR - Error message
+2023-05-09 07:35:46,232 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:35:46,232 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:35:46,232 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:36:17,031 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:17,032 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:17,032 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:17,032 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:17,032 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:17,032 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:17,032 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:36:17,032 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:17,032 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:36:17,032 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:17,032 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:36:17,032 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:17,032 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:36:17,032 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:17,032 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:36:37,492 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:37,492 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:37,492 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:37,492 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:37,492 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:37,492 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:37,492 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:36:37,492 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:37,492 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:36:37,492 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:37,492 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:36:37,493 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:37,493 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:36:37,493 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:37,493 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 07:36:43,431 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:43,431 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:43,431 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:43,431 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:43,431 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:43,431 - hr_management.settings - DEBUG - Debug message
+2023-05-09 07:36:43,431 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 07:36:43,431 - hr_management.settings - INFO - Info message
+2023-05-09 07:36:43,431 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 07:36:43,431 - hr_management.settings - WARNING - Warning message
+2023-05-09 07:36:43,431 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 07:36:43,431 - hr_management.settings - ERROR - Error message
+2023-05-09 07:36:43,431 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 07:36:43,431 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 07:36:43,431 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 08:56:03,129 - hr_management.settings - DEBUG - Debug message
+2023-05-09 08:56:03,129 - hr_management.settings - INFO - Info message
+2023-05-09 08:56:03,129 - hr_management.settings - WARNING - Warning message
+2023-05-09 08:56:03,129 - hr_management.settings - ERROR - Error message
+2023-05-09 08:56:03,129 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 08:56:03,130 - hr_management.settings - DEBUG - Debug message
+2023-05-09 08:56:03,130 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 08:56:03,130 - hr_management.settings - INFO - Info message
+2023-05-09 08:56:03,130 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 08:56:03,130 - hr_management.settings - WARNING - Warning message
+2023-05-09 08:56:03,130 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 08:56:03,130 - hr_management.settings - ERROR - Error message
+2023-05-09 08:56:03,130 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 08:56:03,130 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 08:56:03,130 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:00:02,849 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:00:02,849 - hr_management.settings - INFO - Info message
+2023-05-09 09:00:02,849 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:00:02,849 - hr_management.settings - ERROR - Error message
+2023-05-09 09:00:02,849 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:00:02,849 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:00:02,849 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:00:02,850 - hr_management.settings - INFO - Info message
+2023-05-09 09:00:02,850 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:00:02,850 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:00:02,850 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:00:02,850 - hr_management.settings - ERROR - Error message
+2023-05-09 09:00:02,850 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:00:02,850 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:00:02,850 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:05:57,933 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:05:57,933 - hr_management.settings - INFO - Info message
+2023-05-09 09:05:57,933 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:05:57,933 - hr_management.settings - ERROR - Error message
+2023-05-09 09:05:57,933 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:05:57,934 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:05:57,934 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:05:57,934 - hr_management.settings - INFO - Info message
+2023-05-09 09:05:57,934 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:05:57,934 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:05:57,934 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:05:57,934 - hr_management.settings - ERROR - Error message
+2023-05-09 09:05:57,934 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:05:57,934 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:05:57,934 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:14:03,705 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:14:03,705 - hr_management.settings - INFO - Info message
+2023-05-09 09:14:03,705 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:14:03,705 - hr_management.settings - ERROR - Error message
+2023-05-09 09:14:03,705 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:14:03,705 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:14:03,705 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:14:03,705 - hr_management.settings - INFO - Info message
+2023-05-09 09:14:03,705 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:14:03,705 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:14:03,705 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:14:03,705 - hr_management.settings - ERROR - Error message
+2023-05-09 09:14:03,705 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:14:03,706 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:14:03,706 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:16:51,999 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:16:51,999 - hr_management.settings - INFO - Info message
+2023-05-09 09:16:51,999 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:16:51,999 - hr_management.settings - ERROR - Error message
+2023-05-09 09:16:51,999 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:16:51,999 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:16:51,999 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:16:51,999 - hr_management.settings - INFO - Info message
+2023-05-09 09:16:51,999 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:16:51,999 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:16:51,999 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:16:51,999 - hr_management.settings - ERROR - Error message
+2023-05-09 09:16:51,999 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:16:52,000 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:16:52,000 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:17:38,871 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:17:38,871 - hr_management.settings - INFO - Info message
+2023-05-09 09:17:38,871 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:17:38,871 - hr_management.settings - ERROR - Error message
+2023-05-09 09:17:38,871 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:17:38,871 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:17:38,871 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:17:38,871 - hr_management.settings - INFO - Info message
+2023-05-09 09:17:38,871 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:17:38,872 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:17:38,872 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:17:38,872 - hr_management.settings - ERROR - Error message
+2023-05-09 09:17:38,872 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:17:38,872 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:17:38,872 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:18:04,534 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:18:04,534 - hr_management.settings - INFO - Info message
+2023-05-09 09:18:04,534 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:18:04,534 - hr_management.settings - ERROR - Error message
+2023-05-09 09:18:04,534 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:18:04,534 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:18:04,534 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:18:04,534 - hr_management.settings - INFO - Info message
+2023-05-09 09:18:04,534 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:18:04,534 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:18:04,534 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:18:04,534 - hr_management.settings - ERROR - Error message
+2023-05-09 09:18:04,534 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:18:04,534 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:18:04,534 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:18:11,723 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:18:11,723 - hr_management.settings - INFO - Info message
+2023-05-09 09:18:11,723 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:18:11,723 - hr_management.settings - ERROR - Error message
+2023-05-09 09:18:11,723 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:18:11,724 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:18:11,724 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:18:11,724 - hr_management.settings - INFO - Info message
+2023-05-09 09:18:11,724 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:18:11,724 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:18:11,724 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:18:11,724 - hr_management.settings - ERROR - Error message
+2023-05-09 09:18:11,724 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:18:11,724 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:18:11,724 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:20:30,873 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:20:30,874 - hr_management.settings - INFO - Info message
+2023-05-09 09:20:30,874 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:20:30,874 - hr_management.settings - ERROR - Error message
+2023-05-09 09:20:30,874 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:20:30,875 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:20:30,875 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:20:30,875 - hr_management.settings - INFO - Info message
+2023-05-09 09:20:30,875 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:20:30,875 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:20:30,875 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:20:30,875 - hr_management.settings - ERROR - Error message
+2023-05-09 09:20:30,875 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:20:30,875 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:20:30,875 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:20:57,652 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:20:57,652 - hr_management.settings - INFO - Info message
+2023-05-09 09:20:57,652 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:20:57,652 - hr_management.settings - ERROR - Error message
+2023-05-09 09:20:57,652 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:20:57,653 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:20:57,653 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:20:57,653 - hr_management.settings - INFO - Info message
+2023-05-09 09:20:57,653 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:20:57,653 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:20:57,653 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:20:57,653 - hr_management.settings - ERROR - Error message
+2023-05-09 09:20:57,653 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:20:57,653 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:20:57,653 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:21:04,920 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:21:04,920 - hr_management.settings - INFO - Info message
+2023-05-09 09:21:04,920 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:21:04,920 - hr_management.settings - ERROR - Error message
+2023-05-09 09:21:04,920 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:21:04,920 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:21:04,920 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:21:04,920 - hr_management.settings - INFO - Info message
+2023-05-09 09:21:04,920 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:21:04,920 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:21:04,920 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:21:04,920 - hr_management.settings - ERROR - Error message
+2023-05-09 09:21:04,920 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:21:04,920 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:21:04,920 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:21:40,628 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:21:40,628 - hr_management.settings - INFO - Info message
+2023-05-09 09:21:40,628 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:21:40,628 - hr_management.settings - ERROR - Error message
+2023-05-09 09:21:40,628 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:21:40,629 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:21:40,629 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:21:40,629 - hr_management.settings - INFO - Info message
+2023-05-09 09:21:40,629 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:21:40,629 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:21:40,629 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:21:40,629 - hr_management.settings - ERROR - Error message
+2023-05-09 09:21:40,629 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:21:40,629 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:21:40,629 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 15:13:48,354 - hr_management.settings - DEBUG - Debug message
+2023-05-09 15:13:48,355 - hr_management.settings - INFO - Info message
+2023-05-09 15:13:48,355 - hr_management.settings - WARNING - Warning message
+2023-05-09 15:13:48,355 - hr_management.settings - ERROR - Error message
+2023-05-09 15:13:48,355 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 15:13:48,355 - hr_management.settings - DEBUG - Debug message
+2023-05-09 15:13:48,355 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 15:13:48,355 - hr_management.settings - INFO - Info message
+2023-05-09 15:13:48,355 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 15:13:48,355 - hr_management.settings - WARNING - Warning message
+2023-05-09 15:13:48,355 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 15:13:48,355 - hr_management.settings - ERROR - Error message
+2023-05-09 15:13:48,355 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 15:13:48,355 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 15:13:48,355 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
+2023-05-09 09:43:48,652 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:43:48,652 - hr_management.settings - INFO - Info message
+2023-05-09 09:43:48,652 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:43:48,652 - hr_management.settings - ERROR - Error message
+2023-05-09 09:43:48,652 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:43:48,653 - hr_management.settings - DEBUG - Debug message
+2023-05-09 09:43:48,653 - hr_management.settings - DEBUG- settings.py:197 - Debug message
+2023-05-09 09:43:48,653 - hr_management.settings - INFO - Info message
+2023-05-09 09:43:48,653 - hr_management.settings - INFO- settings.py:198 - Info message
+2023-05-09 09:43:48,653 - hr_management.settings - WARNING - Warning message
+2023-05-09 09:43:48,653 - hr_management.settings - WARNING- settings.py:199 - Warning message
+2023-05-09 09:43:48,653 - hr_management.settings - ERROR - Error message
+2023-05-09 09:43:48,653 - hr_management.settings - ERROR- settings.py:200 - Error message
+2023-05-09 09:43:48,653 - hr_management.settings - CRITICAL - Critical message
+2023-05-09 09:43:48,653 - hr_management.settings - CRITICAL- settings.py:201 - Critical message
