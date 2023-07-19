@@ -42,7 +42,6 @@ def employee_apply_leave(request):
         emp_leaves = EmployeeLeave.objects.filter(employee_id = employee).first()
         leave_data = LeaveReportEmployee.objects.filter(employee_id = employee)    
         current_date = datetime.datetime.now().date()
-        # print(date_string)
         if emp_leaves.year_updated != current_date.year:
             if emp_leaves.current_EL > 9 :
                 emp_leaves.current_EL = 9
@@ -55,7 +54,6 @@ def employee_apply_leave(request):
             emp_leaves.CasualLeave = 0.67
                 
         elif emp_leaves.month_updated != current_date.month :
-            print("month change")
             emp_leaves.current_EL = emp_leaves.current_EL + 1.5
             emp_leaves.CasualLeave = emp_leaves.CasualLeave + 0.67
             emp_leaves.month_updated = current_date.month

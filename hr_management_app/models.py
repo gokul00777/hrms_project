@@ -43,7 +43,6 @@ class Employees(models.Model):
         super(Employees, self).save(*args, **kwargs)
 
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    # gender = models.CharField(max_length=255, default='')
     manager = models.CharField(max_length=50)
     department = models.CharField(max_length=50, default='')
     designation = models.CharField(max_length=50, default='')
@@ -170,17 +169,6 @@ class Documents(models.Model):
     family_member3_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
     family_member4_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
     family_member5_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-
-
-# class LeaveReportEmployee(models.Model):
-#     id=models.AutoField(primary_key=True)
-#     employee_id=models.ForeignKey(Employees,on_delete=models.CASCADE)
-#     leave_date=models.DateTimeField(max_length=255)
-#     leave_message=models.TextField()
-#     leave_status=models.IntegerField(default=0)
-#     created_at=models.DateTimeField(auto_now_add=True)
-#     updated_at=models.DateTimeField(auto_now_add=True)
-#     objects=models.Manager()
 
 
 

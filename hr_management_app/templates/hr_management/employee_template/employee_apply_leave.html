@@ -158,6 +158,11 @@
     padding-left: 160px;
 
   }
+
+  .my-form {
+    padding-left: 160px;
+
+  }
 </style>
 {% endblock custom_css %}
 {% block main_content %}
@@ -181,79 +186,79 @@
                 <div class="center">
                   <div class="card-body">
                     <div class="row">
-                      <div class="col-md-5">
+                      <div class="col-md-4">
                         <div class="leave-info">
                           <label>Casual Leaves:</label>
                           <span>{{ CasualLeave | floatformat:2 }}</span>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <div class="leave-info">
                           <label>Earned Leaves:</label>
                           <span>{{ EarnLeave | floatformat:2 }}</span>
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-4">
                         <div class="leave-info">
                           <label>Total Leaves:</label>
                           <span>{{ TotalLeaves | floatformat:2 }}</span>
                         </div>
                       </div>
                     </div>
+                  </div>
 
+                  <div class="row">
+                    <div class="col-md-8">
+                      <div class="form-group">
+                        <label>Leave Type</label>
+                        <select class="form-control" name="leave_type" id="leaveTypeSelect">
+                          <option value="">--Select Leave Type--</option>
+                          <option value="casual">Casual Leave</option>
+                          <option value="Earned">Earned Leave</option>
+                        </select>
+                      </div>
 
-                    <div class="row">
-                      <div class="col-md-8">
-                        <div class="form-group">
-                          <label>Leave Type</label>
-                          <select class="form-control" name="leave_type" id="leaveTypeSelect">
-                            <option>--Select Leave Type--</option>
-                            <option value="casual">Casual Leave</option>
-                            <option value="Earned">Earned Leave</option>
-                          </select>
+                      {% csrf_token %}
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>From:</label>
+                          <input type="date" id="leaveStartDate" name="leave_start_date" class="form-control"
+                            placeholder="From Date">
                         </div>
 
-                        {% csrf_token %}
-
-                        <div class="row">
-                          <div class="col-md-6">
-                            <label>From:</label>
-                            <input type="date" id="leaveStartDate" name="leave_start_date" class="form-control"
-                              placeholder="From Date">
-                          </div>
-
-                          <div class="col-md-6">
-                            <label>To:</label>
-                            <input type="date" id="leaveEndDate" name="leave_end_date" class="form-control"
-                              placeholder="To Date">
-                          </div>
+                        <div class="col-md-6">
+                          <label>To:</label>
+                          <input type="date" id="leaveEndDate" name="leave_end_date" class="form-control"
+                            placeholder="To Date">
                         </div>
+                      </div>
 
-                        <div class="form-group">
-                          <label>Leave Reason</label>
-                          <textarea class="form-control" rows="2" name="leave_msg"></textarea>
-                        </div>
+                      <div class="form-group">
+                        <label>Leave Reason</label>
+                        <textarea class="form-control" rows="2" name="leave_msg"></textarea>
+                      </div>
 
-                        <div class="card-footer">
-                          <button type="submit" class="btn btn-primary btn-block" id="applyLeaveButton">Apply for
-                            Leave</button>
-                        </div>
+                      <div class="card-footer">
+                        <button type="submit" class="btn btn-primary btn-block" id="applyLeaveButton">Apply for
+                          Leave</button>
+                      </div>
 
-                        <div class="form-group">
-                          {% if messages %}
-                          {% for message in messages %}
-                          {% if message.tags == 'error' %}
-                          <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                          {% endif %}
-                          {% if message.tags == 'success' %}
-                          <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                          {% endif %}
-                          {% endfor %}
-                          {% endif %}
-                        </div>
+                      <div class="form-group">
+                        {% if messages %}
+                        {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% endfor %}
+                        {% endif %}
                       </div>
                     </div>
                   </div>
+                </div>
               </form>
             </div>
           </div>
@@ -583,6 +588,12 @@
   if (errorMessage) {
     alert(errorMessage);
   }
+</script>
+<script>
+  // Reload the page after 5 minutes
+  setTimeout(function () {
+    location.reload();
+  }, 60000); // 300,000 milliseconds = 5 minutes
 </script>
 
 {% endblock main_content %}

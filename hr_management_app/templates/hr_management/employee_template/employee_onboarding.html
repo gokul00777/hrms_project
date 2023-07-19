@@ -267,6 +267,41 @@
                                     {{ emp_family_form.relationship3.label_tag }} {{ emp_family_form.relationship3 }}
                                 </div>
                             </div>
+
+                           
+                            <div class="form-row family-member-row" style="display:none;">
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.member4_name.label_tag }} {{ emp_family_form.member4_name }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.merber4_dob.label_tag }} {{ emp_family_form.merber4_dob }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.merber4_aadhar_no.label_tag }} {{ emp_family_form.merber4_aadhar_no}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.relationship4.label_tag }} {{ emp_family_form.relationship4 }}
+                                </div>
+                            </div>
+
+                
+                            
+                            <div class="form-row family-member-row" style="display:none;">
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.member5_name.label_tag }} {{ emp_family_form.member5_name }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.merber5_dob.label_tag }} {{ emp_family_form.merber5_dob }}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.merber5_aadhar_no.label_tag }} {{ emp_family_form.merber5_aadhar_no}}
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_family_form.relationship5.label_tag }} {{ emp_family_form.relationship5 }}
+                                </div>
+                            </div>
+                            
+                             
                             <div>
                                 <button id="add-family-member" class="btn btn-primary" type="button">
                                     <i class="fas fa-plus"></i> Add Family Member
@@ -351,20 +386,34 @@
                                     
                                 </div>
                             </div>
-                            <div class="form-row document-row">
+                            <div class="form-row">
                                 <div class="form-group col-md-6">
                                     {{ emp_document_form.family_member3_aadhar.label_tag }}{{emp_document_form.family_member3_aadhar }}
                                 </div>
+                                                            
+                                <div class="form-group col-md-6 document-row" style="display:none;"> 
+                                    {{ emp_document_form.family_member4_aadhar.label_tag }}{{emp_document_form.family_member4_aadhar }}
+                                </div>
                             </div>
-
-                        <div class="text-center">
+                            <div class="form-row">
+                                <div class="form-group col-md-6 document-row" style="display:none;">
+                                   
+                                    {{ emp_document_form.family_member5_aadhar.label_tag }}{{emp_document_form.family_member5_aadhar }}
+                                    
+                                </div>
+                            </div>
+                          
+                           
+                        <div>
                             <button id="add-document" class="btn btn-primary" type="button">
                                 <i class="fas fa-plus"></i> Add Document
                             </button>
                         </div>
-                        <div class="container">
-                            <button type="submit" class="btn btn-info rounded-pill m-l-2 ">Submit</button>
-                            <button type="submit" class="btn btn-danger rounded-pill m-2">Cancel</button>
+                        <div class="text-center">
+                            <div class="container">
+                                <button type="submit" class="btn btn-info rounded-pill m-l-2 ">Submit</button>
+                                <button type="submit" class="btn btn-danger rounded-pill m-2">Cancel</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -375,75 +424,55 @@
 {% block custom_js %}
 <script>
     $(document).ready(function () {
-        // define the maximum number of family members
-        const MAX_FAMILY_MEMBERS = 5;
 
-        // add event listener to the "Add Family Member" button
-        $('#add-family-member').click(function () {
-            // get the number of existing family members
-            let numFamilyMembers = $('.family-member-row').length;
+        let memberCounter = 2; // Start at 2 since you already have fields for member 4 and member 5
 
-            // check if we reached the maximum number of family members
-            if (numFamilyMembers >= MAX_FAMILY_MEMBERS) {
-                alert('You cannot add more than ' + MAX_FAMILY_MEMBERS + ' family members.');
-                return;
-            }
+        // Function to show/hide the family member fields
+        function toggleFamilyMemberFields() {
+            $('.family-member-row').each(function(index, element) {
+                if (index >= memberCounter) {
+                    $(element).hide();
+                } else {
+                    $(element).show();
+                }
+            });
+        }
 
-            // create a new row with the form inputs
-            let newRowHtml = '<div class="form-row family-member-row">';
-            newRowHtml += '<div class="form-group col-md-6">';
-            newRowHtml += '<label for="member' + (numFamilyMembers + 1) + '_name">Member ' + (numFamilyMembers + 1) + ' Name</label>';
-            newRowHtml += '<input type="text" name="member' + (numFamilyMembers + 1) + '_name" class="form-control">';
-            newRowHtml += '</div>';
-            newRowHtml += '<div class="form-group col-md-6">';
-            newRowHtml += '<label for="member' + (numFamilyMembers + 1) + '_dob">Member ' + (numFamilyMembers + 1) + ' DOB</label>';
-            newRowHtml += '<input type="date" name="member' + (numFamilyMembers + 1) + '_dob" class="form-control">';
-            newRowHtml += '</div>';
-            newRowHtml += '</div>';
-            newRowHtml += '<div class="form-row family-member-row">';
-            newRowHtml += '<div class="form-group col-md-6">';
-            newRowHtml += '<label for="member' + (numFamilyMembers + 1) + '_aadhar_no">Member ' + (numFamilyMembers + 1) + ' Aadhar Number</label>';
-            newRowHtml += '<input type="text" name="member' + (numFamilyMembers + 1) + '_aadhar_no" class="form-control">';
-            newRowHtml += '</div>';
-            newRowHtml += '<div class="form-group col-md-6">';
-            newRowHtml += '<label for="member' + (numFamilyMembers + 1) + '_relationship">Relationship with Member ' + (numFamilyMembers + 1) + '</label>';
-            newRowHtml += '<input type="text" name="member' + (numFamilyMembers + 1) + '_relationship" class="form-control">';
-            newRowHtml += '</div>';
-            newRowHtml += '</div>';
+        // Call the function on page load
+        toggleFamilyMemberFields();
 
-
-            // append the new row to the form
-            $('.family-member-row').last().after(newRowHtml);
+        // Event handler for the "Add Family Member" button
+        $('#add-family-member').on('click', function() {
+            memberCounter++;
+            toggleFamilyMemberFields();
         });
+           
     });
 
 
         $(document).ready(function () {
-            // define the maximum number of documents
-            const MAX_DOCUMENTS = 5;
+            let memberCounter = 2; // Start at 2 since you already have fields for member 4 and member 5
 
-            // add event listener to the "Add Document" button
-            $('#add-document').click(function () {
-                // get the number of existing documents
-                let numDocuments = $('.document-row').length;
+            // Function to show/hide the family member fields
+            function toggleFamilyMemberFields() {
+                $('.document-row').each(function(index, element) {
+                    if (index >= memberCounter) {
+                        $(element).hide();
+                    } else {
+                        $(element).show();
+                    }
+                });
+            }
 
-                // check if we reached the maximum number of documents
-                if (numDocuments >= MAX_DOCUMENTS) {
-                    alert('You cannot add more than ' + MAX_DOCUMENTS + ' documents.');
-                    return;
-                }
+            // Call the function on page load
+            toggleFamilyMemberFields();
 
-                // create a new row with the form inputs
-                let newRowHtml = '<div class="form-row document-row">';
-                newRowHtml += '<div class="form-group col-md-6">';
-                newRowHtml += '<label for="document_type_' + (numDocuments + 1) + '">Document ' + (numDocuments + 1) + ' Type</label>';
-                newRowHtml += '<input type="file" name="document_type_' + (numDocuments + 1) + '" class="form-control">';
-                newRowHtml += '</div>';
-                newRowHtml += '</div>';
-
-                // append the new row to the form
-                $('.document-row').last().after(newRowHtml);
+            // Event handler for the "Add Family Member" button
+            $('#add-document').on('click', function() {
+                memberCounter++;
+                toggleFamilyMemberFields();
             });
+            
         
     });
 </script>
@@ -470,7 +499,4 @@
 </script>
 
 {% endblock custom_js %}
-
-
-
 {% endblock main_content%}

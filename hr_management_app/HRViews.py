@@ -41,37 +41,37 @@ def hr_home(request):
 
 
 
-@login_required(login_url=doLogin)
-@require_user_type(2)
-def hr_apply_leave(request):
-    try:
-        hr_object = HRs.objects.get(admin=request.user)
-    except ObjectDoesNotExist as e:
-        logger.error(f"Could not find HRs object for user {request.user}: {str(e)}")
-        return redirect("show_login")  # or render a custom error page
+# @login_required(login_url=doLogin)
+# @require_user_type(2)
+# def hr_apply_leave(request):
+#     try:
+#         hr_object = HRs.objects.get(admin=request.user.id)
+#     except ObjectDoesNotExist as e:
+#         logger.error(f"Could not find HRs object for user {request.user}: {str(e)}")
+#         return redirect("show_login")  # or render a custom error page
 
-    leave_data = LeaveReportHR.objects.filter(hr_id=hr_object)
-    return render(request, "hr_management/hr/hr_apply_leave.html", {"leave_data": leave_data})
+#     leave_data = LeaveReportHR.objects.filter(hr_id=hr_object)
+#     return render(request, "hr_management/hr/hr_apply_leave.html", {"leave_data": leave_data})
 
 
-@login_required(login_url=doLogin)
-@require_user_type(2)
-def hr_apply_leave_save(request):
-    if request.method == "POST":
-        leave_date = request.POST.get("leave_date")
-        leave_msg = request.POST.get("leave_msg")
-        hr_object = HRs.objects.get(admin=request.user)
+# @login_required(login_url=doLogin)
+# @require_user_type(2)
+# def hr_apply_leave_save(request):
+#     if request.method == "POST":
+#         leave_date = request.POST.get("leave_date")
+#         leave_msg = request.POST.get("leave_msg")
+#         hr_object = HRs.objects.get(admin=request.user)
 
-        leave_report = LeaveReportHR()
-        leave_report.leave_date = leave_date
-        leave_report.leave_message = leave_msg
-        leave_report.hr_id = hr_object  # add the hr_id field
-        leave_report.save()
+#         leave_report = LeaveReportHR()
+#         leave_report.leave_date = leave_date
+#         leave_report.leave_message = leave_msg
+#         leave_report.hr_id = hr_object  # add the hr_id field
+#         leave_report.save()
 
-        messages.success(request, "Leave applied successfully!")
-        return redirect("hr_apply_leave")
-    else:
-        return render(request, "hr_management/hr/hr_apply_leave.html")
+#         messages.success(request, "Leave applied successfully!")
+#         return redirect("hr_apply_leave")
+#     else:
+#         return render(request, "hr_management/hr/hr_apply_leave.html")
 
 
 
@@ -102,6 +102,7 @@ def hr_feedback_save(request):
             messages.error(request, "Failed To Send Feedback")
             return HttpResponseRedirect(("hr_feedback"))
 
+
 @login_required(login_url=doLogin)
 @require_user_type(2)
 def hr_profile(request):
@@ -123,7 +124,7 @@ def hr_profile_save(request):
     else:
         first_name=request.POST.get("first_name")
         last_name=request.POST.get("last_name")
-        address=request.POST.get("address")
+        # address=request.POST.get("address")
         password=request.POST.get("password")
         try:
             customuser=CustomUser.objects.get(id=request.user.id)
@@ -134,7 +135,7 @@ def hr_profile_save(request):
             customuser.save()
 
             hr=HRs.objects.get(admin=customuser.id)
-            hr.address=address
+            # hr.address=address
             hr.save()
             messages.success(request, "Successfully Updated Profile")
             return HttpResponseRedirect(reverse("hr_profile"))

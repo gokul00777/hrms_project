@@ -56,23 +56,10 @@
             <!-- /.col -->
             <div class="col-12">
               <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </div><br><!-- /.col -->
+            <div class="col-12 text-center"><br>
+              <a href="reset_password">Forgot Password</a>
             </div><!-- /.col -->
-            <div class="col-12 text-center">
-              <a href="reset_password">Reset Password</a>
-            </div><!-- /.col -->
-            <div class="col-12 text-center">
-              <a href="{% url 'signup_admin' %}">Admin Signup</a>
-            </div><!-- /.col -->
-            <div class="col-12 text-center">
-              <a href="{% url 'signup_hr' %}">HR Signup</a>
-            </div><!-- /.col -->
-            <div class="col-12 text-center">
-              <a href="{% url 'signup_employee' %}">Employee Signup</a>
-            </div><!-- /.col -->
-            <div class="col-12 text-center">
-              <a href="{% url 'signup_manager' %}">Manager Signup</a>
-            </div><!-- /.col -->
-          </div>
           <div class="row">
             {% if messages %}
             <div class="col-12">

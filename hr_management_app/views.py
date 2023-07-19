@@ -1,19 +1,21 @@
-import datetime
 import json
-import os
 import requests
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.core.files.storage import FileSystemStorage
+from django.contrib.auth import login, logout
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
-
 from hr_management_app.EmailBackEnd import EmailBackEnd
-from django.core.mail import send_mail
-from django.conf import settings
 from .models import *
 from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
+from django.utils.html import strip_tags
 
 
 def ShowLoginPage(request):
@@ -201,70 +203,93 @@ def do_signup_manager(request):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import PasswordResetView
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from hr_management_app.models import CustomUser
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth.views import PasswordResetView
-from django.template.loader import render_to_string
-from django.core.mail import EmailMessage
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
+# views.py
+User = get_user_model()
 
 def reset_password(request):
+    user_not_exist = False  # Initialize the variable
+
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
-            user = CustomUser.objects.get(email=email)
-        except CustomUser.DoesNotExist:
-            messages.error(request, 'No user with the provided email address exists.')
-            return redirect('reset_password')
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user_not_exist = True  # Set the variable to True if the user does not exist
+        else:
+            # Generate the password reset token
+            token = default_token_generator.make_token(user)
 
-        # Generate the password reset token
-        token = default_token_generator.make_token(user)
+            # Generate the password reset link
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = request.build_absolute_uri('/password_reset/{}/{}/'.format(uid, token))
 
-        # Generate the password reset link
-        uid = urlsafe_base64_encode(force_bytes(user.pk))
-        reset_link = request.build_absolute_uri('/password_reset/{}/{}/'.format(uid, token))
+            # Compose the email
+            subject = 'Password Reset'
+            message = render_to_string('hr_management/reset_password_email.html', {
+                'user': user,
+                'reset_link': reset_link
+            })
+            plain_text_message = strip_tags(message)
+            email = EmailMessage(subject, plain_text_message, to=[email])
+            email.send()
+            messages.success(request, 'Password reset email has been sent. Please check your inbox.')
+            return redirect('show_login')
+    return render(request, 'hr_management/reset_password.html', {'user_not_exist': user_not_exist})
 
-        # Compose the email
-        subject = 'Password Reset'
-        message = render_to_string('hr_management/reset_password_email.html', {
-            'user': user,
-            'reset_link': reset_link
-        })
-        email = EmailMessage(subject, message, to=[email])
-        email.send()
 
-        messages.success(request, 'Password reset email has been sent. Please check your inbox.')
+
+def reset_password_confirm(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        messages.error(request, 'The password reset link is invalid or has expired.')
         return redirect('reset_password')
 
-    return render(request, 'hr_management/reset_password.html')
+    if default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            if password == confirm_password:
+                user.set_password(password)
+                user.save()
+                return redirect('do_login')
+            else:
+                messages.error(request, 'Passwords do not match. Please try again.')
+    else:
+        messages.error(request, 'The password reset link is invalid or has expired.')
+        return redirect('reset_password')
+
+    return render(request, 'hr_management/reset_password_confirm.html')
+
+# def resend_reset_email(request):
+#     if request.method == 'POST':
+#         email = request.POST.get('email')
+#         try:  
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             messages.error(request, 'No user with the provided email address exists.')
+#             return redirect('resend_reset_email')
+
+#         # Generate the password reset token
+#         token = default_token_generator.make_token(user)
+
+#         # Generate the password reset link
+#         uid = urlsafe_base64_encode(force_bytes(user.pk))
+#         reset_link = request.build_absolute_uri('/password_reset/{}/{}/'.format(uid, token))
+
+#         # Compose the email
+#         subject = 'Password Reset'
+#         message = render_to_string('hr_management/reset_password_email.html', {
+#             'user': user,
+#             'reset_link': reset_link
+#         })
+#         email = EmailMessage(subject, message, to=[email])
+#         email.send()
+
+#         messages.success(request, 'Password reset email has been resent. Please check your inbox.')
+#         return redirect('resend_reset_email')
+
+#     return render(request, 'hr_management/reset_password_email.html')
+
+
