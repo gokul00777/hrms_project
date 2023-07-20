@@ -52,47 +52,16 @@ def manager_profile_save(request):
             return HttpResponseRedirect(reverse("manager_profile"))
 
 
-
-
-################## imp ############################################
-
-# @login_required(login_url='do_login')
-# @require_user_type(user_type=[1, 4])
-# def manager_leave_view(request):
-#     user = request.user
-#     if user.user_type == '4':
-#         manager_id = user.id
-#         print(manager_id,'user')
-#         # Retrieve the manager instance from CustomUser model
-#         manager = CustomUser.objects.get(id=manager_id, user_type='4')
-#         # Get the employees managed by the manager
-#         print(manager,'klk')
-#         customusers = CustomUser.objects.filter(manager=manager)
-#         print(customusers,'dddd')
-#         for i in customusers:
-#             print(i.id,'iii')
-#         # Get leave requests of the manager's employees
-#             employees = Employees.objects.filter(admin_id=i.id)
-#             for i in employees:
-#                 print(i,'hjjk')
-#                 l = LeaveReportEmployee.objects.filter(employee_id_id=i)
-#                 return render(request, "hr_management/manager_template/employee_leave_view.html", {'leaves':l,"current_time": datetime.now()})
-
-
-
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1, 4])
 def manager_leave_view(request):
     user = request.user
     if user.user_type == '4':
         manager_id = user.id
-        print(manager_id, 'user')
         # Retrieve the manager instance from CustomUser model
         manager = CustomUser.objects.get(id=manager_id, user_type='4')
         # Get the employees managed by the manager
-        print(manager, 'klk')
         customusers = CustomUser.objects.filter(manager=manager)
-        print(customusers, 'dddd')
 
         context = {
             'leaves': [],
@@ -104,12 +73,10 @@ def manager_leave_view(request):
             leave_reports = []
 
             customuser_ids.append(customuser.id)
-            print(customuser.id, 'iii')
 
             employees = Employees.objects.filter(admin_id__in=customuser_ids)
 
             for employee in employees:
-                print(employee, 'hjjk')
                 l = LeaveReportEmployee.objects.filter(employee_id_id=employee)
                 leave_reports.extend(l)
 

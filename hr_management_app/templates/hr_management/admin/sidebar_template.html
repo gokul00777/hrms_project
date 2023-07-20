@@ -67,16 +67,6 @@
               </a>
             </li>
             <li class="nav-item">
-              {% url 'hr_leave_view' as hr_leave_view %}
-              <a href="{% url 'hr_leave_view' %}"
-                class="nav-link {% if request.path == hr_leave_view %} active {% endif %}">
-                <i class="nav-icon fas fa-calendar"></i>
-                <p>
-                  HR Leave
-                </p>
-              </a>
-            </li>
-            <li class="nav-item">
               {% url 'admin_send_notification_hr' as admin_send_notification_hr %}
               <a href="{% url 'admin_send_notification_hr' %}"
                 class="nav-link {% if request.path == admin_send_notification_hr %} active {% endif %}">

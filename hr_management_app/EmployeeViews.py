@@ -455,9 +455,8 @@ def employee_fcmtoken_save(request):
 @require_user_type(user_type=3)
 @login_required(login_url='do_login')
 def employee_all_notification(request):
-    employee_id = request.user.id
-    notifications = NotificationEmployee.objects.filter(employee_id=employee_id)
-    print(notifications, 'nnnn')
+    employee_id =Employees.objects.get(admin=request.user.id)
+    notifications = NotificationEmployee.objects.filter(employee_id=employee_id.id)
     return render(request, "hr_management/employee_template/all_notification.html", {"notifications": notifications})
 
 

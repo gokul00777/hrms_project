@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ChoiceField
 from .models import CustomUser
-
+from django.core.exceptions import ValidationError
 from hr_management_app.models import *
 class ChoiceNoValidation(ChoiceField):
     def validate(self, value):
@@ -75,7 +75,13 @@ class EmployeeOnboardingForm(forms.ModelForm):
         }
 
 
+    # def clean_contact_no(self):
+    #     contact_no = self.cleaned_data.get('contact_no')
 
+    #     if contact_no and len(contact_no) != 10:
+    #         raise forms.ValidationError("Contact number must be 10 digits long.")
+
+    #     return contact_no
 
 class EmployeeAddressDetailsFrom(forms.ModelForm):
     class Meta:

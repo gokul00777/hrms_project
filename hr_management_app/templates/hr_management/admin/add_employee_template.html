@@ -2,9 +2,34 @@
 {% block page_title %}
 Add Employee
 {% endblock page_title %}
+{% block custom_css %}
+<style>
+  .custom-error {
+    max-width: 300px;
+    /* Adjust the width to your desired value */
+    margin: 0 auto;
+    /* Add this line to center the element */
+    text-align: center;
+    /* Add this line to center the text inside the element */
+  }
+</style>
+
+{% endblock custom_css %}
 {% block main_content %}
 <!-- Main content -->
 <section class="content">
+  <div class="form-group">
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'error' %}
+    <div id="error-message" class="alert alert-danger custom-error" style="margin-top:10px">{{ message }}</div>
+    {% endif %}
+    {% if message.tags == 'success' %}
+    <div id="success-message" class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+  </div>
   <div class="container-fluid" style="width: 900px;">
     <div class="row">
       <div class="col-md-12">
@@ -58,33 +83,19 @@ Add Employee
               <div class="row">
                 <div class="form-group col-md-6">
                   <label>Designation</label>
-                  <input type="text" class="form-control" placeholder="designation" name="designation" id="id_designation"
-                    autocomplete="off">
+                  <input type="text" class="form-control" placeholder="designation" name="designation"
+                    id="id_designation" autocomplete="off">
                 </div>
                 <div class="form-group col-md-6">
                   <label>Manager</label>
                   <select name="manager" class="form-control">
                     <option value="">Select Manager</option>
                     {% for manager in manager %}
-                        <option value="{{ manager }}">{{ manager }}</option>
+                    <option value="{{ manager }}">{{ manager }}</option>
                     {% endfor %}
-                </select>
+                  </select>
                 </div>
               </div>
-              
-              <div class="form-group">
-                {% if messages %}
-                {% for message in messages %}
-                {% if message.tags == 'error' %}
-                <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
-                {% endif %}
-                {% if message.tags == 'success' %}
-                <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
-                {% endif %}
-                {% endfor %}
-                {% endif %}
-              </div>
-
             </div>
             <!-- /.card-body -->
 
@@ -163,6 +174,21 @@ Add Employee
 
     });
 
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(function () {
+      var errorMessage = document.getElementById("error-message");
+      var successMessage = document.getElementById("success-message");
+
+      if (errorMessage) {
+        errorMessage.style.display = "none";
+      }
+      if (successMessage) {
+        successMessage.style.display = "none";
+      }
+    }, 1000); // 30 seconds
   });
 </script>
 {% endblock custom_js %}

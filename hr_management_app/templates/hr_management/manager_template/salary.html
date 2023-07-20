@@ -9,73 +9,6 @@
 
 {% block custom_css %}
 
-@require_user_type(user_type=[3,4])
-@login_required(login_url='do_login')
-def employee_salary_view(request):
-    employee = get_object_or_404(Employees, admin=request.user)
-    salary_slips = SalarySlip.objects.filter(employee_id=employee)
-    if not salary_slips:
-            if request.user.user_type == '3':
-                return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
-            else:
-                return render(request,'hr_management/manager_template/salary_slip_not_generated.html')
-
-    unique_months = set()
-    unique_years = set()
-    for salary in salary_slips:
-        unique_months.add(salary.month)
-        unique_years.add(salary.year)
-    if request.method == 'POST':
-        selected_month = request.POST.get('month')
-        selected_year = request.POST.get('year')
-        if selected_month:
-            salary_slips = salary_slips.filter(month=selected_month)
-        if selected_year:
-            salary_slips = salary_slips.filter(year=selected_year)
-        selected_salary_slip = salary_slips.first()
- 
-        if not selected_salary_slip:
-            return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
-
-        month_short = selected_salary_slip.month[0:3]
-        year_short = selected_salary_slip.year[2:4]
-        number2word = num2words(selected_salary_slip.net_salary)
-        capitalized_word = number2word.title()
-        bank_details = BankDetails.objects.filter(employee=employee).first()
-        bank_name = bank_details.bank_name if bank_details else None
-        account_number = bank_details.account_number if bank_details else None
-        onboarding_data = Employee_Onboarding.objects.filter(employee_id=employee)
-        if request.user.user_type == '3':
-            return render(request, "hr_management/employee_template/salary.html", {
-                "salary_slips": salary_slips,
-                "salary_slip": selected_salary_slip,
-                "selected_salary_slip": selected_salary_slip,
-                "employee": employee,
-                "onboarding_data": onboarding_data,
-                "capitalized_word": capitalized_word,
-                "account_number": account_number,
-                "bank_name": bank_name,
-                "month_short": month_short,
-                "year_short": year_short
-            })
-        else:
-                return render(request, "hr_management/manager_template/salary.html", {
-                "salary_slips": salary_slips,
-                "salary_slip": selected_salary_slip,
-                "selected_salary_slip": selected_salary_slip,
-                "employee": employee,
-                "onboarding_data": onboarding_data,
-                "capitalized_word": capitalized_word,
-                "account_number": account_number,
-                "bank_name": bank_name,
-                "month_short": month_short,
-                "year_short": year_short
-            })
-    if request.user.user_type == '3':
-        return render(request, "hr_management/employee_template/salary.html",{'unique_months':unique_months,'unique_years':unique_years})
-    else:
-        return render(request, "hr_management/manager_template/salary.html",{'unique_months':unique_months,'unique_years':unique_years})
-
 <style>
     #border {
         border: 2px solid rgba(0, 0, 0, 0.836);
@@ -429,9 +362,6 @@ def employee_salary_view(request):
     </div>
 </div>
 {% endif %}
-
-
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 <script>
     document.getElementById('download-btn').addEventListener('click', function () {
@@ -446,6 +376,9 @@ def employee_salary_view(request):
         html2pdf().from(element).set(opt).save();
     });
 </script>
+
+
+
 
 {% block footer %}
 {% endblock footer %}

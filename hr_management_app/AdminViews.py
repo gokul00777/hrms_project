@@ -215,12 +215,17 @@ def manage_employee(request):
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def add_manager(request):
-    manager = CustomUser.objects.filter(Q(user_type=4) | Q(user_type=1))
-    if request.user.user_type =='2': 
-        return render(request,"hr_management/hr/add_manager_template.html",{"manager":manager})
-    else:
-        return render(request,"hr_management/admin/add_manager_template.html",{"manager":manager})
-      
+    try:
+        manager = CustomUser.objects.filter(Q(user_type=4) | Q(user_type=1))
+        if request.user.user_type =='2': 
+            return render(request,"hr_management/hr/add_manager_template.html",{"manager":manager})
+        else:
+            return render(request,"hr_management/admin/add_manager_template.html",{"manager":manager})
+    except:
+        messages.error(request,"Failed to Add Manager")
+        return HttpResponseRedirect(reverse("add_manager"))
+
+
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
@@ -269,8 +274,7 @@ def add_manager_save(request):
             
             messages.success(request,"Successfully Added Manager")
             return HttpResponseRedirect(reverse("add_manager"))
-        except BaseException as a:
-            return a
+        except:
             messages.error(request,"Failed to Add Manager")
             return HttpResponseRedirect(reverse("add_manager"))
 
@@ -308,7 +312,6 @@ def edit_hr_save(request):
             user.email=email
             user.username=username
             user.manager = manager
-            print(user.manager)
             user.save()
 
             hr_model=HRs.objects.get(admin=hr_id)
@@ -346,7 +349,6 @@ def edit_employee_save(request):
         username=request.POST.get("username")
         manager= request.POST.get('manager')
         designation = request.POST.get("designation")
-        print(designation,'ddkklk')
         department = request.POST.get("department")
 
         try:
@@ -357,13 +359,9 @@ def edit_employee_save(request):
             user.username=username
             user.manager = manager
             user.save()
-            print(user,'dd')
             employee_model=Employees.objects.get(admin=employee_id)
             employee_model.designation=designation
             employee_model.department=department
-            print(designation,'de')
-            print(department,'lde')
-
             employee_model.save()
             messages.success(request,"Successfully Edited Employee")
             return redirect('manage_employee')
@@ -375,26 +373,35 @@ def edit_employee_save(request):
 @require_user_type(user_type=[1,2])
 def delete_employee(request, employee_id):
     user = CustomUser.objects.get(id=employee_id)
-    template_name = 'hr_management/admin/delete_employee_template.html'
     context ={'user':user}
     if request.method == 'POST':
          user.delete()
          messages.success(request, "Employee Deleted Successfully")
          return HttpResponseRedirect(reverse('manage_employee'))
-    return render(request,template_name,context)
+    if request.user.user_type == '2':
+        return render(request,'hr_management/hr/delete_employee_template.html',context)
+    else:
+        return render(request,'hr_management/admin/delete_employee_template.html',context)
+
+
 
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def delete_hr(request, hr_id):
-    user = CustomUser.objects.get(id=hr_id)
-    template_name = 'hr_management/hr/delete_hr_template.html'
-    context ={'user':user}
-    if request.method == 'POST':
-         user.delete()
-         messages.success(request, "HR Deleted Successfully")
-         return HttpResponseRedirect(reverse('manage_hr'))
-    return render(request,template_name,context)
+    try:
+        user = CustomUser.objects.get(id=hr_id)
+        context ={'user':user}
+        if request.method == 'POST':
+            user.delete()
+            messages.success(request, "HR Deleted Successfully")
+            return HttpResponseRedirect(reverse('manage_hr'))
+        if request.user.user_type == '1':
+            return render(request,'hr_management/admin/delete_hr_template.html',context)
+        else:
+            return render(request,'hr_management/hr/delete_hr_template.html',context)
+    except BaseException as a:
+        print(a)
 
 
 @login_required(login_url='do_login')
@@ -608,17 +615,13 @@ def employee_approve_leave(request, leave_id):
 
     if leave.leave_type == 'Earned':
         employee_leave.EarnLeave_used += num_days
-        print("employee_leave.current_EL",employee_leave.current_EL)
         
         if employee_leave.current_EL < num_days:
             abc = num_days - employee_leave.current_EL
             employee_leave.current_EL = 0
             employee_leave.Prev_CFEL = employee_leave.Prev_CFEL - abc 
-            print("less than current_EL",employee_leave.Prev_CFEL)
         else:
-            print("Before current_EL",employee_leave.current_EL)
             employee_leave.current_EL = employee_leave.current_EL - num_days 
-            print("After current_EL",employee_leave.current_EL)
 
         
         employee_leave.EarnLeave = employee_leave.Prev_CFEL + employee_leave.current_EL
@@ -768,7 +771,6 @@ def send_employee_notification(request):
     data=requests.post(url,data=json.dumps(body),headers=headers)
     notification=NotificationEmployee(employee_id=employee,message=message)
     notification.save()
-    print(data.text)
     return HttpResponse("True")
 
 
@@ -795,7 +797,6 @@ def send_hr_notification(request):
     data=requests.post(url,data=json.dumps(body),headers=headers)
     notification=NotificationHRs(hr_id=hr,message=message)
     notification.save()
-    print(data.text)
     return HttpResponse("True")
 
 ###################################### TO GENERATE PDF ###################################
@@ -803,110 +804,114 @@ import weasyprint
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def generate_offer_letter(request):
-    if request.method == 'POST':
-        offer_letter_sended = OfferLetter_Sended()
-        offer_letter_sended.ctc = float(request.POST.get('ctc'))
-        offer_letter_sended.name = request.POST.get('name')
-        offer_letter_sended.email = request.POST.get('email')
-        offer_letter_sended.offer_release_date = request.POST.get('offer_release_date')
-        offer_letter_sended.joining_date = request.POST.get('joining_date')
-        offer_letter_sended.reporting = request.POST.get('reporting')
-        offer_letter_sended.address = request.POST.get('address')
-        offer_letter_sended.designation = request.POST.get('designation')
-        offer_letter_sended.job_grade = request.POST.get('job_grade')
-        offer_letter_sended.hr_name = request.POST.get('hr_name')
-        offer_letter_sended.offer_accept_date = request.POST.get('offer_accept_date')
-        offer_letter_sended.mobile_no = request.POST.get('mobile_no')
+    try:
+        if request.method == 'POST':
+            offer_letter_sended = OfferLetter_Sended()
+            offer_letter_sended.ctc = float(request.POST.get('ctc'))
+            offer_letter_sended.name = request.POST.get('name')
+            offer_letter_sended.email = request.POST.get('email')
+            offer_letter_sended.offer_release_date = request.POST.get('offer_release_date')
+            offer_letter_sended.joining_date = request.POST.get('joining_date')
+            offer_letter_sended.reporting = request.POST.get('reporting')
+            offer_letter_sended.address = request.POST.get('address')
+            offer_letter_sended.designation = request.POST.get('designation')
+            offer_letter_sended.job_grade = request.POST.get('job_grade')
+            offer_letter_sended.hr_name = request.POST.get('hr_name')
+            offer_letter_sended.offer_accept_date = request.POST.get('offer_accept_date')
+            offer_letter_sended.mobile_no = request.POST.get('mobile_no')
 
-        formatted_date = datetime.strptime(offer_letter_sended.offer_release_date, '%Y-%m-%d').strftime('%d%m%Y')
+            formatted_date = datetime.strptime(offer_letter_sended.offer_release_date, '%Y-%m-%d').strftime('%d%m%Y')
 
-        name = request.POST.get('name') 
-        offer_release_date = request.POST.get('offer_release_date')
-        amount = offer_letter_sended.ctc
-        amount_words = num2words(amount)
-        joining_date = request.POST.get('joining_date')
-        time = request.POST.get('time')
-        address = request.POST.get('address')
-        designation = request.POST.get('designation')
-        job_grade = request.POST.get('job_grade')
-        reporting = request.POST.get('reporting')
-        hr_name = request.POST.get('hr_name')
-        offer_accept_date = request.POST.get('offer_accept_date')
-        ctc = offer_letter_sended.ctc
-
-
-        insurance_premiums = float(11000)
-        total_variable_pay = ctc * 0.10
-        total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-        basic_pay = total_fixed_pay * 0.40
-        employer_pf_contribution = 0.13 * basic_pay
-        hra = 0.50 * basic_pay
-        flexible_components_tfp = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-        total_cost_to_company = total_fixed_pay + total_variable_pay + insurance_premiums
+            name = request.POST.get('name') 
+            offer_release_date = request.POST.get('offer_release_date')
+            amount = offer_letter_sended.ctc
+            amount_words = num2words(amount)
+            joining_date = request.POST.get('joining_date')
+            time = request.POST.get('time')
+            address = request.POST.get('address')
+            designation = request.POST.get('designation')
+            job_grade = request.POST.get('job_grade')
+            reporting = request.POST.get('reporting')
+            hr_name = request.POST.get('hr_name')
+            offer_accept_date = request.POST.get('offer_accept_date')
+            ctc = offer_letter_sended.ctc
 
 
-#         # Calculate ESIC and insurance_premiums values
-        if ctc <=  252000:
-            esic = 0.0325 * ctc
-            insurance_premiums = 0
-        else:
-            esic = 0
-            insurance_premiums = 11000.0
-        
-        offer_letter = OfferLetter(
-            basic_pay=basic_pay,
-            hra=hra,
-            total_fixed_pay=total_fixed_pay,
-            total_variable_pay=total_variable_pay,
-            insurance_premiums=insurance_premiums,
-            total_cost_to_company=total_cost_to_company,
-            employer_pf_contribution=employer_pf_contribution,
-            flexible_components_tfp=flexible_components_tfp,
-            esic = esic
-        )
+            insurance_premiums = float(11000)
+            total_variable_pay = ctc * 0.10
+            total_fixed_pay = ctc - total_variable_pay - insurance_premiums
+            basic_pay = total_fixed_pay * 0.40
+            employer_pf_contribution = 0.13 * basic_pay
+            hra = 0.50 * basic_pay
+            flexible_components_tfp = total_fixed_pay - basic_pay - hra - employer_pf_contribution
+            total_cost_to_company = total_fixed_pay + total_variable_pay + insurance_premiums
 
-        offer_letter.save()
-        offer_letter_sended.offerletter_id = offer_letter.id
-        offer_letter_id = offer_letter_sended.offerletter_id
-        offer_letter_sended.save()
 
+    #         # Calculate ESIC and insurance_premiums values
+            if ctc <=  252000:
+                esic = 0.0325 * ctc
+                insurance_premiums = 0
+            else:
+                esic = 0
+                insurance_premiums = 11000.0
+            
+            offer_letter = OfferLetter(
+                basic_pay=basic_pay,
+                hra=hra,
+                total_fixed_pay=total_fixed_pay,
+                total_variable_pay=total_variable_pay,
+                insurance_premiums=insurance_premiums,
+                total_cost_to_company=total_cost_to_company,
+                employer_pf_contribution=employer_pf_contribution,
+                flexible_components_tfp=flexible_components_tfp,
+                esic = esic
+            )
+
+            offer_letter.save()
+            offer_letter_sended.offerletter_id = offer_letter.id
+            offer_letter_id = offer_letter_sended.offerletter_id
+            offer_letter_sended.save()
+
+            if request.user.user_type == '1':
+            # Render offer letter HTML template
+                offer_letter_html = render_to_string('hr_management/admin/offer_letter.html', {'offer_letter': offer_letter, \
+                                                    'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
+                                                    'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
+                                                    'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
+                                                    'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
+
+                # Create a PDF file from HTML template
+                pdf_file = BytesIO()
+                weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
+
+                # Create and return the PDF response
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
+                response.write(pdf_file.getvalue())
+                return response
+            else:
+                offer_letter_html = render_to_string('hr_management/hr/offer_letter.html', {'offer_letter': offer_letter, \
+                                                    'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
+                                                    'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
+                                                    'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
+                                                    'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
+
+                # Create a PDF file from HTML template
+                pdf_file = BytesIO()
+                weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
+
+                # Create and return the PDF response
+                response = HttpResponse(content_type='application/pdf')
+                response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
+                response.write(pdf_file.getvalue())
+                return response
         if request.user.user_type == '1':
-        # Render offer letter HTML template
-            offer_letter_html = render_to_string('hr_management/admin/offer_letter.html', {'offer_letter': offer_letter, \
-                                                'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
-                                                'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
-                                                'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
-                                                'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
-
-            # Create a PDF file from HTML template
-            pdf_file = BytesIO()
-            weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
-
-            # Create and return the PDF response
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
-            response.write(pdf_file.getvalue())
-            return response
+            return render(request, 'hr_management/admin/generate_offer_letter.html')
         else:
-            offer_letter_html = render_to_string('hr_management/hr/offer_letter.html', {'offer_letter': offer_letter, \
-                                                'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
-                                                'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
-                                                'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
-                                                'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
-
-            # Create a PDF file from HTML template
-            pdf_file = BytesIO()
-            weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
-
-            # Create and return the PDF response
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
-            response.write(pdf_file.getvalue())
-            return response
-    if request.user.user_type == '1':
-        return render(request, 'hr_management/admin/generate_offer_letter.html')
-    else:
-        return render(request, 'hr_management/hr/generate_offer_letter.html')
+            return render(request, 'hr_management/hr/generate_offer_letter.html')
+    except:
+        messages.error(request,"Please put requited details")
+        return HttpResponseRedirect(reverse("generate_offer_letter"))
 
 
 
@@ -923,798 +928,6 @@ def offer_letter_sended_history(request):
         return render(request, 'hr_management/admin/offer_letter_sended_history.html', {'offer_letters_sended': offer_letters_sended})
     else:
         return render(request, 'hr_management/hr/offer_letter_sended_history.html', {'offer_letters_sended': offer_letters_sended})
-
-
-#############################Offer Letter send to employee email#####################################################
-
-# @login_required(login_url='do_login')
-# def generate_offer_letter(request):
-#     if request.method == 'POST':
-#         offer_letter_sended = OfferLetter_Sended()
-#         offer_letter_sended.ctc = float(request.POST.get('ctc'))
-#         offer_letter_sended.name = request.POST.get('name')
-#         # offer_letter_sended.date = request.POST.get('date')
-#         offer_letter_sended.offer_release_date = request.POST.get('offer_release_date')
-#         offer_letter_sended.joining_date = request.POST.get('joining_date')
-#         offer_letter_sended.reporting = request.POST.get('reporting')
-#         offer_letter_sended.address = request.POST.get('address')
-#         offer_letter_sended.designation = request.POST.get('designation')
-#         offer_letter_sended.job_grade = request.POST.get('job_grade')
-#         offer_letter_sended.hr_name = request.POST.get('hr_name')
-#         offer_letter_sended.offer_accept_date = request.POST.get('offer_accept_date')
-#         offer_letter_sended.email = request.POST.get('email')
-#         offer_letter_sended.mobile_no = request.POST.get('mobile_no')
-#         formatted_date = datetime.datetime.strptime(offer_letter_sended.offer_release_date, '%Y-%m-%d').strftime('%d%m%Y')
-
-#         name = offer_letter_sended.name
-#         offer_release_date = offer_letter_sended.offer_release_date
-#         amount = offer_letter_sended.ctc
-#         amount_words = num2words(amount)
-#         joining_date = offer_letter_sended.joining_date
-#         reporting =offer_letter_sended.reporting
-#         time = request.POST.get('time')
-#         address = offer_letter_sended.address
-#         ctc = offer_letter_sended.ctc
-#         designation = offer_letter_sended.designation 
-#         job_grade = offer_letter_sended.job_grade
-#         hr_name = offer_letter_sended.hr_name
-#         offer_accept_date = offer_letter_sended.offer_accept_date
-#         email = offer_letter_sended.email
-
-#         insurance_premiums = float(11000)
-#         total_variable_pay = ctc * 0.10
-#         total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-#         basic_pay = total_fixed_pay * 0.40
-#         employer_pf_contribution = 0.13 * basic_pay
-#         hra = 0.50 * basic_pay
-#         flexible_components_tfp = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-#         total_cost_to_company = total_fixed_pay + total_variable_pay + insurance_premiums
-
-
-# #         # Calculate ESIC and insurance_premiums values
-#         if ctc <=  252000:
-#             esic = 0.0325 * ctc
-#             insurance_premiums = 0
-#         else:
-#             esic = 0
-#             insurance_premiums = 11000.0
-
-#         offer_letter = OfferLetter(
-#             basic_pay=basic_pay,
-#             hra=hra,
-#             total_fixed_pay=total_fixed_pay,
-#             total_variable_pay=total_variable_pay,
-#             insurance_premiums=insurance_premiums,
-#             total_cost_to_company=total_cost_to_company,
-#             employer_pf_contribution=employer_pf_contribution,
-#             flexible_components_tfp=flexible_components_tfp,
-#             esic = esic
-#         )
-#         offer_letter_id = offer_letter_sended.id
-#         offer_letter.save()
-
-#         # Render offer letter HTML template
-#         offer_letter_html = render_to_string('hr_management/admin/offer_letter.html', {'offer_letter': offer_letter, \
-#                                             'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
-#                                             'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
-#                                             'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
-#                                             'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
-
-#         # Create a PDF file from HTML template
-#         pdf_file = BytesIO()
-#         weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
-
-#         email = EmailMessage(
-#             'Offer Letter',
-#             'Please find the attached offer letter.',
-#             'Put_email_here',
-#             [email],
-#             # reply_to=['sender@example.com'],
-#         )
-#         email.attach(f'{name}_offer_letter.pdf', pdf_file.getvalue(), 'application/pdf')
-
-#         # Send the email
-#         email.send()
-#         return render(request,'hr_management/admin/popup.html')
-
-#     return render(request, 'hr_management/admin/generate_offer_letter.html')
-
-##################################This is correct code of salary pdf generate##########################################
-
-# from django.shortcuts import render, get_object_or_404
-# from decimal import Decimal
-# from num2words import num2words
-# from django.http import HttpResponse
-# from io import BytesIO
-# from weasyprint import HTML
-# from datetime import date
-# import calendar
-# from .models import Employee_Onboarding, BankDetails, SalarySlip
-
-
-# def employee_salary(request):
-#     employees = Employee_Onboarding.objects.all()
-
-#     if request.method == 'POST':
-#         employee_id = request.POST.get('employee_id')
-#         ctc = float(request.POST.get('ctc'))
-#         days_payable = request.POST.get('days')
-#         days_paid = request.POST.get('paid')
-#         month = request.POST.get('month_name')
-#         year = request.POST.get('year')
-#         address = request.POST.get('address')
-
-#         month_short = month[0:3]
-#         year_short = year[2:4]
-
-#         if employee_id:
-#             # Retrieve onboarding data based on employee ID
-#             onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
-#             bank_details = BankDetails.objects.get(employee=onboarding_data.employee)
-#             employee = onboarding_data.employee
-
-#             # Retrieve the emp_id from the associated Employees object
-#             emp_id = employee.emp_id
-#             emp_department = employee.department
-#             emp_designation = employee.designation
-
-#             # Access specific fields from the onboarding data
-#             first_name = onboarding_data.first_name
-#             last_name = onboarding_data.last_name
-#             contact_no = onboarding_data.contact_no
-#             date_of_joining = onboarding_data.date_of_joining
-#             dob = onboarding_data.dob
-#             pancard_no = onboarding_data.pancard_no
-#             pf_uan_no = onboarding_data.pf_uan_no
-#             account_number = bank_details.account_number
-#             bank_name = bank_details.bank_name
-
-#             # Calculate ESIC and insurance_premiums values
-#             if ctc <= 252000:
-#                 esic = 0.0325 * ctc
-#                 insurance_premiums = 0
-#             else:
-#                 esic = 0
-#                 insurance_premiums = 11000.0
-
-
-
-#             variable_component = (ctc * 0.10)
-#             # Calculate salary components
-#             total_variable_pay = ctc * 0.10
-#             total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-#             basic_pay = total_fixed_pay * 0.40
-#             employer_pf_contribution = 0.13 * basic_pay
-#             hra = 0.50 * basic_pay
-#             total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-#             conveyance_allowance = 1600/ int(days_payable) * int(days_paid)
-#             professional_tax = 200
-#             income_tax = 0
-            
-
-
-
-#             # Calculate salary components for 5 working days
-#             total_variable_pay = ctc * 0.10
-#             total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid)/int(days_payable)
-#             basic_salary = (total_fixed_pay * 0.40)
-#             variable_component = (ctc * 0.10) / 12 * int(days_paid)/int(days_payable)
-#             hra = 0.50 * basic_salary
-#             provident_fund = 0.12 * basic_salary
-#             flexible_component = (total_flexible_component / 12) * int(days_paid)/int(days_payable) - conveyance_allowance
-#             gross_salary = hra + basic_salary + conveyance_allowance + flexible_component + variable_component
-#             flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
-#             other_deductions = 0
-#             total_deductions = provident_fund + professional_tax + income_tax + other_deductions
-#             net_salary = Decimal(gross_salary) - Decimal(total_deductions)
-#             int_net_salary = int(net_salary)
-#             words = num2words(int_net_salary).capitalize()
-
-#             # Employee Leave count
-#             leave_count = LeaveReportEmployee.objects.filter(employee_id=employee.id, leave_status=1).count()
-#             # days_paid = int(days_paid) - leave_count
-#             # Employee Leave count
-#             # leave_count = LeaveReportEmployee.objects.filter(employee_id=employee.id, leave_status=1).count()
-#             # days_paid = int(days_payable) - leave_count
-
-#              # Calculate YTD salary and other YTD fields
-#             current_month = date.today().month
-#             current_year = date.today().year
-#             ytd_net_salary = 0
-#             ytd_basic_salary = 0
-#             ytd_hra = 0
-#             ytd_conveyance_allowance = 0
-#             ytd_flexible_component = 0
-#             ytd_variable_component = 0
-#             ytd_provident_fund = 0
-#             ytd_esic = 0
-#             ytd_professional_tax = 0
-#             ytd_income_tax = 0
-#             ytd_other_deductions = 0
-#             ytd_total_deductions = 0
-            
-
-
-#             try:
-#                 # prev_salary_slips = SalarySlip.objects.filter(year=year)
-
-#                 prev_salary_slips = SalarySlip.objects.filter(year=year, month__lte=calendar.month_name[current_month])
-#                 ytd_net_salary = sum(salary_slip.net_salary for salary_slip in prev_salary_slips)
-#                 ytd_basic_salary = sum(salary_slip.basic_salary for salary_slip in prev_salary_slips)
-#                 ytd_hra = sum(salary_slip.hra for salary_slip in prev_salary_slips)
-#                 ytd_conveyance_allowance = sum(salary_slip.conveyance_allowance for salary_slip in prev_salary_slips)
-#                 ytd_flexible_component = sum(salary_slip.flexible_component for salary_slip in prev_salary_slips)
-#                 ytd_variable_component = sum(salary_slip.variable_component for salary_slip in prev_salary_slips)
-#                 ytd_gross_salary = sum(salary_slip.gross_salary for salary_slip in prev_salary_slips)
-#                 ytd_provident_fund = sum(salary_slip.provident_fund for salary_slip in prev_salary_slips)
-#                 ytd_esic = sum(salary_slip.esic for salary_slip in prev_salary_slips)
-#                 ytd_professional_tax = sum(salary_slip.professional_tax for salary_slip in prev_salary_slips)
-#                 ytd_income_tax =  sum(salary_slip.income_tax for salary_slip in prev_salary_slips)
-#                 ytd_other_deductions =  sum(salary_slip.other_deductions for salary_slip in prev_salary_slips)
-#                 ytd_total_deductions =  sum(salary_slip.total_deductions for salary_slip in prev_salary_slips)
-                
-#             except SalarySlip.DoesNotExist:
-#                 pass
-
-#             ytd_net_salary +=Decimal(net_salary)
-#             ytd_basic_salary += Decimal(basic_salary)
-#             ytd_hra += Decimal(hra)
-#             ytd_conveyance_allowance += Decimal(conveyance_allowance)
-#             ytd_flexible_component += Decimal(flexible_component) 
-#             ytd_variable_component += Decimal(variable_component)
-#             ytd_gross_salary += Decimal(gross_salary)
-#             ytd_provident_fund += Decimal(provident_fund)
-#             ytd_esic += Decimal(esic)
-#             ytd_professional_tax += Decimal(professional_tax)
-#             ytd_income_tax += Decimal(income_tax)
-#             ytd_other_deductions += Decimal(other_deductions)
-#             ytd_total_deductions += Decimal(total_deductions)
-
-
-#             salary_slip = SalarySlip(
-#                 month=month,
-#                 year=year,
-#                 days_payable=days_payable,
-#                 ctc=ctc,
-#                 esic=esic,
-#                 basic_salary=basic_salary,
-#                 hra=hra,
-#                 conveyance_allowance=conveyance_allowance,
-#                 flexible_component=flexible_component,
-#                 variable_component=variable_component,
-#                 provident_fund=provident_fund,
-#                 professional_tax=professional_tax,
-#                 income_tax=income_tax,
-#                 other_deductions=other_deductions,
-#                 gross_salary=gross_salary,
-#                 total_deductions=total_deductions,
-#                 net_salary=net_salary,
-#                 address=address,
-#                 ytd_net_salary=ytd_net_salary,
-#                 ytd_basic_salary=ytd_basic_salary,
-#                 ytd_hra = ytd_hra,
-#                 ytd_conveyance_allowance=ytd_conveyance_allowance,
-#                 ytd_flexible_component = ytd_flexible_component,
-#                 ytd_variable_component = ytd_variable_component,
-#                 ytd_gross_salary  = ytd_gross_salary,
-#                 ytd_esic=ytd_esic,
-#                 ytd_professional_tax = ytd_professional_tax,
-#                 ytd_income_tax = ytd_income_tax,
-#                 ytd_other_deductions = ytd_other_deductions,
-#                 ytd_total_deductions = ytd_total_deductions,
-#                 ytd_provident_fund = ytd_provident_fund
-#             )
-
-#             # salary_slip.calculate_ytd()  # Call calculate_ytd method to update YTD values
-#             salary_slip.save()
-
-#             # Render salary slip HTML template
-#             salary_slip_html = render_to_string('hr_management/admin/salary.html', {
-#                 'salary_slip': salary_slip, 'words': words, 'first_name': first_name, 'last_name': last_name,
-#                 'contact_no': contact_no, 'date_of_joining': date_of_joining, 'dob': dob, 'pancard_no': pancard_no,
-#                 'pf_uan_no': pf_uan_no, 'account_number': account_number, 'bank_name': bank_name, 'emp_id': emp_id,
-#                 'address': address, 'days_paid': days_paid, 'month_short': month_short, 'year_short': year_short,
-#                 'emp_department': emp_department, 'emp_designation': emp_designation
-
-#             })
-
-#             # Create a PDF file from HTML template
-#             pdf_file = BytesIO()
-
-#             weasyprint.HTML(string=salary_slip_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
-
-#             # HTML(string=salary_slip_html).write_pdf(pdf_file)
-
-#             # Create and return the PDF response
-#             response = HttpResponse(content_type='application/pdf')
-#             response['Content-Disposition'] = f'attachment; filename="{first_name} {last_name} Salary_slip.pdf"'
-#             response.write(pdf_file.getvalue())
-#             return response
-
-#     return render(request, 'hr_management/admin/employee_salary.html', {'employees': employees})
-
-
-################################# All Employee Salary slip send to email###############################
-# from datetime import date
-# import calendar
-# from num2words import num2words
-# from decimal import Decimal
-# from django.shortcuts import render, get_object_or_404
-# from .models import Employee_Onboarding, BankDetails, SalarySlip
-# from django.db.models import Q
-# from django.core.mail import EmailMessage
-# import tempfile
-# import os
-# from datetime import date
-# import calendar
-# from num2words import num2words
-# from decimal import Decimal
-# from django.shortcuts import render, get_object_or_404
-# from .models import Employee_Onboarding, BankDetails, SalarySlip
-# from django.db.models import Q
-
-# def employee_salary(request):
-#     employees = Employee_Onboarding.objects.all()
-
-  
-#     if request.method == 'POST':
-#         employee_id = request.POST.get('employee_id')
-#         ctc = float(request.POST.get('ctc'))
-#         days_payable = request.POST.get('days')
-#         days_paid = request.POST.get('paid')
-#         month = request.POST.get('month_name')
-#         year = request.POST.get('year')
-#         address = request.POST.get('address')
-
-#         month_short = month[0:3]
-#         year_short = year[2:4]
-        
-
-#         month_to_number = {
-#             'january': 1,
-#             'february': 2,
-#             'march': 3,
-#             'april': 4,
-#             'may': 5,
-#             'june': 6,
-#             'july': 7,
-#             'august': 8,
-#             'september': 9,
-#             'october': 10,
-#             'november': 11,
-#             'december': 12
-#         }
-
-        
-#         month_number = month_to_number.get(month.lower())
-
-
-#         if employee_id:
-#             # Retrieve onboarding data based on employee ID
-#             onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
-#             bank_details = BankDetails.objects.get(employee=onboarding_data.employee)
-#             employee = onboarding_data.employee
-
-#             # Retrieve the emp_id from the associated Employees object
-#             emp_id = employee.emp_id
-#             emp_department = employee.department
-#             emp_designation = employee.designation
-
-#             # Access specific fields from the onboarding data
-#             first_name = onboarding_data.first_name
-#             last_name = onboarding_data.last_name
-#             contact_no = onboarding_data.contact_no
-#             date_of_joining = onboarding_data.date_of_joining
-#             dob = onboarding_data.dob
-#             pancard_no = onboarding_data.pancard_no
-#             pf_uan_no = onboarding_data.pf_uan_no
-#             account_number = bank_details.account_number
-#             bank_name = bank_details.bank_name
-
-#             # Calculate ESIC and insurance_premiums values
-#             if ctc <= 252000:
-#                 esic = 0.0325 * ctc
-#                 insurance_premiums = 0
-#             else:
-#                 esic = 0
-#                 insurance_premiums = 11000.0
-
-
-
-#             variable_component = (ctc * 0.10)
-#             # Calculate salary components
-#             total_variable_pay = ctc * 0.10
-#             total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-#             basic_pay = total_fixed_pay * 0.40
-#             employer_pf_contribution = 0.13 * basic_pay
-#             hra = 0.50 * basic_pay
-#             total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-#             conveyance_allowance = 1600/ int(days_payable) * int(days_paid)
-#             professional_tax = 200
-#             income_tax = 0
-            
-
-#             # Calculate salary components for 5 working days
-#             total_variable_pay = ctc * 0.10
-#             total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid)/int(days_payable)
-#             basic_salary = (total_fixed_pay * 0.40)
-#             variable_component = (ctc * 0.10) / 12 * int(days_paid)/int(days_payable)
-#             hra = 0.50 * basic_salary
-#             provident_fund = 0.12 * basic_salary
-#             flexible_component = (total_flexible_component / 12) * int(days_paid)/int(days_payable) - conveyance_allowance
-#             gross_salary = hra + basic_salary + conveyance_allowance + flexible_component + variable_component
-#             flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
-#             other_deductions = 0
-#             total_deductions = provident_fund + professional_tax + income_tax + other_deductions
-#             net_salary = Decimal(gross_salary) - Decimal(total_deductions)
-#             int_net_salary = int(net_salary)
-#             words = num2words(int_net_salary).capitalize()
-
-#             # Employee Leave count
-#             leave_count = LeaveReportEmployee.objects.filter(employee_id=employee.id, leave_status=1).count()
-#             # days_paid = int(days_paid) - leave_count
-#             # Employee Leave count
-#             # leave_count = LeaveReportEmployee.objects.filter(employee_id=employee.id, leave_status=1).count()
-#             # days_paid = int(days_payable) - leave_count
-
-         
-#             # current_month = month_number
-#             # print(current_month)
-
-
-#             ytd_net_salary = 0
-#             ytd_basic_salary = 0
-#             ytd_hra = 0
-#             ytd_conveyance_allowance = 0
-#             ytd_flexible_component = 0
-#             ytd_variable_component = 0
-#             ytd_provident_fund = 0
-#             ytd_esic = 0
-#             ytd_professional_tax = 0
-#             ytd_income_tax = 0
-#             ytd_other_deductions = 0
-#             ytd_total_deductions = 0
-#             ytd_gross_salary = 0 
-
-#             try:
-#                 if month_number <= 3:  # Check if the month is before April
-#                     start_year = int(year) - 1  # Previous financial year
-#                 else:
-#                     start_year = int(year)  # Current financial year
-#                 end_year = start_year + 1
-
-#                 # Define the start and end months of the financial year
-#                 start_month = 4  # April
-#                 end_month = 3  # March
-
-#                 # Calculate the financial year range
-#                 if start_month <= end_month:
-#                     # If the start month is before or the same as the end month, use a single range
-#                     month_range = range(start_month, end_month + 1)
-#                 else:
-#                     # If the start month is after the end month, use two ranges for overlapping years
-#                     month_range = list(range(start_month, 13))  # April to December
-#                     month_range += list(range(1, end_month + 1))  # January to March
-
-#                 # Filter the salary slips based on the financial year range
-#                 prev_salary_slips = SalarySlip.objects.filter(
-#                     year__in=[str(start_year), str(end_year)],
-#                     month__in=[str(month).zfill(2) for month in month_range]
-#                 )
-#                 # Calculate the YTD values
-#                 ytd_net_salary = sum(salary_slip.net_salary for salary_slip in prev_salary_slips)
-#                 ytd_basic_salary = sum(salary_slip.basic_salary for salary_slip in prev_salary_slips)
-#                 ytd_hra = sum(salary_slip.hra for salary_slip in prev_salary_slips)
-#                 ytd_conveyance_allowance = sum(salary_slip.conveyance_allowance for salary_slip in prev_salary_slips)
-#                 ytd_flexible_component = sum(salary_slip.flexible_component for salary_slip in prev_salary_slips)
-#                 ytd_variable_component = sum(salary_slip.variable_component for salary_slip in prev_salary_slips)
-#                 ytd_gross_salary = sum(salary_slip.gross_salary for salary_slip in prev_salary_slips)
-#                 ytd_provident_fund = sum(salary_slip.provident_fund for salary_slip in prev_salary_slips)
-#                 ytd_esic = sum(salary_slip.esic for salary_slip in prev_salary_slips)
-#                 ytd_professional_tax = sum(salary_slip.professional_tax for salary_slip in prev_salary_slips)
-#                 ytd_income_tax = sum(salary_slip.income_tax for salary_slip in prev_salary_slips)
-#                 ytd_other_deductions = sum(salary_slip.other_deductions for salary_slip in prev_salary_slips)
-#                 ytd_total_deductions = sum(salary_slip.total_deductions for salary_slip in prev_salary_slips)
-
-#             except SalarySlip.DoesNotExist as a:
-#                 print('----------------------------',a)
-
-#             ytd_net_salary +=Decimal(net_salary)
-#             ytd_basic_salary += Decimal(basic_salary)
-#             ytd_hra += Decimal(hra)
-#             ytd_conveyance_allowance += Decimal(conveyance_allowance)
-#             ytd_flexible_component += Decimal(flexible_component) 
-#             ytd_variable_component += Decimal(variable_component)
-#             ytd_gross_salary += Decimal(gross_salary)
-#             ytd_provident_fund += Decimal(provident_fund)
-#             ytd_esic += Decimal(esic)
-#             ytd_professional_tax += Decimal(professional_tax)
-#             ytd_income_tax += Decimal(income_tax)
-#             ytd_other_deductions += Decimal(other_deductions)
-#             ytd_total_deductions += Decimal(total_deductions)
-
-
-#             salary_slip = SalarySlip(
-#                 month=month,
-#                 year=year,
-#                 days_payable=days_payable,
-#                 ctc=ctc,
-#                 esic=esic,
-#                 basic_salary=basic_salary,
-#                 hra=hra,
-#                 conveyance_allowance=conveyance_allowance,
-#                 flexible_component=flexible_component,
-#                 variable_component=variable_component,
-#                 provident_fund=provident_fund,
-#                 professional_tax=professional_tax,
-#                 income_tax=income_tax,
-#                 other_deductions=other_deductions,
-#                 gross_salary=gross_salary,
-#                 total_deductions=total_deductions,
-#                 net_salary=net_salary,
-#                 address=address,
-#                 ytd_net_salary=ytd_net_salary,
-#                 ytd_basic_salary=ytd_basic_salary,
-#                 ytd_hra = ytd_hra,
-#                 ytd_conveyance_allowance=ytd_conveyance_allowance,
-#                 ytd_flexible_component = ytd_flexible_component,
-#                 ytd_variable_component = ytd_variable_component,
-#                 ytd_gross_salary  = ytd_gross_salary,
-#                 ytd_esic=ytd_esic,
-#                 ytd_professional_tax = ytd_professional_tax,
-#                 ytd_income_tax = ytd_income_tax,
-#                 ytd_other_deductions = ytd_other_deductions,
-#                 ytd_total_deductions = ytd_total_deductions,
-#                 ytd_provident_fund = ytd_provident_fund
-#             )
-
-#             # salary_slip.calculate_ytd()  # Call calculate_ytd method to update YTD values
-#             salary_slip.save()
-#             with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as pdf_file:
-#                  pdf_path = pdf_file.name
-#             # Save the PDF content to the temporary file (code for generating PDF goes here)
-#             # e.g., generate_pdf(pdf_path, salary_slip)
-
-#         # Send email to all registered employee emails
-#             employees = CustomUser.objects.filter(user_type=3).values_list('email', flat=True)
-
-#             for email in employees:
-#                 # Create the email message
-#                 email = EmailMessage(
-#                     subject='Salary Slip',
-#                     body='Please find attached the salary slip.',
-#                     from_email='gp.smtp1234@gmail.com',
-#                     to=[email],
-#                 )
-
-#                 # Attach the PDF file to the email
-#                 email.attach_file(pdf_path)
-
-#                 # Send the email
-#                 email.send()
-
-#             # Delete the temporary PDF file
-#             # os.remove(pdf_path)
-
-#             return render(request, 'hr_management/admin/salary.html', {
-#                 'salary_slip': salary_slip, 'words': words, 'first_name': first_name, 'last_name': last_name,
-#                 'contact_no': contact_no, 'date_of_joining': date_of_joining, 'dob': dob, 'pancard_no': pancard_no,
-#                 'pf_uan_no': pf_uan_no, 'account_number': account_number, 'bank_name': bank_name, 'emp_id': emp_id,
-#                 'address': address, 'days_paid': days_paid, 'month_short': month_short, 'year_short': year_short,
-#                 'emp_department': emp_department, 'emp_designation': emp_designation
-
-#             })
-
-
-#     return render(request, 'hr_management/admin/employee_salary.html', {
-#     'employees': employees,
-#     'salary_slip_link': reverse('salary_slip')  # Add this line to pass the URL to the template
-# })
-
-
-###################################This is correct code for all employee salary generate from all employee on single click ###############################################
-
-# @login_required(login_url='do_login')
-# @require_user_type(1)
-# def employee_salary_all(request):
-#     employees = Employee_Onboarding.objects.all()
-  
-#     if request.method == "POST":  
-#         month = request.POST.get('month_name')
-#         year = request.POST.get('year')
-#         days_payable = int(request.POST.get('days'))
-#         days_paid = int(request.POST.get('paid'))
-        
-
-#         month_to_number = {
-#             'january': 1,
-#             'february': 2,
-#             'march': 3,
-#             'april': 4,
-#             'may': 5,
-#             'june': 6,
-#             'july': 7,
-#             'august': 8,
-#             'september': 9,
-#             'october': 10,
-#             'november': 11,
-#             'december': 12
-#         }
-
-#         month_number = month_to_number.get(month.lower())
-#         print(month_number)
-
-#         for i in employees:
-#                 employee_id = i.id
-#                 onboarding_data = Employee_Onboarding.objects.get(employee_id=employee_id)
-#                 c = onboarding_data.contact_no
-#                 print(c)
-#                 offer = OfferLetter_Sended.objects.get(mobile_no=c)
-#                 print(offer.ctc)
-#                 ctc = offer.ctc
-#                 address = offer.address
-
-#                 if employee_id:
-#                     # Retrieve onboarding data based on employee ID
-#                     onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
-#                     bank_details = BankDetails.objects.get(employee=onboarding_data.employee)
-#                     employee = onboarding_data.employee
-
-
-#                     # Calculate ESIC and insurance_premiums values
-#                     if ctc <= 252000:
-#                         esic = 0.0325 * ctc
-#                         insurance_premiums = 0
-#                     else:
-#                         esic = 0
-#                         insurance_premiums = 11000.0
-
-#                     variable_component = (ctc * 0.10)
-#                     # Calculate salary components
-#                     total_variable_pay = ctc * 0.10
-#                     total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-#                     basic_pay = total_fixed_pay * 0.40
-#                     employer_pf_contribution = 0.13 * basic_pay
-#                     hra = 0.50 * basic_pay
-#                     total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-#                     conveyance_allowance = 1600/ int(days_payable) * int(days_paid)
-#                     professional_tax = 200
-#                     income_tax = 0
-
-#                     # Calculate salary components for 5 working days
-#                     total_variable_pay = ctc * 0.10
-#                     total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid)/int(days_payable)
-#                     basic_salary = (total_fixed_pay * 0.40)
-#                     variable_component = (ctc * 0.10) / 12 * int(days_paid)/int(days_payable)
-#                     hra = 0.50 * basic_salary
-#                     provident_fund = 0.12 * basic_salary
-#                     flexible_component = (total_flexible_component / 12) * int(days_paid)/int(days_payable) - conveyance_allowance
-#                     gross_salary = hra + basic_salary + conveyance_allowance + flexible_component + variable_component
-#                     flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
-#                     other_deductions = 0
-#                     total_deductions = provident_fund + professional_tax + income_tax + other_deductions
-#                     net_salary = Decimal(gross_salary) - Decimal(total_deductions)
-#                     # int_net_salary = int(net_salary)
-#                     # words = num2words(int_net_salary).capitalize()
-
-#                     # Employee Leave count
-#                     # leave_count = LeaveReportEmployee.objects.filter(employee_id=employee.id, leave_status=1).count()
-
-#                     ytd_net_salary = net_salary
-#                     ytd_basic_salary = basic_salary
-#                     ytd_hra = hra
-#                     ytd_conveyance_allowance = conveyance_allowance
-#                     ytd_flexible_component = flexible_component
-#                     ytd_variable_component = variable_component
-#                     ytd_provident_fund = provident_fund
-#                     ytd_esic = esic
-#                     ytd_professional_tax = professional_tax
-#                     ytd_income_tax = income_tax
-#                     ytd_other_deductions = other_deductions
-#                     ytd_total_deductions = total_deductions
-#                     ytd_gross_salary = gross_salary
-
-#                     prev_salary_slips = SalarySlip.objects.filter(employee_id=employee).order_by('-id')[0:1]
-#                     print(prev_salary_slips,'prev_salary_slips')
-
-#                     if prev_salary_slips:
-#                         first_salary_slip = prev_salary_slips[0]
-#                         net_salary = first_salary_slip.net_salary
-#                         ytd_net_salary = first_salary_slip.ytd_net_salary
-#                         basic_salary = first_salary_slip.basic_salary
-#                         ytd_basic_salary = first_salary_slip.ytd_basic_salary
-#                         hra = first_salary_slip.hra
-#                         ytd_hra= first_salary_slip.ytd_hra
-#                         conveyance_allowance = first_salary_slip.conveyance_allowance
-#                         ytd_conveyance_allowance= first_salary_slip.ytd_conveyance_allowance
-#                         flexible_component = first_salary_slip .flexible_component
-#                         ytd_flexible_component= first_salary_slip.ytd_flexible_component
-#                         variable_component = first_salary_slip.variable_component
-#                         ytd_variable_component= first_salary_slip.variable_component
-#                         provident_fund = first_salary_slip.provident_fund
-#                         ytd_provident_fund = first_salary_slip.ytd_provident_fund
-#                         esic = first_salary_slip.esic
-#                         ytd_esic = first_salary_slip.ytd_esic
-#                         professional_tax = first_salary_slip.professional_tax
-#                         ytd_professional_tax = first_salary_slip.ytd_professional_tax
-#                         income_tax = first_salary_slip.income_tax
-#                         ytd_income_tax = first_salary_slip.ytd_income_tax
-#                         other_deductions = first_salary_slip.other_deductions
-#                         ytd_other_deductions = first_salary_slip.ytd_other_deductions
-#                         total_deductions = first_salary_slip.total_deductions
-#                         ytd_total_deductions = first_salary_slip.ytd_total_deductions
-#                         gross_salary = first_salary_slip.gross_salary
-#                         ytd_gross_salary = first_salary_slip.ytd_gross_salary
-#                         print(ytd_gross_salary,'ytd_gross_salary')
-#                         if month_number == 4 :  # Check if the month is April or later
-#                             print(month_number)
-#                             ytd_net_salary = net_salary
-#                             ytd_basic_salary = basic_salary
-#                             ytd_hra = hra
-#                             ytd_conveyance_allowance = conveyance_allowance
-#                             ytd_flexible_component = flexible_component
-#                             ytd_variable_component = variable_component
-#                             ytd_provident_fund = provident_fund
-#                             ytd_esic = esic
-#                             ytd_professional_tax = professional_tax
-#                             ytd_income_tax = income_tax
-#                             ytd_other_deductions = other_deductions
-#                             ytd_total_deductions = total_deductions
-#                             ytd_gross_salary = gross_salary
-#                         else:
-#                             ytd_net_salary += net_salary
-#                             ytd_basic_salary += basic_salary
-#                             ytd_hra += hra
-#                             ytd_conveyance_allowance += conveyance_allowance
-#                             ytd_flexible_component += flexible_component
-#                             ytd_variable_component += variable_component
-#                             ytd_provident_fund += provident_fund
-#                             ytd_esic += esic
-#                             ytd_professional_tax += professional_tax
-#                             ytd_income_tax += income_tax
-#                             ytd_other_deductions += other_deductions
-#                             ytd_total_deductions += total_deductions
-#                             ytd_gross_salary += gross_salary
-
-#                     salary_slip = SalarySlip(
-#                         employee_id=employee,
-#                         month=month,
-#                         year=year,
-#                         days_payable=days_payable,
-#                         days_paid = days_paid,
-#                         ctc=ctc,
-#                         esic=esic,
-#                         basic_salary=basic_salary,
-#                         hra=hra,
-#                         conveyance_allowance=conveyance_allowance,
-#                         flexible_component=flexible_component,
-#                         variable_component=variable_component,
-#                         provident_fund=provident_fund,
-#                         professional_tax=professional_tax,
-#                         income_tax=income_tax,
-#                         other_deductions=other_deductions,
-#                         gross_salary=gross_salary,
-#                         total_deductions=total_deductions,
-#                         net_salary=net_salary,
-#                         address=address,
-#                         ytd_net_salary=ytd_net_salary,
-#                         ytd_basic_salary=ytd_basic_salary,
-#                         ytd_hra = ytd_hra,
-#                         ytd_conveyance_allowance = ytd_conveyance_allowance,
-#                         ytd_flexible_component = ytd_flexible_component,
-#                         ytd_variable_component = ytd_variable_component,
-#                         ytd_provident_fund = ytd_provident_fund,
-#                         ytd_esic = ytd_esic,
-#                         ytd_professional_tax = ytd_professional_tax,
-#                         ytd_income_tax = ytd_income_tax,
-#                         ytd_other_deductions = ytd_other_deductions,
-#                         ytd_total_deductions = ytd_total_deductions,
-#                         ytd_gross_salary = ytd_gross_salary
-#                     )
-#                     salary_slip.save()
-#         return HttpResponse('Data saved successfully')    
-            
-#     return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees})
 
 ###########################################Payroll###################################################
 @login_required(login_url='do_login')
@@ -1743,230 +956,234 @@ def employee_wage_register_details(request):
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def wage_register(request):
-    employees = Employee_Onboarding.objects.all()
-    wage_registers = []
-    today = date.today()
-    salary_drop = SalarySlip.objects.all()   
+    try:
+        employees = Employee_Onboarding.objects.all()
+        wage_registers = []
+        today = date.today()
+        salary_drop = SalarySlip.objects.all()   
 
-    available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            
+        current_year = datetime.now().year
+        start_year = 2021
+
+        available_years = [str(year) for year in range(start_year, current_year + 2)]
+
+        remaining_years = {}
+
+        for year in available_years:
+            remaining_months = []
+            for month in available_months:
+                if not any(w.year == year and w.month == month for w in salary_drop):
+                    remaining_months.append(month)
+            if remaining_months:
+                remaining_years[year] = remaining_months          
         
-    current_year = datetime.now().year
-    start_year = 2021
+        if request.method == "POST":
+            month = request.POST.get('month_name')
+            year = request.POST.get('year')
+            days_payable = int(request.POST.get('days'))
+            days_paid = int(request.POST.get('paid'))      
 
-    available_years = [str(year) for year in range(start_year, current_year + 2)]
+            month_to_number = {
+                'january': 1,
+                'february': 2,
+                'march': 3,
+                'april': 4,
+                'may': 5,
+                'june': 6,
+                'july': 7,
+                'august': 8,
+                'september': 9,
+                'october': 10,
+                'november': 11,
+                'december': 12
+            }
 
-    remaining_years = {}
-
-    for year in available_years:
-        remaining_months = []
-        for month in available_months:
-            if not any(w.year == year and w.month == month for w in salary_drop):
-                remaining_months.append(month)
-        if remaining_months:
-            remaining_years[year] = remaining_months          
-      
-    if request.method == "POST":
-        month = request.POST.get('month_name')
-        year = request.POST.get('year')
-        days_payable = int(request.POST.get('days'))
-        days_paid = int(request.POST.get('paid'))      
-
-        month_to_number = {
-            'january': 1,
-            'february': 2,
-            'march': 3,
-            'april': 4,
-            'may': 5,
-            'june': 6,
-            'july': 7,
-            'august': 8,
-            'september': 9,
-            'october': 10,
-            'november': 11,
-            'december': 12
-        }
-
-        month_number = month_to_number.get(month.lower())
-        existing_data = WageRegister.objects.filter(month=month, year=year)
-        existing_data.delete()
+            month_number = month_to_number.get(month.lower())
+            existing_data = WageRegister.objects.filter(month=month, year=year)
+            existing_data.delete()
 
 
-        for employee in employees:
-            employee_id = employee.id
-            onboarding_data = Employee_Onboarding.objects.get(id=employee_id)
-            c = onboarding_data.contact_no
+            for employee in employees:
+                employee_id = employee.id
+                onboarding_data = Employee_Onboarding.objects.get(id=employee_id)
+                c = onboarding_data.contact_no
 
-            offer = OfferLetter_Sended.objects.get(mobile_no=c)
-            ctc = offer.ctc
-            address = offer.address
+                offer = OfferLetter_Sended.objects.get(mobile_no=c)
+                ctc = offer.ctc
+                address = offer.address
 
-            age = today.year - employee.dob.year
+                age = today.year - employee.dob.year
 
-            # Check if the birth month and day have already passed in the current year
-            if today.month < employee.dob.month or (today.month == employee.dob.month and today.day < employee.dob.day):
-                age -= 1
-            age = age
+                # Check if the birth month and day have already passed in the current year
+                if today.month < employee.dob.month or (today.month == employee.dob.month and today.day < employee.dob.day):
+                    age -= 1
+                age = age
 
-            if employee_id:
-                onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
-                employee = onboarding_data.employee
+                if employee_id:
+                    onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
+                    employee = onboarding_data.employee
 
-                if ctc <= 252000:
-                    insurance_premiums = 0
-                else:
-                    insurance_premiums = 11000.0
-
-                variable_component = (ctc * 0.10)
-                total_variable_pay = ctc * 0.10
-                total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-                basic_pay = total_fixed_pay * 0.40
-                employer_pf_contribution = 0.13 * basic_pay
-                hra = 0.50 * basic_pay
-                total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-                conveyance_allowance = 1600 / int(days_payable) * int(days_paid)
-                professional_tax = 200
-                income_tax = 0
-
-                total_variable_pay = ctc * 0.10
-                total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid) / int(days_payable)
-                basic_salary = (total_fixed_pay * 0.40)
-                variable_component = (ctc * 0.10) / 12 * int(days_paid) / int(days_payable)
-                hra = 0.50 * basic_salary
-                provident_fund = 0.12 * basic_salary
-                flexible_component = (total_flexible_component / 12) * days_paid / days_payable - conveyance_allowance
-                gross_salary = (hra + basic_salary + conveyance_allowance + flexible_component + variable_component)
-                flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
-                other_deductions = 0
-                if ctc <= 252000:
-                    esic = (0.0075 * float(gross_salary))
-                else:
-                    esic = 0
-                total_deductions = provident_fund + professional_tax + income_tax + other_deductions +esic
-                net_salary = Decimal(gross_salary) - Decimal(total_deductions)
-
-                ytd_net_salary = net_salary
-                ytd_basic_salary = basic_salary
-                ytd_hra = hra
-                ytd_conveyance_allowance = conveyance_allowance
-                ytd_flexible_component = flexible_component
-                ytd_variable_component = variable_component
-                ytd_provident_fund = provident_fund
-                ytd_esic = esic
-                ytd_professional_tax = professional_tax
-                ytd_income_tax = income_tax
-                ytd_other_deductions = other_deductions
-                ytd_total_deductions = total_deductions
-                ytd_gross_salary = gross_salary
-
-                prev_wage_register = WageRegister.objects.filter(employee_id=employee).order_by('-id')[0:1]
-
-                if prev_wage_register:
-                    first_salary_slip = prev_wage_register[0]
-                    net_salary = first_salary_slip.net_salary
-                    ytd_net_salary = first_salary_slip.ytd_net_salary
-                    basic_salary = first_salary_slip.basic_salary
-                    ytd_basic_salary = first_salary_slip.ytd_basic_salary
-                    hra = first_salary_slip.hra
-                    ytd_hra = first_salary_slip.ytd_hra
-                    conveyance_allowance = first_salary_slip.conveyance_allowance
-                    ytd_conveyance_allowance = first_salary_slip.ytd_conveyance_allowance
-                    flexible_component = first_salary_slip.flexible_component
-                    ytd_flexible_component = first_salary_slip.ytd_flexible_component
-                    variable_component = first_salary_slip.variable_component
-                    ytd_variable_component = first_salary_slip.variable_component
-                    provident_fund = first_salary_slip.provident_fund
-                    ytd_provident_fund = first_salary_slip.ytd_provident_fund
-                    esic = first_salary_slip.esic
-                    ytd_esic = first_salary_slip.ytd_esic
-                    professional_tax = first_salary_slip.professional_tax
-                    ytd_professional_tax = first_salary_slip.ytd_professional_tax
-                    income_tax = first_salary_slip.income_tax
-                    ytd_income_tax = first_salary_slip.ytd_income_tax
-                    other_deductions = first_salary_slip.other_deductions
-                    ytd_other_deductions = first_salary_slip.ytd_other_deductions
-                    total_deductions = first_salary_slip.total_deductions
-                    ytd_total_deductions = first_salary_slip.ytd_total_deductions
-                    gross_salary = first_salary_slip.gross_salary
-                    ytd_gross_salary = first_salary_slip.ytd_gross_salary
-
-                    if month_number == 4:  # Check if the month is April or later
-                        ytd_net_salary = net_salary
-                        ytd_basic_salary = basic_salary
-                        ytd_hra = hra
-                        ytd_conveyance_allowance = conveyance_allowance
-                        ytd_flexible_component = flexible_component
-                        ytd_variable_component = variable_component
-                        ytd_provident_fund = provident_fund
-                        ytd_esic = esic
-                        ytd_professional_tax = professional_tax
-                        ytd_income_tax = income_tax
-                        ytd_other_deductions = other_deductions
-                        ytd_total_deductions = total_deductions
-                        ytd_gross_salary = gross_salary
+                    if ctc <= 252000:
+                        insurance_premiums = 0
                     else:
-                        ytd_net_salary += net_salary
-                        ytd_basic_salary += basic_salary
-                        ytd_hra += hra
-                        ytd_conveyance_allowance += conveyance_allowance
-                        ytd_flexible_component += flexible_component
-                        ytd_variable_component += variable_component
-                        ytd_provident_fund += provident_fund
-                        ytd_esic += esic
-                        ytd_professional_tax += professional_tax
-                        ytd_income_tax += income_tax
-                        ytd_other_deductions += other_deductions
-                        ytd_total_deductions += total_deductions
-                        ytd_gross_salary += gross_salary
+                        insurance_premiums = 11000.0
 
-                wage_register = WageRegister(
-                    employee_id=employee,
-                    month=month,
-                    year=year,
-                    age = age,
-                    days_payable=days_payable,
-                    days_paid=days_paid,
-                    ctc=round(ctc),
-                    esic=round(esic),
-                    basic_salary=round(basic_salary),
-                    hra=round(hra),
-                    conveyance_allowance=round(conveyance_allowance),
-                    flexible_component=round(flexible_component),
-                    variable_component=round(variable_component),
-                    provident_fund=round(provident_fund),
-                    professional_tax=round(professional_tax),
-                    income_tax=round(income_tax),
-                    other_deductions=round(other_deductions),
-                    gross_salary=round(gross_salary),
-                    total_deductions=round(total_deductions),
-                    net_salary=round(net_salary),
-                    address=address,
-                    ytd_net_salary=round(ytd_net_salary),
-                    ytd_basic_salary=round(ytd_basic_salary),
-                    ytd_hra=round(ytd_hra),
-                    ytd_conveyance_allowance=round(ytd_conveyance_allowance),
-                    ytd_flexible_component=round(ytd_flexible_component),
-                    ytd_variable_component=round(ytd_variable_component),
-                    ytd_provident_fund=round(ytd_provident_fund),
-                    ytd_esic=round(ytd_esic),
-                    ytd_professional_tax=round(ytd_professional_tax),
-                    ytd_income_tax=round(ytd_income_tax),
-                    ytd_other_deductions=round(ytd_other_deductions),
-                    ytd_total_deductions=round(ytd_total_deductions),
-                    ytd_gross_salary=round(ytd_gross_salary)
-                )
-                
-                wage_register.save()
-                wage_registers.append(wage_register)
+                    variable_component = (ctc * 0.10)
+                    total_variable_pay = ctc * 0.10
+                    total_fixed_pay = ctc - total_variable_pay - insurance_premiums
+                    basic_pay = total_fixed_pay * 0.40
+                    employer_pf_contribution = 0.13 * basic_pay
+                    hra = 0.50 * basic_pay
+                    total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
+                    conveyance_allowance = 1600 / int(days_payable) * int(days_paid)
+                    professional_tax = 200
+                    income_tax = 0
+
+                    total_variable_pay = ctc * 0.10
+                    total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid) / int(days_payable)
+                    basic_salary = (total_fixed_pay * 0.40)
+                    variable_component = (ctc * 0.10) / 12 * int(days_paid) / int(days_payable)
+                    hra = 0.50 * basic_salary
+                    provident_fund = 0.12 * basic_salary
+                    flexible_component = (total_flexible_component / 12) * days_paid / days_payable - conveyance_allowance
+                    gross_salary = (hra + basic_salary + conveyance_allowance + flexible_component + variable_component)
+                    flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
+                    other_deductions = 0
+                    if ctc <= 252000:
+                        esic = (0.0075 * float(gross_salary))
+                    else:
+                        esic = 0
+                    total_deductions = provident_fund + professional_tax + income_tax + other_deductions +esic
+                    net_salary = Decimal(gross_salary) - Decimal(total_deductions)
+
+                    ytd_net_salary = net_salary
+                    ytd_basic_salary = basic_salary
+                    ytd_hra = hra
+                    ytd_conveyance_allowance = conveyance_allowance
+                    ytd_flexible_component = flexible_component
+                    ytd_variable_component = variable_component
+                    ytd_provident_fund = provident_fund
+                    ytd_esic = esic
+                    ytd_professional_tax = professional_tax
+                    ytd_income_tax = income_tax
+                    ytd_other_deductions = other_deductions
+                    ytd_total_deductions = total_deductions
+                    ytd_gross_salary = gross_salary
+
+                    prev_wage_register = WageRegister.objects.filter(employee_id=employee).order_by('-id')[0:1]
+
+                    if prev_wage_register:
+                        first_salary_slip = prev_wage_register[0]
+                        net_salary = first_salary_slip.net_salary
+                        ytd_net_salary = first_salary_slip.ytd_net_salary
+                        basic_salary = first_salary_slip.basic_salary
+                        ytd_basic_salary = first_salary_slip.ytd_basic_salary
+                        hra = first_salary_slip.hra
+                        ytd_hra = first_salary_slip.ytd_hra
+                        conveyance_allowance = first_salary_slip.conveyance_allowance
+                        ytd_conveyance_allowance = first_salary_slip.ytd_conveyance_allowance
+                        flexible_component = first_salary_slip.flexible_component
+                        ytd_flexible_component = first_salary_slip.ytd_flexible_component
+                        variable_component = first_salary_slip.variable_component
+                        ytd_variable_component = first_salary_slip.variable_component
+                        provident_fund = first_salary_slip.provident_fund
+                        ytd_provident_fund = first_salary_slip.ytd_provident_fund
+                        esic = first_salary_slip.esic
+                        ytd_esic = first_salary_slip.ytd_esic
+                        professional_tax = first_salary_slip.professional_tax
+                        ytd_professional_tax = first_salary_slip.ytd_professional_tax
+                        income_tax = first_salary_slip.income_tax
+                        ytd_income_tax = first_salary_slip.ytd_income_tax
+                        other_deductions = first_salary_slip.other_deductions
+                        ytd_other_deductions = first_salary_slip.ytd_other_deductions
+                        total_deductions = first_salary_slip.total_deductions
+                        ytd_total_deductions = first_salary_slip.ytd_total_deductions
+                        gross_salary = first_salary_slip.gross_salary
+                        ytd_gross_salary = first_salary_slip.ytd_gross_salary
+
+                        if month_number == 4:  # Check if the month is April or later
+                            ytd_net_salary = net_salary
+                            ytd_basic_salary = basic_salary
+                            ytd_hra = hra
+                            ytd_conveyance_allowance = conveyance_allowance
+                            ytd_flexible_component = flexible_component
+                            ytd_variable_component = variable_component
+                            ytd_provident_fund = provident_fund
+                            ytd_esic = esic
+                            ytd_professional_tax = professional_tax
+                            ytd_income_tax = income_tax
+                            ytd_other_deductions = other_deductions
+                            ytd_total_deductions = total_deductions
+                            ytd_gross_salary = gross_salary
+                        else:
+                            ytd_net_salary += net_salary
+                            ytd_basic_salary += basic_salary
+                            ytd_hra += hra
+                            ytd_conveyance_allowance += conveyance_allowance
+                            ytd_flexible_component += flexible_component
+                            ytd_variable_component += variable_component
+                            ytd_provident_fund += provident_fund
+                            ytd_esic += esic
+                            ytd_professional_tax += professional_tax
+                            ytd_income_tax += income_tax
+                            ytd_other_deductions += other_deductions
+                            ytd_total_deductions += total_deductions
+                            ytd_gross_salary += gross_salary
+
+                    wage_register = WageRegister(
+                        employee_id=employee,
+                        month=month,
+                        year=year,
+                        age = age,
+                        days_payable=days_payable,
+                        days_paid=days_paid,
+                        ctc=round(ctc),
+                        esic=round(esic),
+                        basic_salary=round(basic_salary),
+                        hra=round(hra),
+                        conveyance_allowance=round(conveyance_allowance),
+                        flexible_component=round(flexible_component),
+                        variable_component=round(variable_component),
+                        provident_fund=round(provident_fund),
+                        professional_tax=round(professional_tax),
+                        income_tax=round(income_tax),
+                        other_deductions=round(other_deductions),
+                        gross_salary=round(gross_salary),
+                        total_deductions=round(total_deductions),
+                        net_salary=round(net_salary),
+                        address=address,
+                        ytd_net_salary=round(ytd_net_salary),
+                        ytd_basic_salary=round(ytd_basic_salary),
+                        ytd_hra=round(ytd_hra),
+                        ytd_conveyance_allowance=round(ytd_conveyance_allowance),
+                        ytd_flexible_component=round(ytd_flexible_component),
+                        ytd_variable_component=round(ytd_variable_component),
+                        ytd_provident_fund=round(ytd_provident_fund),
+                        ytd_esic=round(ytd_esic),
+                        ytd_professional_tax=round(ytd_professional_tax),
+                        ytd_income_tax=round(ytd_income_tax),
+                        ytd_other_deductions=round(ytd_other_deductions),
+                        ytd_total_deductions=round(ytd_total_deductions),
+                        ytd_gross_salary=round(ytd_gross_salary)
+                    )
                     
+                    wage_register.save()
+                    wage_registers.append(wage_register)
+                        
+            if request.user.user_type == '1':
+                return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+            else:
+                return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
         if request.user.user_type == '1':
-            return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+            return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
         else:
-            return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
-    if request.user.user_type == '1':
-        return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
-    else:
-        return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
+            return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
 
+    except:
+        messages.error(request,"Please fill required details")
+        return HttpResponseRedirect(reverse("wage_register"))
 
 
 
@@ -2291,7 +1508,6 @@ def edit_wage_register(request, pk):
                     except:
                         pass
 
-                    print(wage_register1)
 
                     if wage_register2:
                         wage_register1.ytd_hra += round(wage_register2.ytd_hra)

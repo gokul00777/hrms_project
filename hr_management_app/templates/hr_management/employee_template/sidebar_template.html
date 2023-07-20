@@ -30,7 +30,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             {% url 'employee_profile' as employee_profile %}
             <a href="{{ employee_profile }}" class="nav-link {% if request.path == employee_profile %} active {% endif %}">
               <i class="nav-icon fas fa-user"></i>
@@ -38,7 +38,7 @@
                 Employee Profile
               </p>
             </a>
-          </li>
+          </li> -->
            <li class="nav-item">
             {% url 'employee_apply_leave' as employee_apply_leave %}
             <a href="{{ employee_apply_leave }}" class="nav-link {% if request.path == employee_apply_leave %} active {% endif %}">
@@ -48,7 +48,7 @@
               </p>
             </a>
           </li>
-           <li class="nav-item">
+           <!-- <li class="nav-item">
             {% url 'employee_feedback' as employee_feedback %}
             <a href="{{ employee_feedback }}" class="nav-link {% if request.path == employee_feedback %} active {% endif %}">
               <i class="nav-icon fas fa-comment"></i>
@@ -56,7 +56,7 @@
                 Feedback Message
               </p>
             </a>
-          </li>
+          </li> -->
           <li class="nav-item">
             {% url 'employee_all_notification' as employee_all_notification %}
             <a href="{{ employee_all_notification }}" class="nav-link {% if request.path == employee_all_notification %} active {% endif %}">

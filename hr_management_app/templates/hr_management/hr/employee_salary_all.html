@@ -32,10 +32,30 @@
   .container{
     padding-left: 60px;
   }
+
+  .custom-error {
+        max-width: 300px; /* Adjust the width to your desired value */
+        margin: 0 auto; /* Add this line to center the element */
+        text-align: center; 
+    }
 </style>
 {% endblock custom_css %}
 
 {% block main_content %}
+<div class="form-group">
+  {% if messages %}
+  {% for message in messages %}
+  {% if message.tags == 'error' %}
+  <div id="error-message" class="alert alert-danger custom-error" style="margin-top:10px">{{ message }}</div>
+  {% endif %}
+  {% if message.tags == 'success' %}
+  <div id="success-message" class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+  {% endif %}
+  {% endfor %}
+  {% endif %}
+</div>
+
+
 <section class="content">
   <div class="container-fluid">
     <div class="container-fluid" style="width:900px;">
@@ -47,7 +67,6 @@
               <div class="card-header">
                 <h3 class="card-title">Wage Register</h3>
               </div>
-
               <form action="" method="POST">
                 {% csrf_token %}
                 
@@ -179,4 +198,20 @@
     populateMonths();
   }
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+          var errorMessage = document.getElementById("error-message");
+          var successMessage = document.getElementById("success-message");
+
+          if (errorMessage) {
+              errorMessage.style.display = "none";
+          }
+          if (successMessage) {
+              successMessage.style.display = "none";
+          }
+      }, 1000); // 30 seconds
+  });
+</script>
+
 {% endblock main_content %}

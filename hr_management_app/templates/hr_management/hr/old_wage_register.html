@@ -12,9 +12,10 @@
         margin-left: -140px;
     }
 
-    .btn-success{
+    .btn-success {
         margin-left: 40px;
     }
+
     .years {
         padding-left: 11px;
         margin-right: -70px;
@@ -145,116 +146,117 @@
                 </tbody>
             </table>
     </div>
-    <script>
-        document.getElementById('wageRegisterButton').addEventListener('click', function () {
-            var month = document.getElementById('month').value;
-            var year = document.getElementById('year').value;
-            if (month && year) {
-                document.getElementById('noRecordsMessage').style.display = 'none';
-                document.getElementById('downloadButtonContainer').style.display = 'block';
-            } else {
-                document.getElementById('noRecordsMessage').style.display = 'block';
-                document.getElementById('downloadButtonContainer').style.display = 'none';
-            }
-        });
-    </script>
-    <script>
-        document.getElementById('month').addEventListener('change', function () {
-            var month = this.value;
-            var year = document.getElementById('year').value;
-            if (month && year) {
-                document.getElementById('noRecordsMessage').style.display = 'none';
-                document.querySelector('button[type="submit"]').disabled = false;
-            } else {
-                document.getElementById('noRecordsMessage').style.display = 'block';
-                document.querySelector('button[type="submit"]').disabled = true;
-            }
-        });
+</div>
+<script>
+    document.getElementById('wageRegisterButton').addEventListener('click', function () {
+        var month = document.getElementById('month').value;
+        var year = document.getElementById('year').value;
+        if (month && year) {
+            document.getElementById('noRecordsMessage').style.display = 'none';
+            document.getElementById('downloadButtonContainer').style.display = 'block';
+        } else {
+            document.getElementById('noRecordsMessage').style.display = 'block';
+            document.getElementById('downloadButtonContainer').style.display = 'none';
+        }
+    });
+</script>
+<script>
+    document.getElementById('month').addEventListener('change', function () {
+        var month = this.value;
+        var year = document.getElementById('year').value;
+        if (month && year) {
+            document.getElementById('noRecordsMessage').style.display = 'none';
+            document.querySelector('button[type="submit"]').disabled = false;
+        } else {
+            document.getElementById('noRecordsMessage').style.display = 'block';
+            document.querySelector('button[type="submit"]').disabled = true;
+        }
+    });
 
-        document.getElementById('year').addEventListener('change', function () {
-            var month = document.getElementById('month').value;
-            var year = this.value;
-            if (month && year) {
-                document.getElementById('noRecordsMessage').style.display = 'none';
-                document.querySelector('button[type="submit"]').disabled = false;
-            } else {
-                document.getElementById('noRecordsMessage').style.display = 'block';
-                document.querySelector('button[type="submit"]').disabled = true;
-            }
-        });
-    </script>
+    document.getElementById('year').addEventListener('change', function () {
+        var month = document.getElementById('month').value;
+        var year = this.value;
+        if (month && year) {
+            document.getElementById('noRecordsMessage').style.display = 'none';
+            document.querySelector('button[type="submit"]').disabled = false;
+        } else {
+            document.getElementById('noRecordsMessage').style.display = 'block';
+            document.querySelector('button[type="submit"]').disabled = true;
+        }
+    });
+</script>
 
 
-    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
-    <!-------------------- Download Excell Sheet  -------------------------->
-    <script>
-        function downloadExcel() {
-            // Get the table element
-            var table = document.getElementById("wageRegisterTable");
+<!-------------------- Download Excell Sheet  -------------------------->
+<script>
+    function downloadExcel() {
+        // Get the table element
+        var table = document.getElementById("wageRegisterTable");
 
-            // Create a new Excel workbook
-            var workbook = XLSX.utils.book_new();
+        // Create a new Excel workbook
+        var workbook = XLSX.utils.book_new();
 
-            // Convert the table to a worksheet
-            var worksheet = XLSX.utils.table_to_sheet(table);
+        // Convert the table to a worksheet
+        var worksheet = XLSX.utils.table_to_sheet(table);
 
-            // Remove blank rows
-            var data = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false });
-            worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
+        // Remove blank rows
+        var data = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false });
+        worksheet = XLSX.utils.json_to_sheet(data, { skipHeader: true });
 
-            // Calculate column widths based on the content
-            var columnWidths = [];
-            var rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-            rows.forEach(function (row) {
-                row.forEach(function (cell, columnIndex) {
-                    var cellContentLength = cell ? String(cell).length : 10; // Default width if cell is empty
-                    if (!columnWidths[columnIndex] || cellContentLength > columnWidths[columnIndex]) {
-                        columnWidths[columnIndex] = cellContentLength;
-                    }
-                });
+        // Calculate column widths based on the content
+        var columnWidths = [];
+        var rows = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        rows.forEach(function (row) {
+            row.forEach(function (cell, columnIndex) {
+                var cellContentLength = cell ? String(cell).length : 10; // Default width if cell is empty
+                if (!columnWidths[columnIndex] || cellContentLength > columnWidths[columnIndex]) {
+                    columnWidths[columnIndex] = cellContentLength;
+                }
             });
+        });
 
-            // Set the column widths in the worksheet
-            worksheet["!cols"] = columnWidths.map(function (width) {
-                return { wch: width + 2 }; // Add some padding to the calculated width
-            });
+        // Set the column widths in the worksheet
+        worksheet["!cols"] = columnWidths.map(function (width) {
+            return { wch: width + 2 }; // Add some padding to the calculated width
+        });
 
-            // Set the center alignment for all cells
-            var range = XLSX.utils.decode_range(worksheet["!ref"]);
-            for (var row = range.s.r; row <= range.e.r; row++) {
-                for (var col = range.s.c; col <= range.e.c; col++) {
-                    var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-                    var cell = worksheet[cellAddress];
-                    if (cell && cell.t === "s") {
-                        cell.s = { alignment: { horizontal: "center", vertical: "center" } };
-                    }
+        // Set the center alignment for all cells
+        var range = XLSX.utils.decode_range(worksheet["!ref"]);
+        for (var row = range.s.r; row <= range.e.r; row++) {
+            for (var col = range.s.c; col <= range.e.c; col++) {
+                var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                var cell = worksheet[cellAddress];
+                if (cell && cell.t === "s") {
+                    cell.s = { alignment: { horizontal: "center", vertical: "center" } };
                 }
             }
-
-            // Add the worksheet to the workbook
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Wage Register");
-
-            // Convert the workbook to an Excel file
-            var excelFile = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-
-            // Create a Blob object from the Excel file data
-            var blob = new Blob([excelFile], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-
-            // Create a temporary link element to trigger the file download
-            var link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "wage_register.xlsx";
-            document.body.appendChild(link); // Append the link to the document body
-            link.click();
-
-            // Clean up the temporary link element
-            document.body.removeChild(link);
-            URL.revokeObjectURL(link.href);
         }
 
-        // Attach the downloadExcel function to the button click event
-        document.getElementById("downloadButton").addEventListener("click", downloadExcel);
-    </script>
+        // Add the worksheet to the workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Wage Register");
 
-    {% endblock main_content %}
+        // Convert the workbook to an Excel file
+        var excelFile = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+
+        // Create a Blob object from the Excel file data
+        var blob = new Blob([excelFile], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+
+        // Create a temporary link element to trigger the file download
+        var link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "wage_register.xlsx";
+        document.body.appendChild(link); // Append the link to the document body
+        link.click();
+
+        // Clean up the temporary link element
+        document.body.removeChild(link);
+        URL.revokeObjectURL(link.href);
+    }
+
+    // Attach the downloadExcel function to the button click event
+    document.getElementById("downloadButton").addEventListener("click", downloadExcel);
+</script>
+
+{% endblock main_content %}
