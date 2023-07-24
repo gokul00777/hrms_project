@@ -5,7 +5,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from datetime import datetime, timedelta
 from .models import *
 from django.conf import settings
 from .forms import *
@@ -14,20 +13,17 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from num2words import num2words
-import datetime
 from django.utils.html import strip_tags
 from django.db.models import Q
-from datetime import datetime
+from datetime import datetime,date
 from .decorators import require_user_type
 from django.contrib import messages
 from decimal import Decimal
 from django.http import HttpResponse
 from io import BytesIO
 from django.core.mail import EmailMessage
-from datetime import date
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
-from datetime import date
 from num2words import num2words
 from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
@@ -49,7 +45,7 @@ def admin_home(request):
     attendance_absent_list_hr=[]
     hr_name_list=[]
     for hr in hrs:
-        leaves=LeaveReportHR.objects.filter(hr_id=hr.id,leave_status=1).count()
+        # leaves=LeaveReportHR.objects.filter(hr_id=hr.id,leave_status=1).count()
         hr_name_list.append(hr.admin.username)
 
     employees_all=Employees.objects.all()
@@ -57,7 +53,7 @@ def admin_home(request):
     attendance_absent_list_employee=[]
     employee_name_list=[]
     for employee in employees_all:
-        leaves=LeaveReportEmployee.objects.filter(employee_id=employee.id,leave_status=1).count()
+        # leaves=LeaveReportEmployee.objects.filter(employee_id=employee.id,leave_status=1).count()
         employee_name_list.append(employee.admin.username)
     return render(request,"hr_management/admin/home_content.html",{"employee_count":employee_count1,"hr_count":hr_count,"hr_name_list":hr_name_list,"attendance_present_list_hr":attendance_present_list_hr,"attendance_absent_list_hr":attendance_absent_list_hr,"employee_name_list":employee_name_list,"attendance_present_list_employee":attendance_present_list_employee,"attendance_absent_list_employee":attendance_absent_list_employee})
 
@@ -420,7 +416,7 @@ def employee_details(request, employee_id):
     except CustomUser.DoesNotExist:
         messages.error(request, 'Employee Not Available')
     
-    context = {'user':user,'personal_info': personal_info, 'current_address': current_address, 'per_address':per_address,'emp_family_details':emp_family_details,'bank_details':bank_details,'documents': documents} 
+    context = {'user':user,'personal_info': personal_info, 'current_address': current_address, 'per_address':per_address,'emp_family_details':emp_family_details,'bank_details':bank_details,'documents': documents,'employee':employee} 
     if request.user.user_type == '2':
         return render(request, 'hr_management/hr/employee_onboarding_details.html', context)
     else:
@@ -801,6 +797,8 @@ def send_hr_notification(request):
 
 ###################################### TO GENERATE PDF ###################################
 import weasyprint
+from django.db import transaction
+
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def generate_offer_letter(request):
@@ -855,56 +853,57 @@ def generate_offer_letter(request):
                 esic = 0
                 insurance_premiums = 11000.0
             
-            offer_letter = OfferLetter(
-                basic_pay=basic_pay,
-                hra=hra,
-                total_fixed_pay=total_fixed_pay,
-                total_variable_pay=total_variable_pay,
-                insurance_premiums=insurance_premiums,
-                total_cost_to_company=total_cost_to_company,
-                employer_pf_contribution=employer_pf_contribution,
-                flexible_components_tfp=flexible_components_tfp,
-                esic = esic
-            )
+            with transaction.atomic():
+                offer_letter = OfferLetter(
+                    basic_pay=basic_pay,
+                    hra=hra,
+                    total_fixed_pay=total_fixed_pay,
+                    total_variable_pay=total_variable_pay,
+                    insurance_premiums=insurance_premiums,
+                    total_cost_to_company=total_cost_to_company,
+                    employer_pf_contribution=employer_pf_contribution,
+                    flexible_components_tfp=flexible_components_tfp,
+                    esic = esic
+                )
 
-            offer_letter.save()
-            offer_letter_sended.offerletter_id = offer_letter.id
-            offer_letter_id = offer_letter_sended.offerletter_id
-            offer_letter_sended.save()
+                offer_letter.save()
+                offer_letter_sended.offerletter_id = offer_letter.id
+                offer_letter_id = offer_letter_sended.offerletter_id
+                offer_letter_sended.save()
 
-            if request.user.user_type == '1':
-            # Render offer letter HTML template
-                offer_letter_html = render_to_string('hr_management/admin/offer_letter.html', {'offer_letter': offer_letter, \
-                                                    'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
-                                                    'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
-                                                    'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
-                                                    'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
+                if request.user.user_type == '1':
+                # Render offer letter HTML template
+                    offer_letter_html = render_to_string('hr_management/admin/offer_letter.html', {'offer_letter': offer_letter, \
+                                                        'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
+                                                        'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
+                                                        'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
+                                                        'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
 
-                # Create a PDF file from HTML template
-                pdf_file = BytesIO()
-                weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
+                    # Create a PDF file from HTML template
+                    pdf_file = BytesIO()
+                    weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
 
-                # Create and return the PDF response
-                response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
-                response.write(pdf_file.getvalue())
-                return response
-            else:
-                offer_letter_html = render_to_string('hr_management/hr/offer_letter.html', {'offer_letter': offer_letter, \
-                                                    'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
-                                                    'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
-                                                    'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
-                                                    'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
+                    # Create and return the PDF response
+                    response = HttpResponse(content_type='application/pdf')
+                    response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
+                    response.write(pdf_file.getvalue())
+                    return response
+                else:
+                    offer_letter_html = render_to_string('hr_management/hr/offer_letter.html', {'offer_letter': offer_letter, \
+                                                        'name': name, 'amount_words': amount_words,'joining_date':joining_date,\
+                                                        'reporting':reporting, 'time':time,'address':address,'offer_release_date':offer_release_date,\
+                                                        'designation':designation,'job_grade':job_grade,'offer_letter_id':offer_letter_id,'hr_name':hr_name,\
+                                                        'offer_accept_date':offer_accept_date, 'formatted_date':formatted_date, 'esic':esic}, request=request)
 
-                # Create a PDF file from HTML template
-                pdf_file = BytesIO()
-                weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
+                    # Create a PDF file from HTML template
+                    pdf_file = BytesIO()
+                    weasyprint.HTML(string=offer_letter_html, base_url=request.build_absolute_uri()).write_pdf(pdf_file)
 
-                # Create and return the PDF response
-                response = HttpResponse(content_type='application/pdf')
-                response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
-                response.write(pdf_file.getvalue())
-                return response
+                    # Create and return the PDF response
+                    response = HttpResponse(content_type='application/pdf')
+                    response['Content-Disposition'] = 'attachment; filename="offer_letter.pdf"'
+                    response.write(pdf_file.getvalue())
+                    return response
         if request.user.user_type == '1':
             return render(request, 'hr_management/admin/generate_offer_letter.html')
         else:
@@ -941,17 +940,22 @@ def payroll(request):
 
 
 @login_required(login_url='do_login')
-@require_user_type(1)
+@require_user_type(user_type=[1,2])
 def employee_wage_register_details(request):
-    employees = Employee_Onboarding.objects.all()
-    wage_registers = []
-    
-    for employee in employees:
-        last_wage_register = WageRegister.objects.filter(employee_id=employee.id).order_by('-id').first()
-        wage_registers.append(last_wage_register)
-    
-    return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers})
-
+    try:
+        employees = Employee_Onboarding.objects.all()
+        wage_registers = []
+        for employee in employees:
+            print(employee.id,'lklkl')
+            last_wage_register = WageRegister.objects.filter(employee_id=employee.employee_id).order_by('-id').first()
+            wage_registers.append(last_wage_register)
+        if request.user.user_type == '1':
+            return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers})
+        else:
+            return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers})
+    except:
+        return HttpResponse("Invalid request")
+        
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
@@ -965,9 +969,8 @@ def wage_register(request):
         available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
             
         current_year = datetime.now().year
-        start_year = 2021
 
-        available_years = [str(year) for year in range(start_year, current_year + 2)]
+        available_years = [str(year) for year in range(current_year, current_year + 2)]
 
         remaining_years = {}
 
@@ -1180,9 +1183,9 @@ def wage_register(request):
             return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
         else:
             return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
-
-    except:
-        messages.error(request,"Please fill required details")
+    except BaseException as a:
+        print(a)
+        messages.error(request,"May be something went to wrong")
         return HttpResponseRedirect(reverse("wage_register"))
 
 
@@ -1230,10 +1233,12 @@ def old_wage_register(request):
                 "unique_months": unique_months,  # Pass unique_months to the template
                 "unique_years": unique_years,  # Pass unique_years to the template
             })
+    output_month_sorted = sorted(unique_months, key=lambda x: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].index(x))
+    output_year_sorted = sorted(list(unique_years))
     if request.user.user_type == '1':
-        return render(request, 'hr_management/admin/old_wage_register.html',{'unique_months':unique_months,"unique_years": unique_years})
+        return render(request, 'hr_management/admin/old_wage_register.html',{'unique_months':output_month_sorted,"unique_years": output_year_sorted})
     else:
-        return render(request, 'hr_management/hr/old_wage_register.html',{'unique_months':unique_months,"unique_years": unique_years})
+        return render(request, 'hr_management/hr/old_wage_register.html',{'unique_months':output_month_sorted,"unique_years": output_year_sorted})
 
 #########################################################################################################################
 @login_required(login_url='do_login')
@@ -1300,12 +1305,10 @@ def generate_salary_slips(request):
     else:
         return render(request, 'hr_management/admin/salary_slip_generate_successfully.html')
 
-
-
 # ################################Update wage register ##############################################
 
 @login_required(login_url='do_login')
-@require_user_type(1)               
+@require_user_type(user_type=[1,2])               
 def edit_wage_register(request, pk):
     wage_register = get_object_or_404(WageRegister, id=pk)
     employees = Employee_Onboarding.objects.all()
@@ -1363,7 +1366,7 @@ def edit_wage_register(request, pk):
         ytd_gross_salary = gross_salary
         ytd_total_deductions = total_deductions
         ytd_net_salary = net_salary
-   
+
         
         for employee in employees:
             employee_id = employee.id
@@ -1406,7 +1409,7 @@ def edit_wage_register(request, pk):
                     wage_register.ytd_gross_salary = gross_salary
                     wage_register.ytd_total_deductions = total_deductions
                     wage_register.ytd_net_salary = net_salary
-                   
+                
 
                     provident_fund = 0.12 * basic_salary
                     flexible_component = (total_flexible_component / 12) * int(days_paid)/int(days_payable) - conveyance_allowance
@@ -1490,7 +1493,7 @@ def edit_wage_register(request, pk):
                         wage_register.ytd_other_deductions += round(Decimal(other_deductions))
                         wage_register.ytd_total_deductions += round(Decimal(total_deductions))
                         wage_register.ytd_gross_salary += round(Decimal(gross_salary))
-             
+            
                     wage_register.save() 
                     previous_wage_registers = {}
                     wage_registers = WageRegister.objects.filter(employee_id=wage_register.employee_id).order_by('-id')
@@ -1527,7 +1530,13 @@ def edit_wage_register(request, pk):
 
 
                     wage_register1.save()
-                    return redirect('employee_wage_register_details')
+                    if request.user.user_type == '1':
+                        return redirect('employee_wage_register_details')                    
+                    else:
+                        return redirect('employee_wage_register_details')
 
-    return render(request, 'hr_management/admin/edit_wage_register.html', {'wage_register': wage_register})
+    if request.user.user_type == '1':
+        return render(request, 'hr_management/admin/edit_wage_register.html', {'wage_register': wage_register})
+    else:
+        return render(request, 'hr_management/hr/edit_wage_register.html', {'wage_register': wage_register})
 

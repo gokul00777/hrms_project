@@ -96,7 +96,7 @@ urlpatterns = [
     path('offer_letter_sended_history/', AdminViews.offer_letter_sended_history, name='offer_letter_sended_history'),
     path('old_wage_register',AdminViews.old_wage_register, name='old_wage_register'),
     path('payroll', AdminViews.payroll, name='payroll'),
-    re_path(r'^.*/$', RedirectView.as_view(url='/')),
+    # re_path(r'^.*/$', RedirectView.as_view(url='/')),
 
 
 
@@ -113,5 +113,6 @@ urlpatterns = [
     path('manager_leave_view',ManagerViews.manager_leave_view,name="manager_leave_view"),
     path('employee_details_delete/<int:employee_id>', AdminViews.employee_details_delete, name='employee_details_delete'),
     path('password_reset/<uidb64>/<token>/', views.reset_password_confirm, name='reset_password_confirm'),
-
+    path('reset_password', views.reset_password, name='reset_password'),
+    
 ]

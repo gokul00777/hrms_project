@@ -118,6 +118,7 @@ def do_admin_signup(request):
         messages.success(request,"Successfully Created Admin")
         return HttpResponseRedirect(reverse("show_login"))
     except BaseException as a:
+        print(a)
         messages.error(request,"Failed to Create Admin")
         return HttpResponseRedirect(reverse("show_login"))
 
@@ -132,7 +133,8 @@ def do_hr_signup(request):
         user.save()
         messages.success(request,"Successfully Created HR")
         return HttpResponseRedirect(reverse("show_login"))
-    except:
+    except BaseException as e:
+        print(e)
         messages.error(request,"Failed to Create HR")
         return HttpResponseRedirect(reverse("show_login"))
 

@@ -155,13 +155,15 @@
   }
 
   .container {
-    padding-left: 160px;
+    padding-left: 220px;
 
   }
 
   .my-form {
     padding-left: 80px;
-
+  }
+  #rowchange{
+    padding-right:200px;
   }
 </style>
 {% endblock custom_css %}
@@ -185,7 +187,7 @@
               <form action="{% url 'employee_apply_leave_save' %}" method="post">
                 <div class="center">
                   <div class="card-body">
-                    <div class="row">
+                    <div class="row"  id="rowchange">
                       <div class="col-md-4">
                         <div class="leave-info">
                           <label>Casual Leaves:</label>
@@ -239,8 +241,8 @@
                         <textarea class="form-control" rows="2" name="leave_msg"></textarea>
                       </div>
 
-                      <div class="card-footer">
-                        <button type="submit" class="btn btn-primary btn-block" id="applyLeaveButton">Apply for
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary " id="applyLeaveButton">Apply for
                           Leave</button>
                       </div>
 
@@ -308,6 +310,7 @@
 </div>
 </div>
 <!-- /.content -->
+
 <script>
   const leaveStartDateInput = document.getElementById('leaveStartDate');
   const leaveEndDateInput = document.getElementById('leaveEndDate');

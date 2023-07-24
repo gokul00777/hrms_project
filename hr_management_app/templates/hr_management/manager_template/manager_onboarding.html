@@ -40,7 +40,7 @@
                             <div class="form-row ">
                                 <div class="form-group col-md-6">
                                     <label>Empolyee ID</label>
-                                    <input type="text" class="form-control" name="id" value="{{ request.user.id}}"
+                                    <input type="text" class="form-control" name="id" value="{{ employee.emp_id }}"
                                         disabled="disabled">
                                 </div>
                                 <div class="form-group col-md-6">
@@ -74,24 +74,33 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    {{ emp_onboarding_form.contact_no.label_tag }} {{ emp_onboarding_form.contact_no }}
+                                    {{ emp_onboarding_form.contact_no.label_tag }}
+                                    <input type="text" class="mobile-number-input form-control" name="{{ emp_onboarding_form.contact_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Conact number must be 10 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {{ emp_onboarding_form.emergency_contact_no.label_tag }} {{ emp_onboarding_form.emergency_contact_no }}
-                                    
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group col-md-6">
-                                    {{ emp_onboarding_form.pancard_no.label_tag }} {{ emp_onboarding_form.pancard_no }}
-                                </div>
-                                <div class="form-group col-md-6">
-                                    {{ emp_onboarding_form.adhaar_no.label_tag }} {{ emp_onboarding_form.adhaar_no }}
+                                    {{ emp_onboarding_form.emergency_contact_no.label_tag }}
+                                    <input type="text" class="mobile-number-input form-control" name="{{ emp_onboarding_form.emergency_contact_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Emergency Conact number must be 10 digits long.</span>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    {{ emp_onboarding_form.blood_group.label_tag }} {{ emp_onboarding_form.blood_group }}
+                                    {{ emp_onboarding_form.pancard_no.label_tag }}
+                                    <input type="text" class="pan-card-number-input form-control" name="{{ emp_onboarding_form.pancard_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Invalid PAN card number. Please enter in the format ABCDE1234F.</span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    {{ emp_onboarding_form.adhaar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_onboarding_form.adhaar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
+                                </div>  
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    {{ emp_onboarding_form.blood_group.label_tag }}
+                                    <input type="text" class="blood-group-input form-control" name="{{ emp_onboarding_form.blood_group.name }}" >
+                                    <span class="blood-group-error-message" style="color: red; display: none;">Invalid blood group. Please select a valid blood group (e.g., A+, A-, B+, B-, AB+, AB-, O+, O-).</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_onboarding_form.dob.label_tag }} {{ emp_onboarding_form.dob }}
@@ -124,7 +133,6 @@
                                     <h3 class="card-title; text-center">Employee Current Address</h3>
                                 </div>
                             </div>
-                            <div>
                                 <div class="form-row current-address">
                                     <div class="form-group col-md-6">
                                         {{ emp_address_form.add_type.label_tag }} {{ emp_address_form.add_type }}
@@ -138,8 +146,10 @@
                                         {{ emp_address_form.address2.label_tag }} {{ emp_address_form.address2 }}
                                     </div>
                                     <div class="form-group col-md-6">
-                                        {{ emp_address_form.zip_code.label_tag }} {{ emp_address_form.zip_code }}
-                                    </div>
+                                        {{ emp_address_form.zip_code.label_tag }}
+                                        <input type="text" class="zip-code-input form-control" name="{{ emp_address_form.zip_code.name }}" >
+                                        <span class="zip-code-error-message" style="color: red; display: none;">Invalid ZIP code. Please enter a valid ZIP code.</span>
+                                    </div>                                                                       
                                 </div>
                                 <div class="form-row current-address">
                                     <div class="form-group col-md-6">
@@ -156,12 +166,12 @@
                                     <div class="form-group col-md-6">
                                         {{ emp_address_form.country.label_tag }} {{ emp_address_form.country }}
                                     </div>
+                
                                 </div>
                                 <div class="form-group">
                                     <input type="checkbox" id="same-address-checkbox" onclick="copyAddress()">
                                     <label for="same_address_checkbox">Same as current address</label>
-                                </div>
-                            </div>
+                                </div>                                
 
 
                             <div class="card card-primary">
@@ -185,8 +195,9 @@
                                     
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {{ emp_perment_address_form.per_zip_code.label_tag }} {{ emp_perment_address_form.per_zip_code}}
-                                    
+                                    {{ emp_perment_address_form.per_zip_code.label_tag }}
+                                    <input type="text" class="zip-code-input form-control" name="{{ emp_perment_address_form.per_zip_code.name }}" >
+                                    <span class="zip-code-error-message" style="color: red; display: none;">Invalid ZIP code. Please enter a valid ZIP code.</span>
                                 </div>
                             </div>
                             <div class="form-row permanent-address">
@@ -208,6 +219,7 @@
                                 </div>
                             </div>
                         
+                        
                             <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title; text-center">Employee Family Details</h3>
@@ -225,8 +237,9 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    {{ emp_family_form.merber1_aadhar_no.label_tag }} {{ emp_family_form.merber1_aadhar_no }}
-                                    
+                                    {{ emp_family_form.merber1_aadhar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_family_form.merber1_aadhar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.relationship1.label_tag }} {{ emp_family_form.relationship1 }}
@@ -236,6 +249,7 @@
                             <div class="form-row">
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.member2_name.label_tag }} {{ emp_family_form.member2_name }}
+                                    
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.merber2_dob.label_tag }} {{ emp_family_form.merber2_dob }}
@@ -244,7 +258,9 @@
 
                             <div class="form-row">
                                 <div class="form-group col-md-6">
-                                    {{ emp_family_form.merber2_aadhar_no.label_tag }} {{ emp_family_form.merber2_aadhar_no}}
+                                    {{ emp_family_form.merber2_aadhar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_family_form.merber2_aadhar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.relationship2.label_tag }} {{ emp_family_form.relationship2 }}
@@ -261,7 +277,9 @@
                             
                             <div class="form-row family-member-row">
                                 <div class="form-group col-md-6">
-                                    {{ emp_family_form.merber3_aadhar_no.label_tag }} {{ emp_family_form.merber3_aadhar_no}}
+                                    {{ emp_family_form.merber3_aadhar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_family_form.merber3_aadhar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.relationship3.label_tag }} {{ emp_family_form.relationship3 }}
@@ -277,15 +295,15 @@
                                     {{ emp_family_form.merber4_dob.label_tag }} {{ emp_family_form.merber4_dob }}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {{ emp_family_form.merber4_aadhar_no.label_tag }} {{ emp_family_form.merber4_aadhar_no}}
+                                    {{ emp_family_form.merber4_aadhar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_family_form.merber4_aadhar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.relationship4.label_tag }} {{ emp_family_form.relationship4 }}
                                 </div>
                             </div>
-
-                
-                            
+            
                             <div class="form-row family-member-row" style="display:none;">
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.member5_name.label_tag }} {{ emp_family_form.member5_name }}
@@ -294,7 +312,9 @@
                                     {{ emp_family_form.merber5_dob.label_tag }} {{ emp_family_form.merber5_dob }}
                                 </div>
                                 <div class="form-group col-md-6">
-                                    {{ emp_family_form.merber5_aadhar_no.label_tag }} {{ emp_family_form.merber5_aadhar_no}}
+                                    {{ emp_family_form.merber5_aadhar_no.label_tag }}
+                                    <input type="text" class="aadhar-number-input form-control" name="{{ emp_family_form.merber5_aadhar_no.name }}" >
+                                    <span class="error-message" style="color: red; display: none;">Aadhar number must be 12 digits long.</span>
                                 </div>
                                 <div class="form-group col-md-6">
                                     {{ emp_family_form.relationship5.label_tag }} {{ emp_family_form.relationship5 }}
@@ -416,12 +436,148 @@
                             </div>
                         </div>
                     </form>
+                    {% if messages %}
+                    <div class="alert alert-success">
+                        {% for message in messages %}
+                        {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
 </div>
 {% block custom_js %}
+<!-- jQuery Library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Function to check ZIP code validity for a specific input field
+    function validateZipCode(inputField) {
+        var zipCode = inputField.val();
+        var zipCodeRegex = /^\d{6}$/;
+        return zipCodeRegex.test(zipCode);
+    }
+
+    // Event handler for ZIP code inputs
+    $('.zip-code-input').on('keyup', function() {
+        var inputField = $(this);
+        var errorMessage = inputField.next('.zip-code-error-message');
+        errorMessage.toggle(!validateZipCode(inputField));
+    });
+
+    // Function to check Aadhar number validity for a specific row
+    function validateAadharNumber(inputField) {
+        var aadharNumber = inputField.val();
+        var aadharRegex = /^\d{12}$/;
+        var isValid = aadharNumber.length === 12 && aadharRegex.test(aadharNumber);
+        inputField.closest('.form-group').find('.error-message').toggle(!isValid);
+        return isValid;
+    }
+
+    // Event handler for Aadhar number inputs within each row
+    $('.aadhar-number-input').on('input', function() {
+        validateAadharNumber($(this));
+    });
+
+    // Function to check mobile number validity for a specific row
+    function validateMobileNumber(inputField) {
+        var mobileNumber = inputField.val();
+        var mobileRegex = /^[6-9]\d{9}$/;
+        var isValid = mobileRegex.test(mobileNumber);
+        inputField.closest('.form-group').find('.error-message').toggle(!isValid);
+        return isValid;
+    }
+
+    // Event handler for mobile number inputs within each row
+    $('.mobile-number-input').on('input', function() {
+        validateMobileNumber($(this));
+    });
+
+    // Function to check PAN card number validity for a specific row
+    function validatePANCardNumber(inputField) {
+        var panCardNumber = inputField.val().toUpperCase();
+        var panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+        var isValid = panRegex.test(panCardNumber);
+        inputField.closest('.form-group').find('.error-message').toggle(!isValid);
+        return isValid;
+    }
+
+    // Event handler for PAN card number inputs within each row
+    $('.pan-card-number-input').on('input', function() {
+        validatePANCardNumber($(this));
+    });
+
+    // Function to check blood group validity for a specific row
+    function validateBloodGroup(inputField) {
+        var selectedBloodGroup = inputField.val().toUpperCase();
+        var validBloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+        return validBloodGroups.includes(selectedBloodGroup);
+    }
+
+    // Event handler for blood group inputs within each row
+    $('.blood-group-input').on('keyup', function() {
+        var inputField = $(this);
+        var errorMessage = inputField.next('.blood-group-error-message');
+        errorMessage.toggle(!validateBloodGroup(inputField));
+    });
+
+    $(document).ready(function () {
+        let memberCounter = 2; // Start at 2 since you already have fields for member 4 and member 5
+
+        // Function to show/hide the family member fields
+        function toggleFamilyMemberFields() {
+            $('.family-member-row').each(function(index, element) {
+                $(element).toggle(index < memberCounter);
+            });
+        }
+
+        // Call the function on page load
+        toggleFamilyMemberFields();
+
+        // Event handler for the "Add Family Member" button
+        $('#add-family-member').on('click', function() {
+            memberCounter++;
+            toggleFamilyMemberFields();
+        });
+
+        // Function to show/hide the document fields
+        function toggleDocumentFields() {
+            $('.document-row').each(function(index, element) {
+                $(element).toggle(index < memberCounter);
+            });
+        }
+
+        // Call the function on page load
+        toggleDocumentFields();
+
+        // Event handler for the "Add Document" button
+        $('#add-document').on('click', function() {
+            memberCounter++;
+            toggleDocumentFields();
+        });
+    });
+
+    // Get the checkbox element and the address input elements
+    const sameAddressCheckbox = document.getElementById('same-address-checkbox');
+    const currentAddressInputs = document.querySelectorAll('.current-address input');
+    const permanentAddressInputs = document.querySelectorAll('.permanent-address input');
+
+    // Function to copy the current address to the permanent address fields
+    function copyAddress() {
+        if (sameAddressCheckbox.checked) {
+            for (let i = 0; i < currentAddressInputs.length; i++) {
+                permanentAddressInputs[i].value = currentAddressInputs[i].value;
+            }
+        }
+    }
+
+    // Add an event listener to the checkbox to call the copyAddress function when it is clicked
+    sameAddressCheckbox.addEventListener('click', copyAddress);
+</script>
+
+
 <script>
     $(document).ready(function () {
 
@@ -437,7 +593,6 @@
                 }
             });
         }
-
         // Call the function on page load
         toggleFamilyMemberFields();
 
@@ -477,8 +632,6 @@
     });
 </script>
 
-
-<!-- address same current and perment  -->
 <script>
     // Get the checkbox element and the address input elements
     const sameAddressCheckbox = document.getElementById('same-address-checkbox');

@@ -1,19 +1,16 @@
-import datetime
 from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
-from datetime import date
 from .decorators import require_user_type
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
 from num2words import num2words
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta,date
 from django.core.exceptions import ValidationError
 
 
@@ -33,7 +30,7 @@ def employee_home(request):
 
     return render(request,"hr_management/employee_template/employee_home_template.html",{"employee_count": employee_count, "data1":data_present,"data2":data_absent,'leave_count':leave_count})
 
-import datetime
+
 @login_required(login_url='do_login')
 @require_user_type(user_type=[3,4])
 def employee_apply_leave(request):
@@ -41,7 +38,7 @@ def employee_apply_leave(request):
         employee = Employees.objects.filter(admin=request.user.id).first()
         emp_leaves = EmployeeLeave.objects.filter(employee_id = employee).first()
         leave_data = LeaveReportEmployee.objects.filter(employee_id = employee)    
-        current_date = datetime.datetime.now().date()
+        current_date = datetime.now().date()
         if emp_leaves.year_updated != current_date.year:
             if emp_leaves.current_EL > 9 :
                 emp_leaves.current_EL = 9
@@ -103,8 +100,8 @@ def employee_apply_leave_save(request):
             return HttpResponseRedirect(reverse("employee_apply_leave"))
         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
             try:
-                start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-                end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
                 if end_date < start_date:
                     raise Exception("You cannot select an end date before the start date.")
                 # Exclude Saturdays and Sundays
@@ -153,228 +150,11 @@ def employee_apply_leave_save(request):
                 for field, error in e.message_dict.items():
                     messages.error(request, f"Validation error for field '{field}': {error[0]}")
             except Exception as e:
-                messages.error(request, f"Failed to apply for leave: {str(e)}")
+                messages.error(request, f"Please fill leave reason")
                 return HttpResponseRedirect(reverse("employee_apply_leave") + f"?error={str(e)}")
         return HttpResponseRedirect(reverse("employee_apply_leave"))
 
     
-# def employee_apply_leave_save(request):
-#     if request.method != "POST":
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-#     else:
-#         leave_start_dates = request.POST.getlist("leave_start_date")
-#         leave_end_dates = request.POST.getlist("leave_end_date")
-#         leave_msgs = request.POST.getlist("leave_msg")
-#         leave_types = request.POST.getlist("leave_type")
-
-#         employee_obj = Employees.objects.get(admin=request.user.id)
-
-#         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
-#             try:
-#                 start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-#                 end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
-
-#                 # Exclude Saturdays and Sundays
-#                 leave_dates = []
-#                 current_date = start_date
-#                 while current_date <= end_date:
-#                     if current_date.weekday() < 5:  # Exclude Saturday (5) and Sunday (6)
-#                         leave_dates.append(current_date)
-#                     current_date += timedelta(days=1)
-
-#                 if len(leave_dates) < 1:
-#                     raise Exception("You are applying for a Saturday-Sunday leave.")
-
-#                 existing_leave_dates = LeaveReportEmployee.objects.filter(
-#                     employee_id=employee_obj,
-#                     leave_start_date__in=leave_dates,
-#                     leave_end_date__in=leave_dates
-#                 )
-
-#                 conflicting_dates = []
-#                 for leave_date in existing_leave_dates:
-#                     conflicting_dates.append(leave_date.leave_start_date.strftime("%Y-%m-%d"))
-                
-
-#                 if conflicting_dates:
-#                     raise Exception("You have already applied for leave on that day.")
-                
-
-#                 # Check if any of the leave dates are already applied
-#                 existing_leave_dates = LeaveReportEmployee.objects.filter(
-#                     employee_id=employee_obj,
-#                     leave_start_date__lte=end_date,
-#                     leave_end_date__gte=start_date
-#                 )
-#                 for leave_date in existing_leave_dates:
-#                     leave_range = set(leave_dates)
-#                     existing_range = set(leave_date.get_leave_dates())
-#                     if leave_range.intersection(existing_range):
-#                         raise Exception("You have already applied for leave on that day.")
-
-#                 leave_duration = len(leave_dates)
-
-#                 leave_report = LeaveReportEmployee(
-#                     employee_id=employee_obj,
-#                     leave_type=leave_type,
-#                     leave_start_date=leave_dates[0],
-#                     leave_end_date=leave_dates[-1],
-#                     leave_message=msg,
-#                     leave_status=0
-#                 )
-#                 leave_report.full_clean()  # Validate the model data before saving
-#                 leave_report.save()
-#                 messages.success(request, f"Successfully Applied for Leave. Leave duration: {leave_duration} day(s).")
-#             except ValidationError as e:
-#                 for field, error in e.message_dict.items():
-#                     messages.error(request, f"Validation error for field '{field}': {error[0]}")
-#             except Exception as e:
-#                 messages.error(request, f"Failed to apply for leave: {str(e)}")
-#                 return HttpResponseRedirect(reverse("employee_apply_leave") + f"?error={str(e)}")
-
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-
-#working middle only msg change i want
-
-# def employee_apply_leave_save(request):
-#     if request.method != "POST":
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-#     else:
-#         leave_start_dates = request.POST.getlist("leave_start_date")
-#         leave_end_dates = request.POST.getlist("leave_end_date")
-#         leave_msgs = request.POST.getlist("leave_msg")
-#         leave_types = request.POST.getlist("leave_type")
-
-#         employee_obj = Employees.objects.get(admin=request.user.id)
-
-#         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
-#             try:
-#                 start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-#                 end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
-
-#                 # Exclude Saturdays and Sundays
-#                 leave_dates = []
-#                 current_date = start_date
-#                 while current_date <= end_date:
-#                     if current_date.weekday() < 5:  # Exclude Saturday (5) and Sunday (6)
-#                         leave_dates.append(current_date)
-#                     current_date += datetime.timedelta(days=1)
-
-#                 if len(leave_dates) < 1:
-#                     raise Exception("You are applying for a Saturday-Sunday leave.")
-
-#                 existing_leave_dates = LeaveReportEmployee.objects.filter(
-#                     employee_id=employee_obj,
-#                     leave_start_date__lte=end_date,
-#                     leave_end_date__gte=start_date
-#                 )
-
-#                 conflicting_dates = []
-#                 for leave_date in existing_leave_dates:
-#                     leave_range = set(
-#                         datetime.datetime.strftime(date, "%Y-%m-%d")
-#                         for date in pd.date_range(leave_date.leave_start_date, leave_date.leave_end_date + datetime.timedelta(days=1))
-#                     )
-#                     if any(date in leave_range for date in leave_dates):
-#                         conflicting_dates.append(
-#                             leave_date.leave_start_date.strftime("%Y-%m-%d") + " to " +
-#                             leave_date.leave_end_date.strftime("%Y-%m-%d")
-#                         )
-
-#                 if conflicting_dates:
-#                     raise Exception(f"You have already applied for leave on the following day(s): {', '.join(conflicting_dates)}")
-
-#                 leave_duration = len(leave_dates)
-
-#                 leave_report = LeaveReportEmployee(
-#                     employee_id=employee_obj,
-#                     leave_type=leave_type,
-#                     leave_start_date=leave_dates[0],
-#                     leave_end_date=leave_dates[-1],
-#                     leave_message=msg,
-#                     leave_status=0
-#                 )
-#                 leave_report.full_clean()  # Validate the model data before saving
-#                 leave_report.save()
-#                 messages.success(request, f"Successfully Applied for Leave. Leave duration: {leave_duration} day(s).")
-#             except ValidationError as e:
-#                 for field, error in e.message_dict.items():
-#                     messages.error(request, f"Validation error for field '{field}': {error[0]}")
-#             except Exception as e:
-#                 messages.error(request, f"Failed to apply for leave: {str(e)}")
-#                 return HttpResponseRedirect(reverse("employee_apply_leave") + f"?error={str(e)}")
-
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-
-# def employee_apply_leave_save(request):
-#     if request.method != "POST":
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-#     else:
-#         leave_start_dates = request.POST.getlist("leave_start_date")
-#         leave_end_dates = request.POST.getlist("leave_end_date")
-#         leave_msgs = request.POST.getlist("leave_msg")
-#         leave_types = request.POST.getlist("leave_type")
-
-#         employee_obj = Employees.objects.get(admin=request.user.id)
-
-#         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
-#             try:
-#                 start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-#                 end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
-
-#                 # Exclude Saturdays and Sundays
-#                 leave_dates = []
-#                 current_date = start_date
-#                 while current_date <= end_date:
-#                     if current_date.weekday() < 5:  # Exclude Saturday (5) and Sunday (6)
-#                         leave_dates.append(current_date)
-#                     current_date += datetime.timedelta(days=1)
-
-#                 if len(leave_dates) < 1:
-#                     raise Exception("You are applying for a Saturday-Sunday leave.")
-
-#                 existing_leave_dates = LeaveReportEmployee.objects.filter(
-#                     employee_id=employee_obj,
-#                     leave_start_date__lte=end_date,
-#                     leave_end_date__gte=start_date
-#                 )
-
-#                 conflicting_dates = []
-#                 for leave_date in existing_leave_dates:
-#                     leave_range = [
-#                         date.strftime("%Y-%m-%d")
-#                         for date in pd.date_range(leave_date.leave_start_date, leave_date.leave_end_date + datetime.timedelta(days=1))
-#                     ]
-#                     conflicting_dates += list(set(leave_range) & set(leave_dates))
-
-#                 if conflicting_dates:
-#                     conflicting_dates_str = ", ".join(conflicting_dates)
-#                     raise Exception(f"You have already applied for leave on the following day(s): {conflicting_dates_str}")
-
-#                 leave_duration = len(leave_dates)
-
-#                 leave_report = LeaveReportEmployee(
-#                     employee_id=employee_obj,
-#                     leave_type=leave_type,
-#                     leave_start_date=leave_dates[0],
-#                     leave_end_date=leave_dates[-1],
-#                     leave_message=msg,
-#                     leave_status=0
-#                 )
-#                 leave_report.full_clean()  # Validate the model data before saving
-#                 leave_report.save()
-#                 messages.success(request, f"Successfully Applied for Leave. Leave duration: {leave_duration} day(s).")
-#             except ValidationError as e:
-#                 for field, error in e.message_dict.items():
-#                     messages.error(request, f"Validation error for field '{field}': {error[0]}")
-#             except Exception as e:
-#                 messages.error(request, f"Failed to apply for leave: {str(e)}")
-#                 # Handle the custom message here instead of returning HttpResponseRedirect
-#                 # You can redirect to the appropriate page or show the message on the current page
-#                 messages.info(request, str(e))
-
-#         return HttpResponseRedirect(reverse("employee_apply_leave"))
-
 @require_user_type(user_type=3)
 @login_required(login_url='do_login')
 def employee_feedback(request):
@@ -460,6 +240,7 @@ def employee_all_notification(request):
     return render(request, "hr_management/employee_template/all_notification.html", {"notifications": notifications})
 
 
+
 @require_user_type(user_type=[3,4])
 @login_required(login_url='do_login')
 def EmployeeOnboarding(request, pk=None):
@@ -484,7 +265,7 @@ def EmployeeOnboarding(request, pk=None):
         family_form = FamilyDetailsForm(request.POST)
         bank_form = BankDetailsForm(request.POST)
         document_form = DocumentsForm(request.POST, request.FILES)
-        current_date = datetime.datetime.now().date()
+        current_date = datetime.now().date()
         emp_data = EmployeeLeave.objects.filter(employee_id=employee).first()
         TotalLeaves = 0
         CasualLeave = 0
@@ -503,11 +284,10 @@ def EmployeeOnboarding(request, pk=None):
         emp_data.save()
         
         latest_emp = EmployeeLeave.objects.latest('id')       
-                 
+                
         latest_emp.save()
-
         if onboarding_form.is_valid() and address_form.is_valid() and perment_address_form.is_valid() and family_form.is_valid() and bank_form.is_valid() and document_form.is_valid():
-
+            print('oklk')
             address = address_form.save(commit=False)
             perment_address = perment_address_form.save(commit=False)
             address.employee = employee
@@ -529,8 +309,7 @@ def EmployeeOnboarding(request, pk=None):
             document = document_form.save(commit=False)
             document.employee = employee
             document.save()
-            return redirect('all_records')
-
+            return redirect('employee_onboarding')
     else:
         address_form = EmployeeAddressDetailsFrom()
         perment_address_form = EmployeePermentAddressFrom()
@@ -539,10 +318,10 @@ def EmployeeOnboarding(request, pk=None):
         document_form = DocumentsForm()
         onboarding_form = EmployeeOnboardingForm()
     if request.user.user_type == '3':
-        return render(request, 'hr_management/employee_template/employee_onboarding.html', {'emp_onboarding_form': onboarding_form, 'emp_address_form': emp_address_form, 'emp_perment_address_form': emp_perment_address_form, 'emp_family_form': emp_family_form, 'emp_bank_form': emp_bank_form, 'emp_document_form': emp_document_form})
+        return render(request, 'hr_management/employee_template/employee_onboarding.html', {'emp_onboarding_form': onboarding_form, 'emp_address_form': emp_address_form, 'emp_perment_address_form': emp_perment_address_form, 'emp_family_form': emp_family_form, 'emp_bank_form': emp_bank_form, 'emp_document_form': emp_document_form,'employee':employee })
     else:
-        return render(request, 'hr_management/manager_template/manager_onboarding.html', {'emp_onboarding_form': onboarding_form, 'emp_address_form': emp_address_form, 'emp_perment_address_form': emp_perment_address_form, 'emp_family_form': emp_family_form, 'emp_bank_form': emp_bank_form, 'emp_document_form': emp_document_form})
-        
+        return render(request, 'hr_management/manager_template/manager_onboarding.html', {'emp_onboarding_form': onboarding_form, 'emp_address_form': emp_address_form, 'emp_perment_address_form': emp_perment_address_form, 'emp_family_form': emp_family_form, 'emp_bank_form': emp_bank_form, 'emp_document_form': emp_document_form,'employee':employee})
+    
 
 @require_user_type(user_type=[3,4])
 @login_required(login_url='do_login')
@@ -555,7 +334,7 @@ def AllRecords(request):
     emp_family_details = FamilyDetails.objects.filter(employee=employee)
     bank_details =BankDetails.objects.filter(employee=employee)
     documents = Documents.objects.filter(employee=employee)
-    context = {'personal_info': personal_info, 'current_address': current_address, 'per_address':per_address,'emp_family_details':emp_family_details,'bank_details':bank_details,'documents': documents} 
+    context = {'personal_info': personal_info, 'current_address': current_address, 'per_address':per_address,'emp_family_details':emp_family_details,'bank_details':bank_details,'documents': documents,'employee':employee} 
     if request.user.user_type == '3':
         template_name = 'hr_management/employee_template/records.html'
         return render(request, template_name, context)
@@ -578,6 +357,7 @@ def employee_salary_view(request):
 
     unique_months = set()
     unique_years = set()
+
     for salary in salary_slips:
         unique_months.add(salary.month)
         unique_years.add(salary.year)
@@ -627,7 +407,10 @@ def employee_salary_view(request):
                 "month_short": month_short,
                 "year_short": year_short
             })
+    unique_months = list(unique_months)
+    output_month_sorted = sorted(unique_months, key=lambda x: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].index(x))
+    output_year_sorted = sorted(list(unique_years))
     if request.user.user_type == '3':
-        return render(request, "hr_management/employee_template/salary.html",{'unique_months':unique_months,'unique_years':unique_years})
+        return render(request, "hr_management/employee_template/salary.html",{'unique_months':output_month_sorted,'unique_years':output_year_sorted})
     else:
-        return render(request, "hr_management/manager_template/salary.html",{'unique_months':unique_months,'unique_years':unique_years})
+        return render(request, "hr_management/manager_template/salary.html",{'unique_months':output_month_sorted,'unique_years':output_year_sorted})

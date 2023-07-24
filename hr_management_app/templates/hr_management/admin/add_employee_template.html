@@ -25,7 +25,7 @@ Add Employee
     <div id="error-message" class="alert alert-danger custom-error" style="margin-top:10px">{{ message }}</div>
     {% endif %}
     {% if message.tags == 'success' %}
-    <div id="success-message" class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+    <div id="success-message" class="alert alert-success custom-error" style="margin-top:10px">{{ message }}</div>
     {% endif %}
     {% endfor %}
     {% endif %}
@@ -46,12 +46,13 @@ Add Employee
               <div class="row">
                 <div class="form-group col-md-6">
                   <label>Email address</label>
-                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email"
-                    autocomplete="off">
+                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email" autocomplete="off">
+                  <span id="email-error-message" style="color: red; display: none;">Invalid email address.</span>
                 </div>
                 <div class="form-group col-md-6">
                   <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Password" name="password">
+                  <input type="password" class="form-control" placeholder="Password" id="id_password" name="password">
+                  <p id="password-error-message" style="display: none; color: red;">  Password must be 8 characters or more with at least one uppercase letter, one lowercase letter, one digit, and one special character.</p>
                 </div>
               </div>
               <div class="row">
@@ -74,9 +75,12 @@ Add Employee
                   <label>Department</label>
                   <select name="department" class="form-control">
                     <option value="">Select Department</option>
+                    <option value="DSBU">DSBU</option>
+                    <option value="HSBU">HSBU</option>
+                    <option value="SIBU">SIBU</option>
+                    <option value="SSBU">SSBU</option>
                     <option value="SPBU">SPBU</option>
-                    <option value="HSBO">HSBO</option>
-                    <option value="SSBO">SSBO</option>
+                    <option value="HQ">HQ</option>
                   </select>
                 </div>
               </div>
@@ -96,6 +100,7 @@ Add Employee
                   </select>
                 </div>
               </div>
+
             </div>
             <!-- /.card-body -->
 
@@ -188,7 +193,34 @@ Add Employee
       if (successMessage) {
         successMessage.style.display = "none";
       }
-    }, 1000); // 30 seconds
+    }, 2000); // 30 seconds
+  });
+</script>
+
+<script>
+  const emailInput = document.getElementById('id_email');
+  const emailErrorMessage = document.getElementById('email-error-message');
+  const passwordInput = document.getElementById('id_password');
+  const passwordErrorMessage = document.getElementById('password-error-message');
+
+  emailInput.addEventListener('input', function() {
+      const email = emailInput.value.trim();
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|olatechs)\.com$/;
+      if (!emailRegex.test(email)) {
+          emailErrorMessage.style.display = 'block';
+      } else {
+          emailErrorMessage.style.display = 'none';
+      }
+  });
+
+  passwordInput.addEventListener('input', function() {
+      const password = passwordInput.value;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!passwordRegex.test(password)) {
+          passwordErrorMessage.style.display = 'block';
+      } else {
+          passwordErrorMessage.style.display = 'none';
+      }
   });
 </script>
 {% endblock custom_js %}

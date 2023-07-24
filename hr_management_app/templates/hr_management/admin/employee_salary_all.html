@@ -30,8 +30,14 @@
     flex: 1;
   }
   .container{
-    padding-left: 60px;
+    padding-left: 100px;
   }
+
+  .custom-error {
+        max-width: 300px; /* Adjust the width to your desired value */
+        margin: 0 auto; /* Add this line to center the element */
+        text-align: center; 
+    }
 </style>
 {% endblock custom_css %}
 
@@ -40,7 +46,7 @@
   {% if messages %}
   {% for message in messages %}
   {% if message.tags == 'error' %}
-  <div id="error-message" class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+  <div id="error-message" class="alert alert-danger custom-error" style="margin-top:10px">{{ message }}</div>
   {% endif %}
   {% if message.tags == 'success' %}
   <div id="success-message" class="alert alert-success" style="margin-top:10px">{{ message }}</div>
@@ -48,6 +54,7 @@
   {% endfor %}
   {% endif %}
 </div>
+
 
 <section class="content">
   <div class="container-fluid">
