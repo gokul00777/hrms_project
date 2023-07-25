@@ -589,7 +589,9 @@
           <!-- delete button -->
           <a href="{% url 'employee_details_delete' employee_id=user.id %}" class="btn btn-danger"
             id="delete-btn">Delete</a>
-        </div>
+          <a href="{% url 'edit_employee_onboarding_record' employee_id=employee.admin.id %}" class="btn btn-success"
+            id="delete-btn">Edit</a>
+        </div> 
     </form>
 </div>
 

@@ -598,5 +598,23 @@
     location.reload();
   }, 60000); // 300,000 milliseconds = 5 minutes
 </script>
+<script>
+  // Function to check if the employee has selected all required fields
+  const validateForm = () => {
+    const leaveType = leaveTypeSelect.value;
+    const fromDate = fromDatePicker.value;
+    const toDate = toDatePicker.value;
 
+    if (leaveType === "" || fromDate === "" || toDate === "") {
+      // Display the pop-up alert
+      alert("Please select all fields before applying for leave.");
+      return false; // Prevent form submission
+    }
+
+    return true; // Allow form submission
+  };
+
+  // Attach the validation function to the form submission event
+  document.querySelector("form").addEventListener("submit", validateForm);
+</script>
 {% endblock main_content %}

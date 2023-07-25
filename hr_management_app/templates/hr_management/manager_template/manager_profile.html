@@ -70,7 +70,8 @@
                             <div class="col-md-6">
                               <div class="form-group">
                                 <label>Change Password?</label>
-                                <input type="text" class="form-control" name="password" placeholder="Fill Only If You want to Change Password">
+                                <input type="password" class="form-control" name="password" id="id_password" placeholder="Fill Only If You want to Change Password">
+                                <p id="password-error-message" style="display: none; color: red;">Password must be 8 characters or more with at least one uppercase letter, one lowercase letter, one digit, and one special character.</p>
                               </div>
                             </div>
                           </div>
@@ -113,6 +114,20 @@
           </div>
       </div>
     </section>
+    <script>
+      const passwordInput = document.getElementById('id_password');
+      const passwordErrorMessage = document.getElementById('password-error-message');
+    
+      passwordInput.addEventListener('input', function() {
+        const password = passwordInput.value;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+          passwordErrorMessage.style.display = 'block';
+        } else {
+          passwordErrorMessage.style.display = 'none';
+        }
+      });
+    </script>
     <!-- /.content -->
 {% endblock main_content %}
 

@@ -39,7 +39,7 @@
 
                                     <div class="form-row">
                                         <div class="form-group col-md-4">
-                                            <label for="days_paid">Days Payable:</label>
+                                            <label for="days_paid">Days Paid:</label>
                                             <input type="number" name="days_paid" id="days_paid"
                                                 value="{{ wage_register.days_paid }}" class="form-control text-center"
                                                 required>
@@ -139,8 +139,11 @@
                                             <input type="number" name="lwf" id="lwf" value="{{ wage_register.lwf }}"
                                                 class="form-control text-center" required>
                                         </div>
-
-
+                                        <div class="form-group col-md-4">
+                                            <label for="sunday_and_holidays">sunday_and_holidays:</label>
+                                            <input type="number" name="sunday_and_holidays" id="sunday_and_holidays" value="{{ wage_register.sunday_and_holidays }}"
+                                                class="form-control text-center" required>
+                                        </div>
                                     </div>
                                     <button type="submit" class="btn-success"
                                         style="width: 150px; height: 100;">Update</button>

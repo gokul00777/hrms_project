@@ -114,5 +114,7 @@ urlpatterns = [
     path('employee_details_delete/<int:employee_id>', AdminViews.employee_details_delete, name='employee_details_delete'),
     path('password_reset/<uidb64>/<token>/', views.reset_password_confirm, name='reset_password_confirm'),
     path('reset_password', views.reset_password, name='reset_password'),
+    path('edit_employee_onboarding_record/<int:employee_id>/', AdminViews.edit_employee_onboarding, name='edit_employee_onboarding_record'),
+
     
 ]

@@ -36,36 +36,63 @@ def employee_home(request):
 def employee_apply_leave(request):
     try:
         employee = Employees.objects.filter(admin=request.user.id).first()
-        emp_leaves = EmployeeLeave.objects.filter(employee_id = employee).first()
-        leave_data = LeaveReportEmployee.objects.filter(employee_id = employee)    
+        emp_leaves = EmployeeLeave.objects.filter(employee_id=employee).first()
+        leave_data = LeaveReportEmployee.objects.filter(employee_id=employee)
         current_date = datetime.now().date()
-        if emp_leaves.year_updated != current_date.year:
-            if emp_leaves.current_EL > 9 :
-                emp_leaves.current_EL = 9
-            else :
-                emp_leaves.current_EL = emp_leaves.current_EL
-            
-            emp_leaves.Prev_CFEL = min(emp_leaves.Prev_CFEL + emp_leaves.current_EL , 45)
+        
+        date_joining = Employee_Onboarding.objects.get(employee_id=employee)
+        join_date = date_joining.date_of_joining
+             
+                       
+        if not emp_leaves.year_updated:
+            if join_date.year == current_date.year:
+                months_since_joining = (current_date.month - join_date.month)+1
+            else:
+                months_since_joining = current_date.month 
+                                
+                    
+            earned_leaves = months_since_joining * 1.5
+
+            casual_leaves = months_since_joining * 0.67
+
+            emp_leaves.EarnLeave = earned_leaves
+            emp_leaves.current_EL = earned_leaves
+            emp_leaves.CasualLeave = casual_leaves
+        
+
+            # Update the year and month details
+            emp_leaves.month_updated = current_date.month 
             emp_leaves.year_updated = current_date.year
+                   
+            
+        elif emp_leaves.year_updated != current_date.year:
+            if emp_leaves.current_EL > 9:
+                emp_leaves.current_EL = 9
+            else:
+                emp_leaves.current_EL = emp_leaves.current_EL
+
+            emp_leaves.Prev_CFEL = min(emp_leaves.Prev_CFEL + emp_leaves.current_EL, 45)
+            emp_leaves.year_updated = current_date.year
+            emp_leaves.month_updated = current_date.month  
             emp_leaves.current_EL = 1.5
             emp_leaves.CasualLeave = 0.67
-                
-        elif emp_leaves.month_updated != current_date.month :
+            
+        elif emp_leaves.month_updated != current_date.month:
             emp_leaves.current_EL = emp_leaves.current_EL + 1.5
             emp_leaves.CasualLeave = emp_leaves.CasualLeave + 0.67
             emp_leaves.month_updated = current_date.month
-        
-        emp_leaves.EarnLeave = emp_leaves.Prev_CFEL + emp_leaves.current_EL 
+                        
+        emp_leaves.EarnLeave = emp_leaves.Prev_CFEL + emp_leaves.current_EL
         emp_leaves.TotalLeaves = emp_leaves.EarnLeave + emp_leaves.CasualLeave
 
         emp_leaves.save()
-        
-        context={
+
+        context = {
             'TotalLeaves': emp_leaves.TotalLeaves,
             'CasualLeave': emp_leaves.CasualLeave,
             'EarnLeave': emp_leaves.EarnLeave,
-            'current_EL':emp_leaves.current_EL,
-            'leave_data': leave_data
+            'current_EL': emp_leaves.current_EL,
+            'leave_data': leave_data,
         }
         if request.user.user_type == '3':
             return render(request, "hr_management/employee_template/employee_apply_leave.html", context)
@@ -98,10 +125,20 @@ def employee_apply_leave_save(request):
         if pending_leaves.exists():
             messages.error(request, "You have a pending leave. Please wait for it to be approved.")
             return HttpResponseRedirect(reverse("employee_apply_leave"))
+        
+        if any(not start_date or not end_date for start_date, end_date in zip(leave_start_dates, leave_end_dates)):
+            messages.error(request, "Please select all date fields before applying for leave.")
+            return HttpResponseRedirect(reverse("employee_apply_leave"))
+        
+        if any(not leave_msgs or not leave_types for leave_msgs, leave_types in zip(leave_msgs, leave_types)):
+            messages.error(request, "Please select Leave Message and Leave Type fields before applying for leave.")
+            return HttpResponseRedirect(reverse("employee_apply_leave"))
+        
+                
         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
             try:
-                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
-                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
+                start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
                 if end_date < start_date:
                     raise Exception("You cannot select an end date before the start date.")
                 # Exclude Saturdays and Sundays
@@ -150,9 +187,10 @@ def employee_apply_leave_save(request):
                 for field, error in e.message_dict.items():
                     messages.error(request, f"Validation error for field '{field}': {error[0]}")
             except Exception as e:
-                messages.error(request, f"Please fill leave reason")
+                messages.error(request, f"Failed to apply for leave: {str(e)}")
                 return HttpResponseRedirect(reverse("employee_apply_leave") + f"?error={str(e)}")
         return HttpResponseRedirect(reverse("employee_apply_leave"))
+
 
     
 @require_user_type(user_type=3)
@@ -287,7 +325,6 @@ def EmployeeOnboarding(request, pk=None):
                 
         latest_emp.save()
         if onboarding_form.is_valid() and address_form.is_valid() and perment_address_form.is_valid() and family_form.is_valid() and bank_form.is_valid() and document_form.is_valid():
-            print('oklk')
             address = address_form.save(commit=False)
             perment_address = perment_address_form.save(commit=False)
             address.employee = employee
@@ -343,17 +380,18 @@ def AllRecords(request):
         return render(request, template_name, context)
         
 
-
-@require_user_type(user_type=[3,4])
+import pdb
 @login_required(login_url='do_login')
+@require_user_type(user_type=[3,4])
 def employee_salary_view(request):
+    # pdb.set_trace()
     employee = get_object_or_404(Employees, admin=request.user)
     salary_slips = SalarySlip.objects.filter(employee_id=employee)
     if not salary_slips:
-            if request.user.user_type == '3':
-                return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
-            else:
-                return render(request,'hr_management/manager_template/salary_slip_not_generated.html')
+        if request.user.user_type == '4':
+            return render(request,'hr_management/manager_template/salary_slip_not_generated.html')
+        else:
+            return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
 
     unique_months = set()
     unique_years = set()
@@ -371,7 +409,11 @@ def employee_salary_view(request):
         selected_salary_slip = salary_slips.first()
  
         if not selected_salary_slip:
-            return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
+            if request.user.user_type == '3':
+                return render(request,'hr_management/employee_template/salary_slip_not_generated.html')
+            else:
+                return render(request,'hr_management/manager_template/salary_slip_not_generated.html')
+
 
         month_short = selected_salary_slip.month[0:3]
         year_short = selected_salary_slip.year[2:4]

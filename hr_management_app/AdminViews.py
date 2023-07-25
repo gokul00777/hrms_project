@@ -29,6 +29,9 @@ from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 from .models import Employee_Onboarding, BankDetails, SalarySlip
 from django.db.models import Q
+import weasyprint
+from django.db import transaction
+import calendar
 
 
 
@@ -396,8 +399,10 @@ def delete_hr(request, hr_id):
             return render(request,'hr_management/admin/delete_hr_template.html',context)
         else:
             return render(request,'hr_management/hr/delete_hr_template.html',context)
-    except BaseException as a:
-        print(a)
+    except:
+        messages.error(request, 'HR Not Available')
+        
+        
 
 
 @login_required(login_url='do_login')
@@ -452,6 +457,74 @@ def employee_details_delete(request, employee_id):
         return render(request, 'hr_management/hr/employee_onboarding_details.html', context)
     else:
         return render(request, 'hr_management/admin/employee_onboarding_details.html', context)
+
+   
+############################################ edit onboarding details #######################
+
+
+@login_required(login_url='do_login')
+@require_user_type(user_type=[1,2])
+def edit_employee_onboarding(request, employee_id):
+    try:
+        user = CustomUser.objects.get(id=employee_id)
+        employee = Employees.objects.get(admin=user)
+        personal_info = Employee_Onboarding.objects.get(employee=employee)
+        current_address = Address_detail.objects.get(employee=employee)
+        per_address = Permanent_Address.objects.get(employee=employee)
+        emp_family_details = FamilyDetails.objects.get(employee=employee)
+        bank_details = BankDetails.objects.get(employee=employee)
+        documents = Documents.objects.get(employee=employee)
+
+        if request.method == 'POST':
+            emp_onboarding_form = EmployeeOnboardingForm(request.POST, instance=personal_info)
+            emp_address_form = EmployeeAddressDetailsFrom(request.POST, instance=current_address)
+            emp_perment_address_form = EmployeePermentAddressFrom(request.POST, instance=per_address)
+            emp_family_form = FamilyDetailsForm(request.POST, instance=emp_family_details)
+            emp_bank_form = BankDetailsForm(request.POST, instance=bank_details)
+            emp_document_form = DocumentsForm(request.POST, instance=documents)
+
+            if (
+                emp_onboarding_form.is_valid() and
+                emp_address_form.is_valid() and
+                emp_perment_address_form.is_valid() and
+                emp_family_form.is_valid() and
+                emp_bank_form.is_valid() and
+                emp_document_form.is_valid()
+            ):
+                emp_onboarding_form.save()
+                emp_address_form.save()
+                emp_perment_address_form.save()
+                emp_family_form.save()
+                emp_bank_form.save()
+                emp_document_form.save()
+                
+                return redirect('employee_details', employee_id=employee_id)
+        else:
+            emp_onboarding_form = EmployeeOnboardingForm(instance=personal_info)
+            emp_address_form = EmployeeAddressDetailsFrom(instance=current_address)
+            emp_perment_address_form = EmployeePermentAddressFrom(instance=per_address)
+            emp_family_form = FamilyDetailsForm(instance=emp_family_details)
+            emp_bank_form = BankDetailsForm(instance=bank_details)
+            emp_document_form = DocumentsForm(instance=documents)
+
+        context = {
+            'user': user,
+            'employee': employee,
+            'emp_onboarding_form': emp_onboarding_form,
+            'emp_address_form': emp_address_form,
+            'emp_perment_address_form': emp_perment_address_form,
+            'emp_family_form': emp_family_form,
+            'emp_bank_form': emp_bank_form,
+            'emp_document_form': emp_document_form,
+        }
+
+        if request.user.user_type == '1':
+            return render(request, 'hr_management/admin/employee_onboarding.html', context)
+        else:
+            return render(request, 'hr_management/hr/employee_onboarding.html', context)
+    except:
+        messages.success(request, "Failed to edit onboarding data")
+
 
 
 @login_required(login_url='do_login')
@@ -796,8 +869,7 @@ def send_hr_notification(request):
     return HttpResponse("True")
 
 ###################################### TO GENERATE PDF ###################################
-import weasyprint
-from django.db import transaction
+
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
@@ -938,7 +1010,6 @@ def payroll(request):
 
 ###########################################Generate wage register ###################################################
 
-
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def employee_wage_register_details(request):
@@ -946,17 +1017,251 @@ def employee_wage_register_details(request):
         employees = Employee_Onboarding.objects.all()
         wage_registers = []
         for employee in employees:
-            print(employee.id,'lklkl')
             last_wage_register = WageRegister.objects.filter(employee_id=employee.employee_id).order_by('-id').first()
             wage_registers.append(last_wage_register)
+            month = last_wage_register.month
+            year = last_wage_register.year
+        for wage_register in wage_registers:
+            wage_register.new_days_payable = int(wage_register.days_payable) - int(wage_register.sunday_and_holidays)
         if request.user.user_type == '1':
-            return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers})
+            return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'month':month,'year':year})
         else:
-            return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers})
+            return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'month':month,'year':year})
     except:
         return HttpResponse("Invalid request")
         
 
+# @login_required(login_url='do_login')
+# @require_user_type(user_type=[1,2])
+# def wage_register(request):
+#     try:
+#         employees = Employee_Onboarding.objects.all()
+#         wage_registers = []
+#         today = date.today()
+#         salary_drop = SalarySlip.objects.all()   
+
+#         available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+            
+#         current_year = datetime.now().year
+
+#         available_years = [str(year) for year in range(current_year, current_year + 2)]
+
+#         remaining_years = {}
+
+#         for year in available_years:
+#             remaining_months = []
+#             for month in available_months:
+#                 if not any(w.year == year and w.month == month for w in salary_drop):
+#                     remaining_months.append(month)
+#             if remaining_months:
+#                 remaining_years[year] = remaining_months          
+        
+#         if request.method == "POST":
+#             month = request.POST.get('month_name')
+#             year = request.POST.get('year')
+#             days_payable = int(request.POST.get('days'))
+#             days_paid = int(request.POST.get('paid'))      
+
+#             month_to_number = {
+#                 'january': 1,
+#                 'february': 2,
+#                 'march': 3,
+#                 'april': 4,
+#                 'may': 5,
+#                 'june': 6,
+#                 'july': 7,
+#                 'august': 8,
+#                 'september': 9,
+#                 'october': 10,
+#                 'november': 11,
+#                 'december': 12
+#             }
+
+#             month_number = month_to_number.get(month.lower())
+#             existing_data = WageRegister.objects.filter(month=month, year=year)
+#             existing_data.delete()
+
+
+#             for employee in employees:
+#                 employee_id = employee.id
+#                 onboarding_data = Employee_Onboarding.objects.get(id=employee_id)
+#                 c = onboarding_data.contact_no
+
+#                 offer = OfferLetter_Sended.objects.get(mobile_no=c)
+#                 ctc = offer.ctc
+#                 address = offer.address
+
+#                 age = today.year - employee.dob.year
+
+#                 # Check if the birth month and day have already passed in the current year
+#                 if today.month < employee.dob.month or (today.month == employee.dob.month and today.day < employee.dob.day):
+#                     age -= 1
+#                 age = age
+
+#                 if employee_id:
+#                     onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
+#                     employee = onboarding_data.employee
+
+#                     if ctc <= 252000:
+#                         insurance_premiums = 0
+#                     else:
+#                         insurance_premiums = 11000.0
+
+#                     variable_component = (ctc * 0.10)
+#                     total_variable_pay = ctc * 0.10
+#                     total_fixed_pay = ctc - total_variable_pay - insurance_premiums
+#                     basic_pay = total_fixed_pay * 0.40
+#                     employer_pf_contribution = 0.13 * basic_pay
+#                     hra = 0.50 * basic_pay
+#                     total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
+#                     conveyance_allowance = 1600 / int(days_payable) * int(days_paid)
+#                     professional_tax = 200
+#                     income_tax = 0
+
+#                     total_variable_pay = ctc * 0.10
+#                     total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid) / int(days_payable)
+#                     basic_salary = (total_fixed_pay * 0.40)
+#                     variable_component = (ctc * 0.10) / 12 * int(days_paid) / int(days_payable)
+#                     hra = 0.50 * basic_salary
+#                     provident_fund = 0.12 * basic_salary
+#                     flexible_component = (total_flexible_component / 12) * days_paid / days_payable - conveyance_allowance
+#                     gross_salary = (hra + basic_salary + conveyance_allowance + flexible_component + variable_component)
+#                     flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
+#                     other_deductions = 0
+#                     if ctc <= 252000:
+#                         esic = (0.0075 * float(gross_salary))
+#                     else:
+#                         esic = 0
+#                     total_deductions = provident_fund + professional_tax + income_tax + other_deductions +esic
+#                     net_salary = Decimal(gross_salary) - Decimal(total_deductions)
+
+#                     ytd_net_salary = net_salary
+#                     ytd_basic_salary = basic_salary
+#                     ytd_hra = hra
+#                     ytd_conveyance_allowance = conveyance_allowance
+#                     ytd_flexible_component = flexible_component
+#                     ytd_variable_component = variable_component
+#                     ytd_provident_fund = provident_fund
+#                     ytd_esic = esic
+#                     ytd_professional_tax = professional_tax
+#                     ytd_income_tax = income_tax
+#                     ytd_other_deductions = other_deductions
+#                     ytd_total_deductions = total_deductions
+#                     ytd_gross_salary = gross_salary
+
+#                     prev_wage_register = WageRegister.objects.filter(employee_id=employee).order_by('-id')[0:1]
+
+#                     if prev_wage_register:
+#                         first_salary_slip = prev_wage_register[0]
+#                         net_salary = first_salary_slip.net_salary
+#                         ytd_net_salary = first_salary_slip.ytd_net_salary
+#                         basic_salary = first_salary_slip.basic_salary
+#                         ytd_basic_salary = first_salary_slip.ytd_basic_salary
+#                         hra = first_salary_slip.hra
+#                         ytd_hra = first_salary_slip.ytd_hra
+#                         conveyance_allowance = first_salary_slip.conveyance_allowance
+#                         ytd_conveyance_allowance = first_salary_slip.ytd_conveyance_allowance
+#                         flexible_component = first_salary_slip.flexible_component
+#                         ytd_flexible_component = first_salary_slip.ytd_flexible_component
+#                         variable_component = first_salary_slip.variable_component
+#                         ytd_variable_component = first_salary_slip.variable_component
+#                         provident_fund = first_salary_slip.provident_fund
+#                         ytd_provident_fund = first_salary_slip.ytd_provident_fund
+#                         esic = first_salary_slip.esic
+#                         ytd_esic = first_salary_slip.ytd_esic
+#                         professional_tax = first_salary_slip.professional_tax
+#                         ytd_professional_tax = first_salary_slip.ytd_professional_tax
+#                         income_tax = first_salary_slip.income_tax
+#                         ytd_income_tax = first_salary_slip.ytd_income_tax
+#                         other_deductions = first_salary_slip.other_deductions
+#                         ytd_other_deductions = first_salary_slip.ytd_other_deductions
+#                         total_deductions = first_salary_slip.total_deductions
+#                         ytd_total_deductions = first_salary_slip.ytd_total_deductions
+#                         gross_salary = first_salary_slip.gross_salary
+#                         ytd_gross_salary = first_salary_slip.ytd_gross_salary
+
+#                         if month_number == 4:  # Check if the month is April or later
+#                             ytd_net_salary = net_salary
+#                             ytd_basic_salary = basic_salary
+#                             ytd_hra = hra
+#                             ytd_conveyance_allowance = conveyance_allowance
+#                             ytd_flexible_component = flexible_component
+#                             ytd_variable_component = variable_component
+#                             ytd_provident_fund = provident_fund
+#                             ytd_esic = esic
+#                             ytd_professional_tax = professional_tax
+#                             ytd_income_tax = income_tax
+#                             ytd_other_deductions = other_deductions
+#                             ytd_total_deductions = total_deductions
+#                             ytd_gross_salary = gross_salary
+#                         else:
+#                             ytd_net_salary += net_salary
+#                             ytd_basic_salary += basic_salary
+#                             ytd_hra += hra
+#                             ytd_conveyance_allowance += conveyance_allowance
+#                             ytd_flexible_component += flexible_component
+#                             ytd_variable_component += variable_component
+#                             ytd_provident_fund += provident_fund
+#                             ytd_esic += esic
+#                             ytd_professional_tax += professional_tax
+#                             ytd_income_tax += income_tax
+#                             ytd_other_deductions += other_deductions
+#                             ytd_total_deductions += total_deductions
+#                             ytd_gross_salary += gross_salary
+
+#                     wage_register = WageRegister(
+#                         employee_id=employee,
+#                         month=month,
+#                         year=year,
+#                         age = age,
+#                         days_payable=days_payable,
+#                         days_paid=days_paid,
+#                         ctc=round(ctc),
+#                         esic=round(esic),
+#                         basic_salary=round(basic_salary),
+#                         hra=round(hra),
+#                         conveyance_allowance=round(conveyance_allowance),
+#                         flexible_component=round(flexible_component),
+#                         variable_component=round(variable_component),
+#                         provident_fund=round(provident_fund),
+#                         professional_tax=round(professional_tax),
+#                         income_tax=round(income_tax),
+#                         other_deductions=round(other_deductions),
+#                         gross_salary=round(gross_salary),
+#                         total_deductions=round(total_deductions),
+#                         net_salary=round(net_salary),
+#                         address=address,
+#                         ytd_net_salary=round(ytd_net_salary),
+#                         ytd_basic_salary=round(ytd_basic_salary),
+#                         ytd_hra=round(ytd_hra),
+#                         ytd_conveyance_allowance=round(ytd_conveyance_allowance),
+#                         ytd_flexible_component=round(ytd_flexible_component),
+#                         ytd_variable_component=round(ytd_variable_component),
+#                         ytd_provident_fund=round(ytd_provident_fund),
+#                         ytd_esic=round(ytd_esic),
+#                         ytd_professional_tax=round(ytd_professional_tax),
+#                         ytd_income_tax=round(ytd_income_tax),
+#                         ytd_other_deductions=round(ytd_other_deductions),
+#                         ytd_total_deductions=round(ytd_total_deductions),
+#                         ytd_gross_salary=round(ytd_gross_salary)
+#                     )
+                    
+#                     wage_register.save()
+#                     wage_registers.append(wage_register)
+                        
+#             if request.user.user_type == '1':
+#                 return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+#             else:
+#                 return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+#         if request.user.user_type == '1':
+#             return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
+#         else:
+#             return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
+#     except BaseException as a:
+#         print(a)
+#         messages.error(request,"May be something went to wrong")
+#         return HttpResponseRedirect(reverse("wage_register"))
+# import pdb
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def wage_register(request):
@@ -964,12 +1269,11 @@ def wage_register(request):
         employees = Employee_Onboarding.objects.all()
         wage_registers = []
         today = date.today()
-        salary_drop = SalarySlip.objects.all()   
+        salary_drop = SalarySlip.objects.all()
 
         available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-            
-        current_year = datetime.now().year
 
+        current_year = datetime.now().year
         available_years = [str(year) for year in range(current_year, current_year + 2)]
 
         remaining_years = {}
@@ -977,16 +1281,25 @@ def wage_register(request):
         for year in available_years:
             remaining_months = []
             for month in available_months:
-                if not any(w.year == year and w.month == month for w in salary_drop):
+                if not any(w.year == int(year) and w.month == available_months.index(month) + 1 for w in salary_drop):
                     remaining_months.append(month)
             if remaining_months:
-                remaining_years[year] = remaining_months          
-        
+                remaining_years[year] = remaining_months
         if request.method == "POST":
             month = request.POST.get('month_name')
-            year = request.POST.get('year')
+            year = int(request.POST.get('year'))
             days_payable = int(request.POST.get('days'))
-            days_paid = int(request.POST.get('paid'))      
+            days_paid = int(request.POST.get('paid'))
+
+            month_index = available_months.index(month.capitalize()) + 1
+
+            # Calculate the number of Sundays in the selected month
+            _, num_days = calendar.monthrange(year, month_index)
+            first_weekday = calendar.weekday(year, month_index, 1)
+            num_sundays = (num_days - (6 - first_weekday)) // 7
+            if (num_days - (6 - first_weekday)) % 7 > 0:
+                num_sundays += 1
+
 
             month_to_number = {
                 'january': 1,
@@ -1138,6 +1451,7 @@ def wage_register(request):
                     wage_register = WageRegister(
                         employee_id=employee,
                         month=month,
+                        sunday_and_holidays = num_sundays,
                         year=year,
                         age = age,
                         days_payable=days_payable,
@@ -1171,21 +1485,20 @@ def wage_register(request):
                         ytd_total_deductions=round(ytd_total_deductions),
                         ytd_gross_salary=round(ytd_gross_salary)
                     )
-                    
                     wage_register.save()
                     wage_registers.append(wage_register)
-                        
+                    wage_register.new_days_payable = wage_register.days_payable - wage_register.sunday_and_holidays
             if request.user.user_type == '1':
-                return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+                return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year,'days_payable':days_payable})
             else:
-                return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
+                return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year,'days_payable':days_payable})
         if request.user.user_type == '1':
             return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
         else:
             return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
     except BaseException as a:
-        print(a)
-        messages.error(request,"May be something went to wrong")
+        return a
+        # messages.error(request,"May be something went to wrong {a}")
         return HttpResponseRedirect(reverse("wage_register"))
 
 
@@ -1244,67 +1557,71 @@ def old_wage_register(request):
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def generate_salary_slips(request):
-    emp = Employees.objects.all()
-    salary_slips = []
+    try:
+        emp = Employees.objects.all()
+        salary_slips = []
 
-    # Get the last wage register for each employee
-    for employee in emp:
-        wage_register = WageRegister.objects.filter(employee_id=employee).last()
+        # Get the last wage register for each employee
+        for employee in emp:
+            wage_register = WageRegister.objects.filter(employee_id=employee).last()
 
-        if wage_register is not None:
-            employee_id = wage_register.employee_id.id
-            onboarding_data = Employee_Onboarding.objects.get(employee_id=employee_id)
-            c = onboarding_data.contact_no
+            if wage_register is not None:
+                employee_id = wage_register.employee_id.id
+                onboarding_data = Employee_Onboarding.objects.get(employee_id=employee_id)
+                c = onboarding_data.contact_no
 
-            offer = OfferLetter_Sended.objects.get(mobile_no=c)
-            # ctc = offer.ctc
-            address = offer.address
+                offer = OfferLetter_Sended.objects.get(mobile_no=c)
+                # ctc = offer.ctc
+                address = offer.address
 
-            salary_slip = SalarySlip(
-                employee_id=employee,
-                basic_salary=wage_register.basic_salary,
-                conveyance_allowance=wage_register.conveyance_allowance,
-                total_deductions=wage_register.total_deductions,
-                gross_salary=wage_register.gross_salary,
-                net_salary=wage_register.net_salary,
-                ctc=wage_register.ctc,
-                hra=wage_register.hra,
-                esic=wage_register.esic,
-                flexible_component=wage_register.flexible_component,
-                variable_component=wage_register.variable_component,
-                provident_fund=wage_register.provident_fund,
-                professional_tax=wage_register.professional_tax,
-                income_tax=wage_register.income_tax,
-                other_deductions=wage_register.other_deductions,
-                other_allowns=wage_register.other_allowns,
-                lwf=wage_register.lwf,
-                ytd_ctc=wage_register.ytd_ctc,
-                ytd_hra=wage_register.ytd_hra,
-                ytd_esic=wage_register.ytd_esic,
-                ytd_basic_salary=wage_register.ytd_basic_salary,
-                ytd_conveyance_allowance=wage_register.ytd_conveyance_allowance,
-                ytd_flexible_component=wage_register.ytd_flexible_component,
-                ytd_variable_component=wage_register.ytd_variable_component,
-                ytd_provident_fund=wage_register.ytd_provident_fund,
-                ytd_professional_tax=wage_register.ytd_professional_tax,
-                ytd_income_tax=wage_register.ytd_income_tax,
-                ytd_other_deductions=wage_register.ytd_other_deductions,
-                ytd_gross_salary=wage_register.ytd_gross_salary,
-                ytd_total_deductions=wage_register.ytd_total_deductions,
-                ytd_net_salary=wage_register.ytd_net_salary,
-                days_payable=wage_register.days_payable,
-                days_paid=wage_register.days_paid,
-                address=address,
-                month=wage_register.month,
-                year=wage_register.year,
-            )
-            salary_slip.save()
-            salary_slips.append(salary_slip)
-    if request.user.user_type == '2':
-        return render(request, 'hr_management/hr/salary_slip_generate_successfully.html')
-    else:
-        return render(request, 'hr_management/admin/salary_slip_generate_successfully.html')
-
+                salary_slip = SalarySlip(
+                    employee_id=employee,
+                    basic_salary=wage_register.basic_salary,
+                    conveyance_allowance=wage_register.conveyance_allowance,
+                    total_deductions=wage_register.total_deductions,
+                    gross_salary=wage_register.gross_salary,
+                    net_salary=wage_register.net_salary,
+                    ctc=wage_register.ctc,
+                    hra=wage_register.hra,
+                    esic=wage_register.esic,
+                    flexible_component=wage_register.flexible_component,
+                    variable_component=wage_register.variable_component,
+                    provident_fund=wage_register.provident_fund,
+                    professional_tax=wage_register.professional_tax,
+                    income_tax=wage_register.income_tax,
+                    other_deductions=wage_register.other_deductions,
+                    other_allowns=wage_register.other_allowns,
+                    lwf=wage_register.lwf,
+                    ytd_ctc=wage_register.ytd_ctc,
+                    ytd_hra=wage_register.ytd_hra,
+                    ytd_esic=wage_register.ytd_esic,
+                    ytd_basic_salary=wage_register.ytd_basic_salary,
+                    ytd_conveyance_allowance=wage_register.ytd_conveyance_allowance,
+                    ytd_flexible_component=wage_register.ytd_flexible_component,
+                    ytd_variable_component=wage_register.ytd_variable_component,
+                    ytd_provident_fund=wage_register.ytd_provident_fund,
+                    ytd_professional_tax=wage_register.ytd_professional_tax,
+                    ytd_income_tax=wage_register.ytd_income_tax,
+                    ytd_other_deductions=wage_register.ytd_other_deductions,
+                    ytd_gross_salary=wage_register.ytd_gross_salary,
+                    ytd_total_deductions=wage_register.ytd_total_deductions,
+                    ytd_net_salary=wage_register.ytd_net_salary,
+                    days_payable=wage_register.days_payable,
+                    days_paid=wage_register.days_paid,
+                    address=address,
+                    month=wage_register.month,
+                    year=wage_register.year,
+                )
+                salary_slip.save()
+                salary_slips.append(salary_slip)
+        if request.user.user_type == '2':
+            return render(request, 'hr_management/hr/salary_slip_generate_successfully.html')
+        else:
+            return render(request, 'hr_management/admin/salary_slip_generate_successfully.html')
+    except:
+        messages.success(request,"May be something went to wrong")
+        return HttpResponseRedirect(reverse("generate_salary_slips"))
+    
 # ################################Update wage register ##############################################
 
 @login_required(login_url='do_login')
@@ -1335,6 +1652,7 @@ def edit_wage_register(request, pk):
         wage_register.other_deductions = Decimal(request.POST.get('other_deductions'))
         wage_register.net_salary = Decimal(request.POST.get('net_salary'))
         wage_register.esic = Decimal(request.POST.get('esic'))
+        wage_register.sunday_and_holidays = int(request.POST.get('sunday_and_holidays'))
     
 
         hra = 0
