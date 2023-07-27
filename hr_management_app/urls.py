@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from hr_management_app import views,EmployeeViews,HRViews,AdminViews,ManagerViews
-from hr_management import settings
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic import RedirectView

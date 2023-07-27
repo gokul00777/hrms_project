@@ -13,7 +13,6 @@ Add Manager
     /* Add this line to center the text inside the element */
   }
 </style>
-
 {% endblock custom_css %}
 {% block main_content %}
 <!-- Main content -->
@@ -30,7 +29,6 @@ Add Manager
     {% endfor %}
     {% endif %}
   </div>
-
   <div class="container-fluid" style="width: 900px;">
     <div class="row">
       <div class="col-md-12">
@@ -47,13 +45,14 @@ Add Manager
               <div class="row">
                 <div class="form-group col-md-6">
                   <label>Email address</label>
-                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email" autocomplete="off">
+                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email"
+                    autocomplete="off">
                   <span id="email-error-message" style="color: red; display: none;">Invalid email address.</span>
                 </div>
                 <div class="form-group col-md-6">
-                  <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Password" id="id_password" name="password">
-                  <p id="password-error-message" style="display: none; color: red;">  Password must be 8 characters or more with at least one uppercase letter, one lowercase letter, one digit, and one special character.</p>
+                  <label>Username</label>
+                  <input type="text" class="form-control" placeholder="Username" name="username" id="id_username"
+                    autocomplete="off">
                 </div>
               </div>
               <div class="row">
@@ -67,11 +66,36 @@ Add Manager
                 </div>
               </div>
               <div class="row">
+
                 <div class="form-group col-md-6">
-                  <label>Username</label>
-                  <input type="text" class="form-control" placeholder="Username" name="username" id="id_username"
-                    autocomplete="off">
+                  <label>Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" placeholder="Password" id="id_password" name="password">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default" id="showPasswordBtn">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p id="password-error-message" style="display: none; color: red;">Password must be 8 characters or
+                    more with at least one uppercase letter, one lowercase letter, one digit, and one special character.
+                  </p>
                 </div>
+                <div class="form-group col-md-6">
+                  <label>Confirm Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" name="confirm_password" id="id_confirm_password"
+                      placeholder="Confirm Password">
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-default" id="showConfirmPasswordBtn">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <p id="confirm-password-error-message" style="display: none; color: red;">Passwords do not match.</p>
+                </div>
+              </div>
+              <div class="row">
                 <div class="form-group col-md-6">
                   <label>Department</label>
                   <select name="department" class="form-control">
@@ -84,13 +108,13 @@ Add Manager
                     <option value="HQ">HQ</option>
                   </select>
                 </div>
-              </div>
-              <div class="row">
                 <div class="form-group col-md-6">
                   <label>Designation</label>
-                  <input type="text" class="form-control" placeholder="designation" name="designation"
+                  <input type="text" class="form-control" placeholder="Designation" name="designation"
                     id="id_designation" autocomplete="off">
                 </div>
+              </div>
+              <div class="row">
                 <div class="form-group col-md-6">
                   <label>Manager</label>
                   <select name="manager" class="form-control">
@@ -146,7 +170,6 @@ Add Manager
       else {
         $(".email_error").remove();
       }
-
     });
 
     $("#id_username").keyup(function () {
@@ -176,52 +199,70 @@ Add Manager
       else {
         $(".username_error").remove();
       }
-
     });
 
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    setTimeout(function () {
-      var errorMessage = document.getElementById("error-message");
-      var successMessage = document.getElementById("success-message");
+    const emailInput = document.getElementById('id_email');
+    const emailErrorMessage = document.getElementById('email-error-message');
+    const passwordInput = document.getElementById('id_password');
+    const passwordErrorMessage = document.getElementById('password-error-message');
+    const confirmPasswordInput = document.getElementById('id_confirm_password');
+    const confirmPasswordErrorMessage = document.getElementById('confirm-password-error-message');
+    const passwordMatchIcon = document.getElementById('password-match-icon');
 
-      if (errorMessage) {
-        errorMessage.style.display = "none";
-      }
-      if (successMessage) {
-        successMessage.style.display = "none";
-      }
-    }, 2000); // 30 seconds
-  });
-</script>
-
-<script>
-  const emailInput = document.getElementById('id_email');
-  const emailErrorMessage = document.getElementById('email-error-message');
-  const passwordInput = document.getElementById('id_password');
-  const passwordErrorMessage = document.getElementById('password-error-message');
-
-  emailInput.addEventListener('input', function() {
+    emailInput.addEventListener('input', function () {
       const email = emailInput.value.trim();
       const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|olatechs)\.com$/;
       if (!emailRegex.test(email)) {
-          emailErrorMessage.style.display = 'block';
+        emailErrorMessage.style.display = 'block';
       } else {
-          emailErrorMessage.style.display = 'none';
+        emailErrorMessage.style.display = 'none';
       }
-  });
+    });
 
-  passwordInput.addEventListener('input', function() {
+    passwordInput.addEventListener('input', function () {
       const password = passwordInput.value;
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if (!passwordRegex.test(password)) {
-          passwordErrorMessage.style.display = 'block';
+        passwordErrorMessage.style.display = 'block';
       } else {
-          passwordErrorMessage.style.display = 'none';
+        passwordErrorMessage.style.display = 'none';
       }
+    });
+
+    confirmPasswordInput.addEventListener('input', function () {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (password !== confirmPassword) {
+        confirmPasswordErrorMessage.style.display = 'block';
+        passwordMatchIcon.style.display = 'none'; // Hide the tick icon
+      } else {
+        confirmPasswordErrorMessage.style.display = 'none';
+        passwordMatchIcon.style.display = 'block'; // Show the tick icon
+      }
+    });
+  });
+
+  function togglePasswordVisibility(inputElement, toggleBtn) {
+    const inputType = inputElement.getAttribute('type');
+    const newType = inputType === 'password' ? 'text' : 'password';
+    inputElement.setAttribute('type', newType);
+    const iconClass = newType === 'password' ? 'fa-eye' : 'fa-eye-slash';
+    toggleBtn.innerHTML = `<i class="fa ${iconClass}"></i>`;
+  }
+
+  // Event listeners to toggle password visibility
+  const showPasswordBtn = document.getElementById('showPasswordBtn');
+  const showConfirmPasswordBtn = document.getElementById('showConfirmPasswordBtn');
+  const passwordInput = document.getElementById('id_password');
+  const confirmPasswordInput = document.getElementById('id_confirm_password');
+
+  showPasswordBtn.addEventListener('click', () => {
+    togglePasswordVisibility(passwordInput, showPasswordBtn);
+  });
+
+  showConfirmPasswordBtn.addEventListener('click', () => {
+    togglePasswordVisibility(confirmPasswordInput, showConfirmPasswordBtn);
   });
 </script>
-
 {% endblock custom_js %}

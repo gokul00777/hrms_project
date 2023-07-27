@@ -137,12 +137,6 @@ STATIC_ROOT=os.path.join(BASE_DIR,"static")
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'smtp0777@gmail.com'
-EMAIL_HOST_PASSWORD = 'xetardfvmeohemwh'
 
 
 # Default primary key field type
@@ -153,47 +147,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
+# import logging
 
+# # Set up the logger
+# logger = logging.getLogger(__name__)
+# logger.setLevel(logging.DEBUG)
 
+# # Create a file handler
+# log_path = 'example.log'  # set the log file path here
+# handler = logging.FileHandler(log_path)
+# handler.setLevel(logging.DEBUG)
 
-import logging
+# # Create a formatter
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s- %(filename)s:%(lineno)d - %(message)s')
+# handler.setFormatter(formatter)
 
-# Set up the logger for the file
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+# # Add the handler to the logger
+# logger.addHandler(handler)
 
-# Create a file handler
-log_path = 'hrms.log'  # set the log file path here
-handler = logging.FileHandler(log_path)
-handler.setLevel(logging.DEBUG)
-
-# Create a formatter for the file
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(pathname)s:%(lineno)d - %(message)s')
-handler.setFormatter(formatter)
-
-# Add the file handler to the logger
-logger.addHandler(handler)
-
-# Set up the logger for the console
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)  # Set the log level for console logs
-
-# Create a formatter for the console
-console_formatter = logging.Formatter('%(levelname)s - %(message)s')
-console_handler.setFormatter(console_formatter)
-
-# Add the console handler to the logger
-logger.addHandler(console_handler)
-
-# User action that triggers the log messages
-def user_action():
-    # ... Your user action code goes here ...
-    # Log messages based on the user action
-    logger.debug("User performed the action.")
-    logger.info("User action was successful.")
-    logger.warning("User action had some issues.")
-    logger.error("User action encountered an error.")
-    logger.critical("Critical error in user action!")
-
-# Perform the user action
-user_action()
+# # Log some messages
+# logger.debug('Debug message')
+# logger.info('Info message')
+# logger.warning('Warning message')
+# logger.error('Error message')
+# logger.critical('Critical message')

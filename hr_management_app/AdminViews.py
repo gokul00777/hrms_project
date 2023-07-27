@@ -81,8 +81,13 @@ def add_hr_save(request):
         last_name=request.POST.get("last_name")
         username=request.POST.get("username")
         email=request.POST.get("email")
-        password=request.POST.get("password")
         department=request.POST.get("department")
+        password=request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return HttpResponseRedirect(reverse("add_hr"))
         try:
             user=CustomUser.objects.create_user(username=username,password=password,email=email,last_name=last_name,first_name=first_name,user_type=2)
             user.hrs.department=department
@@ -429,41 +434,31 @@ def employee_details(request, employee_id):
 
 
 #################################### delete onboarding details #######################
-
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def employee_details_delete(request, employee_id):
-    user = CustomUser.objects.get(id=employee_id)
-    employee = Employees.objects.get(admin=user)
-    personal_info = Employee_Onboarding.objects.get(employee=employee)
-    current_address = Address_detail.objects.get(employee=employee)
-    per_address = Permanent_Address.objects.get(employee=employee)
-    emp_family_details = FamilyDetails.objects.get(employee=employee)
-    bank_details = BankDetails.objects.get(employee=employee)
-    documents = Documents.objects.get(employee=employee)
-    leave = EmployeeLeave.objects.get(employee_id=employee)
+    try:
+        user = CustomUser.objects.get(id=employee_id)
+        employee = Employees.objects.get(admin=user)
+        personal_info = Employee_Onboarding.objects.get(employee_id=employee)
+        current_address = Address_detail.objects.get(employee_id=employee)
+        per_address = Permanent_Address.objects.get(employee_id=employee)
+        emp_family_details = FamilyDetails.objects.get(employee_id=employee)
+        bank_details = BankDetails.objects.get(employee_id=employee)
+        documents = Documents.objects.get(employee_id=employee)
+        leave = EmployeeLeave.objects.get(employee_id=employee)
+        personal_info.delete()
+        current_address.delete()
+        per_address.delete()
+        emp_family_details.delete()
+        bank_details.delete()
+        documents.delete()
+        leave.delete()
+        return redirect('employee_details',user.id)
+    except:
+        return HttpResponse("An error occurred while deleting employee details.")
 
-    personal_info.delete()
-    current_address.delete()
-    per_address.delete()
-    emp_family_details.delete()
-    bank_details.delete()
-    documents.delete()
-    leave.delete()
-
-
-    context = {
-        'user': user,
-        
-    }
-    if request.user.user_type == '2':
-        return render(request, 'hr_management/hr/employee_onboarding_details.html', context)
-    else:
-        return render(request, 'hr_management/admin/employee_onboarding_details.html', context)
-
-   
 ############################################ edit onboarding details #######################
-
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
@@ -525,7 +520,7 @@ def edit_employee_onboarding(request, employee_id):
             return render(request, 'hr_management/admin/employee_onboarding.html', context)
         else:
             return render(request, 'hr_management/hr/employee_onboarding.html', context)
-    except:
+    except :
         messages.success(request, "Failed to edit onboarding data")
 
 

@@ -5,12 +5,14 @@ Add HR
 {% block custom_css %}
 <style>
   .custom-error {
-      max-width: 300px; /* Adjust the width to your desired value */
-      margin: 0 auto; /* Add this line to center the element */
-      text-align: center; /* Add this line to center the text inside the element */
+    max-width: 300px;
+    /* Adjust the width to your desired value */
+    margin: 0 auto;
+    /* Add this line to center the element */
+    text-align: center;
+    /* Add this line to center the text inside the element */
   }
 </style>
-
 {% endblock custom_css %}
 
 {% block main_content %}
@@ -27,7 +29,7 @@ Add HR
     {% endif %}
     {% endfor %}
     {% endif %}
-</div>
+  </div>
 
   <div class="container-fluid" style="width: 900px;">
     <div class="row">
@@ -45,13 +47,43 @@ Add HR
               <div class="row">
                 <div class="form-group col-md-6">
                   <label>Email address</label>
-                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email" autocomplete="off">
+                  <input type="email" class="form-control" name="email" placeholder="Enter email" id="id_email"
+                    autocomplete="off">
                   <span id="email-error-message" style="color: red; display: none;">Invalid email address.</span>
                 </div>
                 <div class="form-group col-md-6">
+                  <label>Username</label>
+                  <input type="text" class="form-control" placeholder="Username" name="username" id="id_username"
+                    autocomplete="off">
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group col-md-6">
                   <label>Password</label>
-                  <input type="password" class="form-control" placeholder="Password" id="id_password" name="password">
-                  <p id="password-error-message" style="display: none; color: red;">  Password must be 8 characters or more with at least one uppercase letter, one lowercase letter, one digit, and one special character.</p>
+                  <div class="input-group">
+                    <input type="password" class="form-control" placeholder="Password" id="id_password" name="password">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="eye-icon" style="cursor: pointer;">
+                        <i class="fas fa-eye"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <p id="password-error-message" style="display: none; color: red;">Password must be 8 characters or more with at least one uppercase letter, one lowercase letter, one digit, and one special character.</p>
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Confirm Password</label>
+                  <div class="input-group">
+                    <input type="password" class="form-control" name="confirm_password" id="id_confirm_password" placeholder="Confirm Password">
+                    <div class="input-group-append">
+                      <span class="input-group-text" id="eye-icon-confirm" style="cursor: pointer;">
+                        <i class="fas fa-eye"></i>
+                      </span>
+                    </div>
+                  </div>
+                  <span id="password-match-icon" style="color: green; background-color: transparent; display: none;">
+                    <i class="fas fa-check-circle"></i>
+                  </span>
+                  <p id="confirm-password-error-message" style="display: none; color: red;">Passwords do not match.</p>
                 </div>
               </div>
               <div class="row">
@@ -66,11 +98,6 @@ Add HR
               </div>
               <div class="row">
                 <div class="form-group col-md-6">
-                  <label>Username</label>
-                  <input type="text" class="form-control" placeholder="Username" name="username" id="id_username"
-                    autocomplete="off">
-                </div>
-                <div class="form-group col-md-6">
                   <label>Department</label>
                   <select name="department" class="form-control">
                     <option value="">Select Department</option>
@@ -83,11 +110,11 @@ Add HR
                   </select>
                 </div>
               </div>
-            </div>
-            <!-- /.card-body -->
+              <!-- /.card-body -->
 
-            <div class="text-center" style="padding-bottom: 40px;">
-              <button type="submit" class="btn btn-success">Add HR</button>
+              <div class="text-center" style="padding-bottom: 40px;">
+                <button type="submit" class="btn btn-success">Add HR</button>
+              </div>
             </div>
           </form>
         </div>
@@ -128,7 +155,6 @@ Add HR
       else {
         $(".email_error").remove();
       }
-
     });
 
     $("#id_username").keyup(function () {
@@ -158,51 +184,114 @@ Add HR
       else {
         $(".username_error").remove();
       }
-
     });
 
-  });
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-      setTimeout(function () {
-          var errorMessage = document.getElementById("error-message");
-          var successMessage = document.getElementById("success-message");
+    const emailInput = document.getElementById('id_email');
+    const emailErrorMessage = document.getElementById('email-error-message');
+    const passwordInput = document.getElementById('id_password');
+    const passwordErrorMessage = document.getElementById('password-error-message');
+    const confirmPasswordInput = document.getElementById('id_confirm_password');
+    const confirmPasswordErrorMessage = document.getElementById('confirm-password-error-message');
+    const passwordMatchIcon = document.getElementById('password-match-icon');
 
-          if (errorMessage) {
-              errorMessage.style.display = "none";
-          }
-          if (successMessage) {
-              successMessage.style.display = "none";
-          }
-      }, 2000); // 30 seconds
-  });
-</script>
-
-<script>
-  const emailInput = document.getElementById('id_email');
-  const emailErrorMessage = document.getElementById('email-error-message');
-  const passwordInput = document.getElementById('id_password');
-  const passwordErrorMessage = document.getElementById('password-error-message');
-
-  emailInput.addEventListener('input', function() {
+    emailInput.addEventListener('input', function () {
       const email = emailInput.value.trim();
       const emailRegex = /^[a-zA-Z0-9._%+-]+@(gmail|olatechs)\.com$/;
       if (!emailRegex.test(email)) {
-          emailErrorMessage.style.display = 'block';
+        emailErrorMessage.style.display = 'block';
       } else {
-          emailErrorMessage.style.display = 'none';
+        emailErrorMessage.style.display = 'none';
       }
-  });
+    });
 
-  passwordInput.addEventListener('input', function() {
+    passwordInput.addEventListener('input', function () {
       const password = passwordInput.value;
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if (!passwordRegex.test(password)) {
-          passwordErrorMessage.style.display = 'block';
+        passwordErrorMessage.style.display = 'block';
       } else {
-          passwordErrorMessage.style.display = 'none';
+        passwordErrorMessage.style.display = 'none';
       }
+    });
+
+    confirmPasswordInput.addEventListener('input', function () {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (password !== confirmPassword) {
+        confirmPasswordErrorMessage.style.display = 'block';
+        passwordMatchIcon.style.display = 'none'; // Hide the tick icon
+      } else {
+        confirmPasswordErrorMessage.style.display = 'none';
+        passwordMatchIcon.style.display = 'block'; // Show the tick icon
+      }
+    });
+  });
+</script>
+<script>
+  $(document).ready(function () {
+    // Password visibility toggle
+    const passwordInput = document.getElementById('id_password');
+    const confirmPasswordInput = document.getElementById('id_confirm_password');
+    const passwordMatchIcon = document.getElementById('password-match-icon');
+    const eyeIcon = document.getElementById('eye-icon');
+    const eyeIconConfirm = document.getElementById('eye-icon-confirm');
+
+    const togglePasswordVisibility = (inputElement, iconElement) => {
+      if (inputElement.type === 'password') {
+        inputElement.type = 'text';
+        iconElement.classList.remove('fa-eye');
+        iconElement.classList.add('fa-eye-slash');
+      } else {
+        inputElement.type = 'password';
+        iconElement.classList.remove('fa-eye-slash');
+        iconElement.classList.add('fa-eye');
+      }
+    };
+
+    eyeIcon.addEventListener('click', function () {
+      togglePasswordVisibility(passwordInput, eyeIcon);
+    });
+
+    eyeIconConfirm.addEventListener('click', function () {
+      togglePasswordVisibility(confirmPasswordInput, eyeIconConfirm);
+    });
+
+    // Check if passwords match
+    confirmPasswordInput.addEventListener('input', function () {
+      const password = passwordInput.value;
+      const confirmPassword = confirmPasswordInput.value;
+
+      if (password !== confirmPassword) {
+        passwordMatchIcon.style.display = 'none';
+        document.getElementById('confirm-password-error-message').style.display = 'block';
+      } else {
+        passwordMatchIcon.style.display = 'block';
+        document.getElementById('confirm-password-error-message').style.display = 'none';
+      }
+    });
+
+    // Validate password format
+    passwordInput.addEventListener('input', function () {
+      const password = passwordInput.value;
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if (!passwordRegex.test(password)) {
+        document.getElementById('password-error-message').style.display = 'block';
+      } else {
+        document.getElementById('password-error-message').style.display = 'none';
+      }
+
+      // Check if passwords match after password format validation
+      const confirmPassword = confirmPasswordInput.value;
+      if (password !== confirmPassword) {
+        passwordMatchIcon.style.display = 'none';
+        document.getElementById('confirm-password-error-message').style.display = 'block';
+      } else {
+        passwordMatchIcon.style.display = 'block';
+        document.getElementById('confirm-password-error-message').style.display = 'none';
+      }
+    });
   });
 </script>
 
