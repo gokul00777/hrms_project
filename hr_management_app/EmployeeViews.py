@@ -10,7 +10,7 @@ from .decorators import require_user_type
 from django.core.exceptions import ValidationError
 from django.shortcuts import render, get_object_or_404
 from num2words import num2words
-from datetime import datetime, timedelta,date
+from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
 
 
@@ -105,7 +105,6 @@ def employee_apply_leave(request):
             return render(request, "hr_management/manager_template/leave_error_msg.html")
 
 
-from django.core.exceptions import ValidationError
 @require_user_type(user_type=[3,4])
 @login_required(login_url='do_login')
 def employee_apply_leave_save(request):
@@ -137,8 +136,8 @@ def employee_apply_leave_save(request):
                 
         for start_date, end_date, msg, leave_type in zip(leave_start_dates, leave_end_dates, leave_msgs, leave_types):
             try:
-                start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d").date()
-                end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d").date()
+                start_date = datetime.strptime(start_date, "%Y-%m-%d").date()
+                end_date = datetime.strptime(end_date, "%Y-%m-%d").date()
                 if end_date < start_date:
                     raise Exception("You cannot select an end date before the start date.")
                 # Exclude Saturdays and Sundays

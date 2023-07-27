@@ -20,7 +20,7 @@ class AdminHOD(models.Model):
 class HRs(models.Model):
     id=models.AutoField(primary_key=True)
     admin=models.OneToOneField(CustomUser,on_delete=models.CASCADE)
-    department = models.CharField(max_length=50, default='')
+    department = models.CharField(max_length=50)
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now_add=True)
     fcm_token=models.TextField(default="")
@@ -44,8 +44,8 @@ class Employees(models.Model):
 
     admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     manager = models.CharField(max_length=50)
-    department = models.CharField(max_length=50, default='')
-    designation = models.CharField(max_length=50, default='')
+    department = models.CharField(max_length=50)
+    designation = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     fcm_token = models.TextField(default="")
@@ -67,9 +67,9 @@ class Employee_Onboarding(models.Model):
     last_name = models.CharField(max_length=50)
     contact_no= models.CharField(max_length=10)
     emergency_contact_no = models.CharField(max_length=10)
-    pancard_no= models.CharField(max_length=10)
-    adhaar_no= models.CharField(max_length=12) 
-    pf_uan_no = models.CharField(max_length=30)
+    pancard_no= models.CharField(max_length=10,unique=True)
+    adhaar_no= models.CharField(max_length=12,unique=True) 
+    pf_uan_no = models.CharField(max_length=30,unique=True)
     blood_group = models.CharField(max_length=20)
     dob = models.DateField()
     gender = models.CharField(max_length=20,choices=Gender)
@@ -154,19 +154,19 @@ def get_upload_to(instance, filename):
 
 class Documents(models.Model):
     employee = models.OneToOneField(Employees, on_delete=models.CASCADE)
-    employee_photo = models.FileField(upload_to=get_upload_to, blank=True, null=True)
-    employee_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    employee_pan = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    ssc_marksheet = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    hsc_marksheet = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    diploma_marksheet = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    degree_marksheet = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    bank_passbook = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    passport = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    reliving_letter = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    family_member1_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    family_member2_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
-    family_member3_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
+    employee_photo = models.FileField(upload_to=get_upload_to,)
+    employee_aadhar = models.FileField(upload_to=get_upload_to)
+    employee_pan = models.FileField(upload_to=get_upload_to)
+    ssc_marksheet = models.FileField(upload_to=get_upload_to)
+    hsc_marksheet = models.FileField(upload_to=get_upload_to)
+    diploma_marksheet = models.FileField(upload_to=get_upload_to)
+    degree_marksheet = models.FileField(upload_to=get_upload_to)
+    bank_passbook = models.FileField(upload_to=get_upload_to)
+    passport = models.FileField(upload_to=get_upload_to)
+    reliving_letter = models.FileField(upload_to=get_upload_to)
+    family_member1_aadhar = models.FileField(upload_to=get_upload_to)
+    family_member2_aadhar = models.FileField(upload_to=get_upload_to)
+    family_member3_aadhar = models.FileField(upload_to=get_upload_to)
     family_member4_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
     family_member5_aadhar = models.FileField(upload_to=get_upload_to,blank=True, null=True)
 
@@ -349,12 +349,12 @@ class WageRegister(models.Model):
     # Additional fields
     days_payable = models.IntegerField()
     days_paid = models.IntegerField(null=True)
-    address = models.CharField(max_length=500, default='')
-    month = models.CharField(max_length=30, default='')
-    year = models.CharField(max_length=30, default='') 
-    age = models.CharField(max_length=20,default='') 
-    sunday_and_holidays = models.CharField(max_length=40,default='')
-    new_days_payable = models.CharField(max_length=40, default='')
+    address = models.CharField(max_length=500)
+    month = models.CharField(max_length=30)
+    year = models.CharField(max_length=30) 
+    age = models.CharField(max_length=20) 
+    sunday_and_holidays = models.CharField(max_length=40)
+    new_days_payable = models.CharField(max_length=40)
 
 
 
@@ -398,9 +398,9 @@ class SalarySlip(models.Model):
     # Additional fields
     days_payable = models.IntegerField()
     days_paid = models.IntegerField(null=True)
-    address = models.CharField(max_length=500, default='')
-    month = models.CharField(max_length=30, default='')
-    year = models.CharField(max_length=30, default='')
+    address = models.CharField(max_length=500)
+    month = models.CharField(max_length=30)
+    year = models.CharField(max_length=30)
 
 
 

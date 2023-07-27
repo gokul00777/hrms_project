@@ -40,6 +40,7 @@ urlpatterns = [
     path('manage_session', AdminViews.manage_session,name="manage_session"),
     path('check_email_exist', AdminViews.check_email_exist,name="check_email_exist"),
     path('check_username_exist', AdminViews.check_username_exist,name="check_username_exist"),
+    path('check_mobile_number_exist', AdminViews.check_mobile_number_exist,name="check_mobile_number_exist"),
     path('employee_feedback_message', AdminViews.employee_feedback_message,name="employee_feedback_message"),
     path('employee_feedback_message_replied', AdminViews.employee_feedback_message_replied,name="employee_feedback_message_replied"),
     path('hr_feedback_message', AdminViews.hr_feedback_message,name="hr_feedback_message"),
@@ -80,14 +81,11 @@ urlpatterns = [
     path('employee_profile', EmployeeViews.employee_profile, name="employee_profile"),
     path('employee_profile_save', EmployeeViews.employee_profile_save, name="employee_profile_save"),
     path('employee_fcmtoken_save', EmployeeViews.employee_fcmtoken_save, name="employee_fcmtoken_save"),
-    path('firebase-messaging-sw.js',views.showFirebaseJS,name="show_firebase_js"),
+    # path('firebase-messaging-sw.js',views.showFirebaseJS,name="show_firebase_js"),
     path('employee_all_notification/',EmployeeViews.employee_all_notification,name="employee_all_notification"),
     path('employee_onboarding',EmployeeViews.EmployeeOnboarding, name='employee_onboarding'),
     path('all_records',EmployeeViews.AllRecords, name='all_records'),
-
-
     path('reset_password',views.reset_password, name='reset_password'),
-
     path('employee_salary_view',EmployeeViews.employee_salary_view, name='employee_salary_view'),
     path('wage_register/',AdminViews.wage_register, name='wage_register'),
     path('wage_register_update/<int:pk>/', AdminViews.edit_wage_register, name='edit_wage_register'),
@@ -97,9 +95,6 @@ urlpatterns = [
     path('old_wage_register',AdminViews.old_wage_register, name='old_wage_register'),
     path('payroll', AdminViews.payroll, name='payroll'),
     # re_path(r'^.*/$', RedirectView.as_view(url='/')),
-
-
-
 
 
     ###########manager#########

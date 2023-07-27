@@ -60,32 +60,32 @@ def logout_user(request):
     logout(request)
     return HttpResponseRedirect("/")
 
-def showFirebaseJS(request):
-    data='importScripts("https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js");' \
-         'importScripts("https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"); ' \
-         'var firebaseConfig = {' \
-         '        apiKey: "YOUR_API_KEY",' \
-         '        authDomain: "FIREBASE_AUTH_URL",' \
-         '        databaseURL: "FIREBASE_DATABASE_URL",' \
-         '        projectId: "FIREBASE_PROJECT_ID",' \
-         '        storageBucket: "FIREBASE_STORAGE_BUCKET_URL",' \
-         '        messagingSenderId: "FIREBASE_SENDER_ID",' \
-         '        appId: "FIREBASE_APP_ID",' \
-         '        measurementId: "FIREBASE_MEASUREMENT_ID"' \
-         ' };' \
-         'firebase.initializeApp(firebaseConfig);' \
-         'const messaging=firebase.messaging();' \
-         'messaging.setBackgroundMessageHandler(function (payload) {' \
-         '    console.log(payload);' \
-         '    const notification=JSON.parse(payload);' \
-         '    const notificationOption={' \
-         '        body:notification.body,' \
-         '        icon:notification.icon' \
-         '    };' \
-         '    return self.registration.showNotification(payload.notification.title,notificationOption);' \
-         '});'
+# def showFirebaseJS(request):
+#     data='importScripts("https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js");' \
+#          'importScripts("https://www.gstatic.com/firebasejs/7.14.6/firebase-messaging.js"); ' \
+#          'var firebaseConfig = {' \
+#          '        apiKey: "YOUR_API_KEY",' \
+#          '        authDomain: "FIREBASE_AUTH_URL",' \
+#          '        databaseURL: "FIREBASE_DATABASE_URL",' \
+#          '        projectId: "FIREBASE_PROJECT_ID",' \
+#          '        storageBucket: "FIREBASE_STORAGE_BUCKET_URL",' \
+#          '        messagingSenderId: "FIREBASE_SENDER_ID",' \
+#          '        appId: "FIREBASE_APP_ID",' \
+#          '        measurementId: "FIREBASE_MEASUREMENT_ID"' \
+#          ' };' \
+#          'firebase.initializeApp(firebaseConfig);' \
+#          'const messaging=firebase.messaging();' \
+#          'messaging.setBackgroundMessageHandler(function (payload) {' \
+#          '    console.log(payload);' \
+#          '    const notification=JSON.parse(payload);' \
+#          '    const notificationOption={' \
+#          '        body:notification.body,' \
+#          '        icon:notification.icon' \
+#          '    };' \
+#          '    return self.registration.showNotification(payload.notification.title,notificationOption);' \
+#          '});'
 
-    return HttpResponse(data,content_type="text/javascript")
+#     return HttpResponse(data,content_type="text/javascript")
 
 
 def signup_admin(request):
@@ -259,35 +259,3 @@ def reset_password_confirm(request, uidb64, token):
         return redirect('reset_password')
 
     return render(request, 'hr_management/reset_password_confirm.html')
-
-# def resend_reset_email(request):
-#     if request.method == 'POST':
-#         email = request.POST.get('email')
-#         try:  
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             messages.error(request, 'No user with the provided email address exists.')
-#             return redirect('resend_reset_email')
-
-#         # Generate the password reset token
-#         token = default_token_generator.make_token(user)
-
-#         # Generate the password reset link
-#         uid = urlsafe_base64_encode(force_bytes(user.pk))
-#         reset_link = request.build_absolute_uri('/password_reset/{}/{}/'.format(uid, token))
-
-#         # Compose the email
-#         subject = 'Password Reset'
-#         message = render_to_string('hr_management/reset_password_email.html', {
-#             'user': user,
-#             'reset_link': reset_link
-#         })
-#         email = EmailMessage(subject, message, to=[email])
-#         email.send()
-
-#         messages.success(request, 'Password reset email has been resent. Please check your inbox.')
-#         return redirect('resend_reset_email')
-
-#     return render(request, 'hr_management/reset_password_email.html')
-
-

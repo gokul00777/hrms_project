@@ -13,42 +13,6 @@ class ChoiceNoValidation(ChoiceField):
 class DateInput(forms.DateInput):
     input_type = "date"
 
-# class AddEmployeeForm(forms.Form):
-#     email=forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control","autocomplete":"off"}))
-#     password=forms.CharField(label="Password",max_length=50,widget=forms.PasswordInput(attrs={"class":"form-control"}))
-#     first_name=forms.CharField(label="First Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     last_name=forms.CharField(label="Last Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     username=forms.CharField(label="Username",max_length=50,widget=forms.TextInput(attrs={"class":"form-control","autocomplete":"off"}))
-#     department=(
-#         ("","Select Department"),
-#         ("DSBU","DSBU"),
-#         ("HSBU","HSBU"),
-#         ("SIBU","SIBU"),
-#         ("SSBU","SSBU"),
-#         ("SPBU","SPBU"),
-#         ("HQ","HQ"),
-#     )
-#     department = forms.ChoiceField(label="Department",choices=department,widget=forms.Select(attrs={"class":"form-control"}))
-#     designation = forms.CharField(label="Designation",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     manager = forms.ModelChoiceField(label="Manager", queryset=CustomUser.objects.filter(user_type=4), widget=forms.Select(attrs={"class": "form-control"}))
-# class EditEmployeeForm(forms.Form):
-#     email=forms.EmailField(label="Email",max_length=50,widget=forms.EmailInput(attrs={"class":"form-control"}))
-#     first_name=forms.CharField(label="First Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     last_name=forms.CharField(label="Last Name",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     username=forms.CharField(label="Username",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     department=(
-#         ("","Select Department"),
-#         ("DSBU","DSBU"),
-#         ("HSBU","HSBU"),
-#         ("SIBU","SIBU"),
-#         ("SSBU","SSBU"),
-#         ("SPBU","SPBU"),
-#         ("HQ","HQ"),
-#     )
-#     department = forms.ChoiceField(label="Department",choices=department,widget=forms.Select(attrs={"class":"form-control"}))
-#     designation = forms.CharField(label="Designation",max_length=50,widget=forms.TextInput(attrs={"class":"form-control"}))
-#     manager = forms.ModelChoiceField(label="Manager", queryset=CustomUser.objects.filter(user_type=4), widget=forms.Select(attrs={"class": "form-control"}))
-
 class EmployeeOnboardingForm(forms.ModelForm):
     class Meta:
         model = Employee_Onboarding

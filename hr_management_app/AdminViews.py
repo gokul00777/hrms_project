@@ -441,6 +441,7 @@ def employee_details_delete(request, employee_id):
     emp_family_details = FamilyDetails.objects.get(employee=employee)
     bank_details = BankDetails.objects.get(employee=employee)
     documents = Documents.objects.get(employee=employee)
+    leave = EmployeeLeave.objects.get(employee_id=employee)
 
     personal_info.delete()
     current_address.delete()
@@ -448,6 +449,8 @@ def employee_details_delete(request, employee_id):
     emp_family_details.delete()
     bank_details.delete()
     documents.delete()
+    leave.delete()
+
 
     context = {
         'user': user,
@@ -558,22 +561,17 @@ def employee_leave_view(request):
 def manage_session(request):
     return render(request,"hr_management/admin/manage_session_template.html")
 
-# @login_required(login_url='do_login')
-# @require_user_type(1)
-# def add_session_save(request):
-#     if request.method!="POST":
-#         return HttpResponseRedirect(reverse("manage_session"))
-#     else:
-#         session_start_year=request.POST.get("session_start")
-#         session_end_year=request.POST.get("session_end")
-
-#         try:
-#             messages.success(request, "Successfully Added Session")
-#             return HttpResponseRedirect(reverse("manage_session"))
-#         except:
-#             messages.error(request, "Failed to Add Session")
-#             return HttpResponseRedirect(reverse("manage_session"))
-
+@login_required(login_url='do_login')
+@require_user_type(user_type=[1,2])
+@csrf_exempt
+def check_mobile_number_exist(request):
+    mobile_no=request.POST.get("mobile_no")
+    user_obj=OfferLetter_Sended.objects.filter(mobile_no=mobile_no).exists()
+    if user_obj:
+        return HttpResponse(True)
+    else:
+        return HttpResponse(False)
+    
 
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
@@ -1031,237 +1029,6 @@ def employee_wage_register_details(request):
         return HttpResponse("Invalid request")
         
 
-# @login_required(login_url='do_login')
-# @require_user_type(user_type=[1,2])
-# def wage_register(request):
-#     try:
-#         employees = Employee_Onboarding.objects.all()
-#         wage_registers = []
-#         today = date.today()
-#         salary_drop = SalarySlip.objects.all()   
-
-#         available_months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-            
-#         current_year = datetime.now().year
-
-#         available_years = [str(year) for year in range(current_year, current_year + 2)]
-
-#         remaining_years = {}
-
-#         for year in available_years:
-#             remaining_months = []
-#             for month in available_months:
-#                 if not any(w.year == year and w.month == month for w in salary_drop):
-#                     remaining_months.append(month)
-#             if remaining_months:
-#                 remaining_years[year] = remaining_months          
-        
-#         if request.method == "POST":
-#             month = request.POST.get('month_name')
-#             year = request.POST.get('year')
-#             days_payable = int(request.POST.get('days'))
-#             days_paid = int(request.POST.get('paid'))      
-
-#             month_to_number = {
-#                 'january': 1,
-#                 'february': 2,
-#                 'march': 3,
-#                 'april': 4,
-#                 'may': 5,
-#                 'june': 6,
-#                 'july': 7,
-#                 'august': 8,
-#                 'september': 9,
-#                 'october': 10,
-#                 'november': 11,
-#                 'december': 12
-#             }
-
-#             month_number = month_to_number.get(month.lower())
-#             existing_data = WageRegister.objects.filter(month=month, year=year)
-#             existing_data.delete()
-
-
-#             for employee in employees:
-#                 employee_id = employee.id
-#                 onboarding_data = Employee_Onboarding.objects.get(id=employee_id)
-#                 c = onboarding_data.contact_no
-
-#                 offer = OfferLetter_Sended.objects.get(mobile_no=c)
-#                 ctc = offer.ctc
-#                 address = offer.address
-
-#                 age = today.year - employee.dob.year
-
-#                 # Check if the birth month and day have already passed in the current year
-#                 if today.month < employee.dob.month or (today.month == employee.dob.month and today.day < employee.dob.day):
-#                     age -= 1
-#                 age = age
-
-#                 if employee_id:
-#                     onboarding_data = get_object_or_404(Employee_Onboarding, id=employee_id)
-#                     employee = onboarding_data.employee
-
-#                     if ctc <= 252000:
-#                         insurance_premiums = 0
-#                     else:
-#                         insurance_premiums = 11000.0
-
-#                     variable_component = (ctc * 0.10)
-#                     total_variable_pay = ctc * 0.10
-#                     total_fixed_pay = ctc - total_variable_pay - insurance_premiums
-#                     basic_pay = total_fixed_pay * 0.40
-#                     employer_pf_contribution = 0.13 * basic_pay
-#                     hra = 0.50 * basic_pay
-#                     total_flexible_component = total_fixed_pay - basic_pay - hra - employer_pf_contribution
-#                     conveyance_allowance = 1600 / int(days_payable) * int(days_paid)
-#                     professional_tax = 200
-#                     income_tax = 0
-
-#                     total_variable_pay = ctc * 0.10
-#                     total_fixed_pay = ((ctc) - (insurance_premiums + variable_component)) / 12 * int(days_paid) / int(days_payable)
-#                     basic_salary = (total_fixed_pay * 0.40)
-#                     variable_component = (ctc * 0.10) / 12 * int(days_paid) / int(days_payable)
-#                     hra = 0.50 * basic_salary
-#                     provident_fund = 0.12 * basic_salary
-#                     flexible_component = (total_flexible_component / 12) * days_paid / days_payable - conveyance_allowance
-#                     gross_salary = (hra + basic_salary + conveyance_allowance + flexible_component + variable_component)
-#                     flexible_component = gross_salary - basic_salary - hra - conveyance_allowance - variable_component
-#                     other_deductions = 0
-#                     if ctc <= 252000:
-#                         esic = (0.0075 * float(gross_salary))
-#                     else:
-#                         esic = 0
-#                     total_deductions = provident_fund + professional_tax + income_tax + other_deductions +esic
-#                     net_salary = Decimal(gross_salary) - Decimal(total_deductions)
-
-#                     ytd_net_salary = net_salary
-#                     ytd_basic_salary = basic_salary
-#                     ytd_hra = hra
-#                     ytd_conveyance_allowance = conveyance_allowance
-#                     ytd_flexible_component = flexible_component
-#                     ytd_variable_component = variable_component
-#                     ytd_provident_fund = provident_fund
-#                     ytd_esic = esic
-#                     ytd_professional_tax = professional_tax
-#                     ytd_income_tax = income_tax
-#                     ytd_other_deductions = other_deductions
-#                     ytd_total_deductions = total_deductions
-#                     ytd_gross_salary = gross_salary
-
-#                     prev_wage_register = WageRegister.objects.filter(employee_id=employee).order_by('-id')[0:1]
-
-#                     if prev_wage_register:
-#                         first_salary_slip = prev_wage_register[0]
-#                         net_salary = first_salary_slip.net_salary
-#                         ytd_net_salary = first_salary_slip.ytd_net_salary
-#                         basic_salary = first_salary_slip.basic_salary
-#                         ytd_basic_salary = first_salary_slip.ytd_basic_salary
-#                         hra = first_salary_slip.hra
-#                         ytd_hra = first_salary_slip.ytd_hra
-#                         conveyance_allowance = first_salary_slip.conveyance_allowance
-#                         ytd_conveyance_allowance = first_salary_slip.ytd_conveyance_allowance
-#                         flexible_component = first_salary_slip.flexible_component
-#                         ytd_flexible_component = first_salary_slip.ytd_flexible_component
-#                         variable_component = first_salary_slip.variable_component
-#                         ytd_variable_component = first_salary_slip.variable_component
-#                         provident_fund = first_salary_slip.provident_fund
-#                         ytd_provident_fund = first_salary_slip.ytd_provident_fund
-#                         esic = first_salary_slip.esic
-#                         ytd_esic = first_salary_slip.ytd_esic
-#                         professional_tax = first_salary_slip.professional_tax
-#                         ytd_professional_tax = first_salary_slip.ytd_professional_tax
-#                         income_tax = first_salary_slip.income_tax
-#                         ytd_income_tax = first_salary_slip.ytd_income_tax
-#                         other_deductions = first_salary_slip.other_deductions
-#                         ytd_other_deductions = first_salary_slip.ytd_other_deductions
-#                         total_deductions = first_salary_slip.total_deductions
-#                         ytd_total_deductions = first_salary_slip.ytd_total_deductions
-#                         gross_salary = first_salary_slip.gross_salary
-#                         ytd_gross_salary = first_salary_slip.ytd_gross_salary
-
-#                         if month_number == 4:  # Check if the month is April or later
-#                             ytd_net_salary = net_salary
-#                             ytd_basic_salary = basic_salary
-#                             ytd_hra = hra
-#                             ytd_conveyance_allowance = conveyance_allowance
-#                             ytd_flexible_component = flexible_component
-#                             ytd_variable_component = variable_component
-#                             ytd_provident_fund = provident_fund
-#                             ytd_esic = esic
-#                             ytd_professional_tax = professional_tax
-#                             ytd_income_tax = income_tax
-#                             ytd_other_deductions = other_deductions
-#                             ytd_total_deductions = total_deductions
-#                             ytd_gross_salary = gross_salary
-#                         else:
-#                             ytd_net_salary += net_salary
-#                             ytd_basic_salary += basic_salary
-#                             ytd_hra += hra
-#                             ytd_conveyance_allowance += conveyance_allowance
-#                             ytd_flexible_component += flexible_component
-#                             ytd_variable_component += variable_component
-#                             ytd_provident_fund += provident_fund
-#                             ytd_esic += esic
-#                             ytd_professional_tax += professional_tax
-#                             ytd_income_tax += income_tax
-#                             ytd_other_deductions += other_deductions
-#                             ytd_total_deductions += total_deductions
-#                             ytd_gross_salary += gross_salary
-
-#                     wage_register = WageRegister(
-#                         employee_id=employee,
-#                         month=month,
-#                         year=year,
-#                         age = age,
-#                         days_payable=days_payable,
-#                         days_paid=days_paid,
-#                         ctc=round(ctc),
-#                         esic=round(esic),
-#                         basic_salary=round(basic_salary),
-#                         hra=round(hra),
-#                         conveyance_allowance=round(conveyance_allowance),
-#                         flexible_component=round(flexible_component),
-#                         variable_component=round(variable_component),
-#                         provident_fund=round(provident_fund),
-#                         professional_tax=round(professional_tax),
-#                         income_tax=round(income_tax),
-#                         other_deductions=round(other_deductions),
-#                         gross_salary=round(gross_salary),
-#                         total_deductions=round(total_deductions),
-#                         net_salary=round(net_salary),
-#                         address=address,
-#                         ytd_net_salary=round(ytd_net_salary),
-#                         ytd_basic_salary=round(ytd_basic_salary),
-#                         ytd_hra=round(ytd_hra),
-#                         ytd_conveyance_allowance=round(ytd_conveyance_allowance),
-#                         ytd_flexible_component=round(ytd_flexible_component),
-#                         ytd_variable_component=round(ytd_variable_component),
-#                         ytd_provident_fund=round(ytd_provident_fund),
-#                         ytd_esic=round(ytd_esic),
-#                         ytd_professional_tax=round(ytd_professional_tax),
-#                         ytd_income_tax=round(ytd_income_tax),
-#                         ytd_other_deductions=round(ytd_other_deductions),
-#                         ytd_total_deductions=round(ytd_total_deductions),
-#                         ytd_gross_salary=round(ytd_gross_salary)
-#                     )
-                    
-#                     wage_register.save()
-#                     wage_registers.append(wage_register)
-                        
-#             if request.user.user_type == '1':
-#                 return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
-#             else:
-#                 return render(request, 'hr_management/hr/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year})
-#         if request.user.user_type == '1':
-#             return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
-#         else:
-#             return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
-#     except BaseException as a:
-#         print(a)
-#         messages.error(request,"May be something went to wrong")
-#         return HttpResponseRedirect(reverse("wage_register"))
-# import pdb
 @login_required(login_url='do_login')
 @require_user_type(user_type=[1,2])
 def wage_register(request):
@@ -1277,14 +1044,14 @@ def wage_register(request):
         available_years = [str(year) for year in range(current_year, current_year + 2)]
 
         remaining_years = {}
-
         for year in available_years:
             remaining_months = []
             for month in available_months:
-                if not any(w.year == int(year) and w.month == available_months.index(month) + 1 for w in salary_drop):
+                if not any(w.year == year and w.month == month for w in salary_drop):
                     remaining_months.append(month)
             if remaining_months:
                 remaining_years[year] = remaining_months
+
         if request.method == "POST":
             month = request.POST.get('month_name')
             year = int(request.POST.get('year'))
@@ -1488,6 +1255,7 @@ def wage_register(request):
                     wage_register.save()
                     wage_registers.append(wage_register)
                     wage_register.new_days_payable = wage_register.days_payable - wage_register.sunday_and_holidays
+            
             if request.user.user_type == '1':
                 return render(request, 'hr_management/admin/wage_register.html', {'employees': employees, 'wage_registers': wage_registers,'age':age,'month':month,'year':year,'days_payable':days_payable})
             else:
@@ -1496,9 +1264,8 @@ def wage_register(request):
             return render(request, 'hr_management/admin/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
         else:
             return render(request, 'hr_management/hr/employee_salary_all.html', {'employees': employees,'remaining_years':remaining_years})
-    except BaseException as a:
-        return a
-        # messages.error(request,"May be something went to wrong {a}")
+    except:
+        messages.error(request,"May be something went to wrong")
         return HttpResponseRedirect(reverse("wage_register"))
 
 

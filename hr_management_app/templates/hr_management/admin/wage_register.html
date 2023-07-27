@@ -85,10 +85,10 @@
                 <th scope="col">Age</th>
                 <th scope="col">UAN</th>
                 <th scope="col">Nature of Work and Designation</th>
-                <th scope="col">Total paid Days</th>
-                <th scope="col">Sunday &amp; Holiday</th>
-                <th scope="col">Total payable Days</th>
                 <th scope="col">No of Working Days</th>
+                <!-- <th scope="col">Total paid Days</th> -->
+                <th scope="col">Sunday &amp; Holiday</th>
+                <th scope="col">Total Payable Days</th>
                 <th scope="col">Basic</th>
                 <th scope="col">HRA</th>
                 <th scope="col">Conveyance</th>
@@ -120,10 +120,10 @@
                 <td>{{ wage_register.age }}</td>
                 <td>{{ employee.pf_uan_no }}</td>
                 <td>{{ employee.employee.designation }}</td>
-                <td>{{ wage_register.days_paid }}</td>
+                <td>{{ wage_register.days_payable }}</td>
+                <!-- <td>{{ wage_register.days_paid }}</td> -->
                 <td>{{ wage_register.sunday_and_holidays }}</td>
                 <td>{{ wage_register.new_days_payable }}</td>
-                <td>{{ wage_register.days_payable }}</td>
                 <td>{{ wage_register.basic_salary|floatformat:2 }}</td>
                 <td>{{ wage_register.hra|floatformat:2 }}</td>
                 <td>{{ wage_register.conveyance_allowance|floatformat:2 }}</td>

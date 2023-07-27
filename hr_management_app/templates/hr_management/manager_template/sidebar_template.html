@@ -30,15 +30,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            {% url 'manager_profile' as manager_profile %}
-            <a href="{{ manager_profile }}" class="nav-link {% if request.path == manager_profile %} active {% endif %}">
-              <i class="nav-icon fas fa-user"></i>
-              <p>
-                Manager Profile
-              </p>
-            </a>
-          </li>
+
            <li class="nav-item">
             {% url 'employee_apply_leave' as employee_apply_leave %}
             <a href="{{ employee_apply_leave }}" class="nav-link {% if request.path == employee_apply_leave %} active {% endif %}">
