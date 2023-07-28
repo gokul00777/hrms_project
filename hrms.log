@@ -393,3 +393,23 @@
 2023-07-27 12:41:34,756 - hr_management.settings - WARNING - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:194 - User action had some issues.
 2023-07-27 12:41:34,756 - hr_management.settings - ERROR - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:195 - User action encountered an error.
 2023-07-27 12:41:34,756 - hr_management.settings - CRITICAL - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:196 - Critical error in user action!
+2023-07-27 18:12:17,897 - hr_management.settings - DEBUG - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:192 - User performed the action.
+2023-07-27 18:12:17,897 - hr_management.settings - INFO - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:193 - User action was successful.
+2023-07-27 18:12:17,897 - hr_management.settings - WARNING - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:194 - User action had some issues.
+2023-07-27 18:12:17,898 - hr_management.settings - ERROR - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:195 - User action encountered an error.
+2023-07-27 18:12:17,898 - hr_management.settings - CRITICAL - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:196 - Critical error in user action!
+2023-07-27 12:42:18,287 - hr_management.settings - DEBUG - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:192 - User performed the action.
+2023-07-27 12:42:18,287 - hr_management.settings - INFO - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:193 - User action was successful.
+2023-07-27 12:42:18,287 - hr_management.settings - WARNING - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:194 - User action had some issues.
+2023-07-27 12:42:18,288 - hr_management.settings - ERROR - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:195 - User action encountered an error.
+2023-07-27 12:42:18,288 - hr_management.settings - CRITICAL - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:196 - Critical error in user action!
+2023-07-28 10:11:50,146 - hr_management.settings - DEBUG - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:192 - User performed the action.
+2023-07-28 10:11:50,146 - hr_management.settings - INFO - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:193 - User action was successful.
+2023-07-28 10:11:50,147 - hr_management.settings - WARNING - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:194 - User action had some issues.
+2023-07-28 10:11:50,147 - hr_management.settings - ERROR - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:195 - User action encountered an error.
+2023-07-28 10:11:50,147 - hr_management.settings - CRITICAL - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:196 - Critical error in user action!
+2023-07-28 04:41:50,665 - hr_management.settings - DEBUG - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:192 - User performed the action.
+2023-07-28 04:41:50,665 - hr_management.settings - INFO - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:193 - User action was successful.
+2023-07-28 04:41:50,665 - hr_management.settings - WARNING - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:194 - User action had some issues.
+2023-07-28 04:41:50,665 - hr_management.settings - ERROR - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:195 - User action encountered an error.
+2023-07-28 04:41:50,666 - hr_management.settings - CRITICAL - /home/gokul/Desktop/latesh upto date (another copy)/hr_management/hr_management/hr_management/settings.py:196 - Critical error in user action!
